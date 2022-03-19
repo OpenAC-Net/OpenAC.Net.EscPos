@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
+    <AssemblyName>OpenAC.Net.EscPos</AssemblyName>
+    <RootNamespace>OpenAC.Net.EscPos</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>OpenAC.snk</AssemblyOriginatorKeyFile>
+    <Copyright>Copyright © Projeto OpenAC .Net 2014 - 2021</Copyright>
+    <Company>OpenAC .Net - Automação Comercial em .Net</Company>
+    <Authors>Projeto OpenAC .Net</Authors>
+    <PackageProjectUrl>https://openac-net.github.io/</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>https://avatars.githubusercontent.com/u/90476515?s=200&amp;v=4</PackageIconUrl>
+    <RepositoryUrl>https://github.com/OpenAC-Net/OpenAC.Net.EscPos</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>OpenAC.Net.EscPos</PackageTags>
+    <Description>Biblioteca para impressão em impressora termica usando o protcolo EscPos</Description>
+    <NeutralLanguage>pt-BR</NeutralLanguage>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0.0</Version>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>OpenAC.Net.EscPos</PackageId>
+  </PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+		<DefineConstants>NETCORE;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net452'">
+		<DefineConstants>NET45;NETFULL</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net452|AnyCPU'">
+		<OutputPath>..\..\bin\Debug\</OutputPath>
+		<DocumentationFile>..\..\bin\Debug\net452\OpenAC.Net.EscPos.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net452|AnyCPU'">
+		<OutputPath>..\..\bin\Release\</OutputPath>
+		<DocumentationFile>..\..\bin\Release\net452\OpenAC.Net.EscPos.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+		<OutputPath>..\..\bin\Debug\</OutputPath>
+		<DocumentationFile>..\..\bin\Debug\netstandard2.0\OpenAC.Net.EscPos.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+		<OutputPath>..\..\bin\Release\</OutputPath>
+		<DocumentationFile>..\..\bin\Release\netstandard2.0\OpenAC.Net.EscPos.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenAC.Net.Core" Version="1.0.0.1" />
+    <PackageReference Include="OpenAC.Net.Devices" Version="1.2.0-preview.6" />
+  </ItemGroup>
+
+</Project>

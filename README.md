@@ -4,5 +4,6 @@
 [![Ajude-nos pelo Apoia-se https://apoia.se/openac-net](https://img.shields.io/badge/Donate-Apoia--se-red)](https://apoia.se/openac-net)
 
 # OpenAC.Net.EscPos
-=============
+=============================================================
+
 Componente para comunicação e impressão em impressoras térmicas usando o protocolo EscPos.

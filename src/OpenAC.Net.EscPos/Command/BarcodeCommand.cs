@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="BarcodeCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -34,11 +34,11 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class TextCommand : PrintCommand
+    public sealed class BarcodeCommand : PrintCommand
     {
         #region Constructors
 
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public BarcodeCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
         }
 
@@ -46,15 +46,17 @@ namespace OpenAC.Net.EscPos.Command
 
         #region Properties
 
-        public string Texto { get; set; }
+        public CmdBarcode Tipo { get; set; }
 
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
+        public string Code { get; set; } = "";
 
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+        public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
 
         public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
-        public CmdEstiloFonte? Estilo { get; set; } = null;
+        public int Altura { get; set; } = 0;
+
+        public int Largura { get; set; } = 0;
 
         #endregion Properties
     }

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="QrCodeCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,16 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class TextCommand : PrintCommand
+    public sealed class QrCodeCommand : PrintCommand
     {
         #region Constructors
 
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public QrCodeCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
         }
 
@@ -46,15 +47,15 @@ namespace OpenAC.Net.EscPos.Command
 
         #region Properties
 
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+        public string Code { get; set; } = "";
 
         public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
-        public CmdEstiloFonte? Estilo { get; set; } = null;
+        public QrCodeTipo Tipo { get; set; }
+
+        public QrCodeSize Tamanho { get; set; } = QrCodeSize.Normal;
+
+        public QrCodeErrorLevel ErrorLevel { get; set; }
 
         #endregion Properties
     }

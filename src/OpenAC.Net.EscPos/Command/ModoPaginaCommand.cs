@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="CommandPrinter.cs" company="OpenAC .Net">
+// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,23 +29,21 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using OpenAC.Net.Core;
-using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Command
 {
-    public class CommandPrinter
+    /// <summary>
+    /// WIP - Work In Progress
+    /// </summary>
+    public sealed class ModoPaginaCommand : PrintCommand
     {
         #region Constructors
 
-        public CommandPrinter(EscPosInterpreter interpreter)
+        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
-            Guard.Against<ArgumentNullException>(interpreter == null, "O interpreatador EscPos não pode ser nulo.");
-
-            Interpreter = interpreter;
             Commands = new List<PrintCommand>();
         }
 
@@ -55,30 +53,21 @@ namespace OpenAC.Net.EscPos
 
         protected List<PrintCommand> Commands { get; }
 
-        protected EscPosInterpreter Interpreter { get; }
-
-        public byte[] Content
-        {
-            get
-            {
-                var comandos = new List<byte>();
-
-                foreach (var command in Commands)
-                    comandos.AddRange(command.Content);
-
-                return comandos.ToArray();
-            }
-        }
-
         #endregion Properties
 
-        public void Clear() => Commands.Clear();
+        #region Methods
 
-        public void Zera()
+        protected override byte[] GetContet()
         {
-            var cmd = new ZeraCommand(Interpreter);
-            Commands.Add(cmd);
+            var comandos = new List<byte>();
+
+            foreach (var command in Commands)
+                comandos.AddRange(command.Content);
+
+            return comandos.ToArray();
         }
+
+        public void Clear() => Commands.Clear();
 
         public void ImprimirTexto(string aTexto)
         {
@@ -128,5 +117,7 @@ namespace OpenAC.Net.EscPos
 
             Commands.Add(cmd);
         }
+
+        #endregion Methods
     }
 }

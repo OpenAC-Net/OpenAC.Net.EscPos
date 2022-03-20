@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="LogoConfig.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,32 +29,19 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
-
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Commom
 {
-    public sealed class TextCommand : PrintCommand
+    public sealed class LogoConfig
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
         #region Properties
 
-        public string Texto { get; set; }
+        public byte KC1 { get; set; } = 32;
 
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
+        public byte KC2 { get; set; } = 32;
 
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+        public byte FatorX { get; set; } = 1;
 
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
+        public byte FatorY { get; set; } = 1;
 
         #endregion Properties
     }

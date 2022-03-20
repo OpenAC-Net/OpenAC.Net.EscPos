@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="ByteArrayBuilderExtensions.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,35 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
+using System.Collections.Generic;
+using OpenAC.Net.Devices.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Extensions
 {
-    public sealed class TextCommand : PrintCommand
+    internal static class ByteArrayBuilderExtensions
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public static bool Append(this ByteArrayBuilder list, params object[] items)
         {
+            var ignoredItems = false;
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case byte itemT:
+                        list.Append(itemT);
+                        break;
+
+                    case IEnumerable<byte> arrayT:
+                        list.Append(arrayT);
+                        break;
+
+                    default:
+                        ignoredItems = true;
+                        break;
+                }
+            }
+
+            return !ignoredItems;
         }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
     }
 }

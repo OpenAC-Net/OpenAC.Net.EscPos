@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosCommand.cs" company="OpenAC .Net">
+// <copyright file="LogoCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,41 +29,30 @@
 // <summary></summary>
 // ***********************************************************************
 
+using OpenAC.Net.EscPos.Interpreter;
+
 namespace OpenAC.Net.EscPos.Command
 {
-    public enum EscPosCommand
+    public sealed class LogoCommand : PrintCommand
     {
-        Zera,
-        EspacoEntreLinhas,
-        EspacoEntreLinhasPadrao,
-        LigaNegrito,
-        DesligaNegrito,
-        LigaExpandido,
-        DesligaExpandido,
-        LigaAlturaDupla,
-        DesligaAlturaDupla,
-        LigaSublinhado,
-        DesligaSublinhado,
-        LigaItalico,
-        DesligaItalico,
-        LigaCondensado,
-        DesligaCondensado,
-        LigaInvertido,
-        DesligaInvertido,
-        FonteNormal,
-        FonteA,
-        FonteB,
-        AlinhadoEsquerda,
-        AlinhadoDireita,
-        AlinhadoCentro,
-        Beep,
-        CorteTotal,
-        CorteParcial,
-        PuloDeLinha,
-        PuloDePagina,
-        LigaModoPagina,
-        DesligaModoPagina,
-        ImprimePagina,
-        PaginaDeCodigo
+        #region Constructors
+
+        public LogoCommand(EscPosInterpreter interpreter) : base(interpreter)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public byte KC1 { get; set; }
+
+        public byte KC2 { get; set; }
+
+        public byte FatorX { get; set; }
+
+        public byte FatorY { get; set; }
+
+        #endregion Properties
     }
 }

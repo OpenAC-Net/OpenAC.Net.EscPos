@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="Command.cs" company="OpenAC .Net">
+// <copyright file="QrCodeConfig.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,24 +29,28 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Interpreter
+using System;
+
+namespace OpenAC.Net.EscPos.Commom
 {
-    internal static class Command
+    public sealed class QrCodeConfig
     {
-        public static byte ESC => 27;
+        #region Fields
 
-        public static byte FS => 28;
+        private byte tamanho = 4;
+        private byte tipo = 2;
+        private byte errorLevel = 0;
 
-        public static byte GS => 29;
+        #endregion Fields
 
-        public static byte LF => 10;
+        #region Properties
 
-        public static byte FF => 12;
+        public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;
 
-        public static byte CR => 13;
+        public QrCodeSize Tamanho { get; set; } = QrCodeSize.Normal;
 
-        public static byte SI => 15;
+        public QrCodeErrorLevel ErrorLevel { get; set; } = QrCodeErrorLevel.LevelL;
 
-        public static byte DC2 => 18;
+        #endregion Properties
     }
 }

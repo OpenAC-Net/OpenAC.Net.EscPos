@@ -33,7 +33,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenAC.Net.Core;
+using OpenAC.Net.Core.Extensions;
+using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter
 {
@@ -41,13 +46,25 @@ namespace OpenAC.Net.EscPos.Interpreter
     {
         #region Constructors
 
-        protected EscPosInterpreter() => InicializarComandos();
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="enconder"></param>
+        protected EscPosInterpreter(Encoding enconder)
+        {
+            Guard.Against<ArgumentNullException>(enconder == null, $"{nameof(enconder)} não pode ser nulo.");
+
+            Enconder = enconder;
+            InicializarComandos();
+        }
 
         #endregion Constructors
 
         #region Properties
 
-        protected Dictionary<EscPosCommand, byte[]> Commandos { get; } = new Dictionary<EscPosCommand, byte[]>();
+        protected Dictionary<CmdEscPos, byte[]> Commandos { get; } = new();
+
+        protected Encoding Enconder { get; }
 
         #endregion Properties
 
@@ -61,18 +78,25 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <exception cref="NotImplementedException"></exception>
         public byte[] ProcessCommand(PrintCommand command)
         {
-            var list = new List<byte>();
-
-            switch (command)
+            return command switch
             {
-                case TextCommand cmd: list.AddRange(ProcessCommand(cmd)); break;
-                case ZeraCommand cmd: list.AddRange(ProcessCommand(cmd)); break;
-                case EspacoEntreLinhasCommand cmd: list.AddRange(ProcessCommand(cmd)); break;
-            }
-
-            list.AddRange(Commandos[EscPosCommand.PuloDeLinha]);
-            return list.ToArray();
+                TextCommand cmd => ProcessCommand(cmd),
+                ZeraCommand cmd => ProcessCommand(cmd),
+                EspacoEntreLinhasCommand cmd => ProcessCommand(cmd),
+                JumpLineCommand cmd => ProcessCommand(cmd),
+                CutCommand cmd => ProcessCommand(cmd),
+                CashDrawerCommand cmd => ProcessCommand(cmd),
+                BeepCommand cmd => ProcessCommand(cmd),
+                BarcodeCommand cmd => ProcessCommand(cmd),
+                LogoCommand cmd => ProcessCommand(cmd),
+                QrCodeCommand cmd => ProcessCommand(cmd),
+                _ => throw new ArgumentException("Comando custom, não pode ser usado no interpretador.")
+            };
         }
+
+        public abstract byte[][] GetStatusCommand();
+
+        public abstract EscPosTipoStatus ProcessarStatus(byte[][] dados);
 
         /// <summary>
         /// Processa o comando de texto.
@@ -82,20 +106,20 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         protected virtual byte[] ProcessCommand(TextCommand cmd)
         {
-            var list = new List<byte>();
+            using var builder = new ByteArrayBuilder();
 
             switch (cmd.Fonte)
             {
-                case CmdFonte.Normal when Commandos.ContainsKey(EscPosCommand.FonteNormal):
-                    list.AddRange(Commandos[EscPosCommand.FonteNormal]);
+                case CmdFonte.Normal when Commandos.ContainsKey(CmdEscPos.FonteNormal):
+                    builder.Append(Commandos[CmdEscPos.FonteNormal]);
                     break;
 
-                case CmdFonte.FonteA when Commandos.ContainsKey(EscPosCommand.FonteA):
-                    list.AddRange(Commandos[EscPosCommand.FonteA]);
+                case CmdFonte.FonteA when Commandos.ContainsKey(CmdEscPos.FonteA):
+                    builder.Append(Commandos[CmdEscPos.FonteA]);
                     break;
 
-                case CmdFonte.FonteB when Commandos.ContainsKey(EscPosCommand.FonteB):
-                    list.AddRange(Commandos[EscPosCommand.FonteB]);
+                case CmdFonte.FonteB when Commandos.ContainsKey(CmdEscPos.FonteB):
+                    builder.Append(Commandos[CmdEscPos.FonteB]);
                     break;
 
                 default:
@@ -104,16 +128,16 @@ namespace OpenAC.Net.EscPos.Interpreter
 
             switch (cmd.Alinhamento)
             {
-                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(EscPosCommand.AlinhadoEsquerda):
-                    list.AddRange(Commandos[EscPosCommand.AlinhadoEsquerda]);
+                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
                     break;
 
-                case CmdAlinhamento.Centro when Commandos.ContainsKey(EscPosCommand.AlinhadoCentro):
-                    list.AddRange(Commandos[EscPosCommand.AlinhadoCentro]);
+                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
                     break;
 
-                case CmdAlinhamento.Direita when Commandos.ContainsKey(EscPosCommand.AlinhadoDireita):
-                    list.AddRange(Commandos[EscPosCommand.AlinhadoDireita]);
+                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
                     break;
 
                 default:
@@ -122,75 +146,76 @@ namespace OpenAC.Net.EscPos.Interpreter
 
             switch (cmd.Tamanho)
             {
-                case CmdTamanhoFonte.Expandida when Commandos.ContainsKey(EscPosCommand.LigaExpandido):
-                    list.AddRange(Commandos[EscPosCommand.LigaExpandido]);
+                case CmdTamanhoFonte.Expandida when Commandos.ContainsKey(CmdEscPos.LigaExpandido):
+                    builder.Append(Commandos[CmdEscPos.LigaExpandido]);
                     break;
 
-                case CmdTamanhoFonte.Condensada when Commandos.ContainsKey(EscPosCommand.LigaCondensado):
-                    list.AddRange(Commandos[EscPosCommand.LigaCondensado]);
+                case CmdTamanhoFonte.Condensada when Commandos.ContainsKey(CmdEscPos.LigaCondensado):
+                    builder.Append(Commandos[CmdEscPos.LigaCondensado]);
                     break;
             }
 
             if (cmd.Estilo.HasValue)
             {
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(EscPosCommand.LigaNegrito))
-                    list.AddRange(Commandos[EscPosCommand.LigaNegrito]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(CmdEscPos.LigaNegrito))
+                    builder.Append(Commandos[CmdEscPos.LigaNegrito]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(EscPosCommand.LigaSublinhado))
-                    list.AddRange(Commandos[EscPosCommand.LigaSublinhado]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.LigaSublinhado))
+                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(EscPosCommand.LigaInvertido))
-                    list.AddRange(Commandos[EscPosCommand.LigaSublinhado]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.LigaInvertido))
+                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(EscPosCommand.LigaItalico))
-                    list.AddRange(Commandos[EscPosCommand.LigaItalico]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.LigaItalico))
+                    builder.Append(Commandos[CmdEscPos.LigaItalico]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(EscPosCommand.LigaAlturaDupla))
-                    list.AddRange(Commandos[EscPosCommand.LigaAlturaDupla]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.LigaAlturaDupla))
+                    builder.Append(Commandos[CmdEscPos.LigaAlturaDupla]);
             }
 
             // Adiciona o texto, fazendo o tratamento para quebra de linha
-            // ToDo: Checar se precisar fazer o enconding aqui.
-            list.AddRange(Encoding.UTF8.GetBytes(TratarString(cmd.Texto)));
+            builder.Append(Enconder.GetBytes(TratarString(cmd.Texto)));
 
             if (cmd.Estilo.HasValue)
             {
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(EscPosCommand.DesligaNegrito))
-                    list.AddRange(Commandos[EscPosCommand.DesligaNegrito]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(CmdEscPos.DesligaNegrito))
+                    builder.Append(Commandos[CmdEscPos.DesligaNegrito]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(EscPosCommand.DesligaSublinhado))
-                    list.AddRange(Commandos[EscPosCommand.DesligaSublinhado]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.DesligaSublinhado))
+                    builder.Append(Commandos[CmdEscPos.DesligaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(EscPosCommand.DesligaInvertido))
-                    list.AddRange(Commandos[EscPosCommand.LigaSublinhado]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.DesligaInvertido))
+                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(EscPosCommand.DesligaItalico))
-                    list.AddRange(Commandos[EscPosCommand.DesligaItalico]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.DesligaItalico))
+                    builder.Append(Commandos[CmdEscPos.DesligaItalico]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(EscPosCommand.DesligaAlturaDupla))
-                    list.AddRange(Commandos[EscPosCommand.DesligaAlturaDupla]);
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.DesligaAlturaDupla))
+                    builder.Append(Commandos[CmdEscPos.DesligaAlturaDupla]);
             }
 
             switch (cmd.Tamanho)
             {
-                case CmdTamanhoFonte.Expandida when Commandos.ContainsKey(EscPosCommand.DesligaExpandido):
-                    list.AddRange(Commandos[EscPosCommand.DesligaExpandido]);
+                case CmdTamanhoFonte.Expandida when Commandos.ContainsKey(CmdEscPos.DesligaExpandido):
+                    builder.Append(Commandos[CmdEscPos.DesligaExpandido]);
                     break;
 
-                case CmdTamanhoFonte.Condensada when Commandos.ContainsKey(EscPosCommand.DesligaCondensado):
-                    list.AddRange(Commandos[EscPosCommand.DesligaCondensado]);
+                case CmdTamanhoFonte.Condensada when Commandos.ContainsKey(CmdEscPos.DesligaCondensado):
+                    builder.Append(Commandos[CmdEscPos.DesligaCondensado]);
                     break;
             }
 
             // Volta a Fonte para Normal.
-            if (Commandos.ContainsKey(EscPosCommand.FonteNormal))
-                list.AddRange(Commandos[EscPosCommand.FonteNormal]);
+            if (Commandos.ContainsKey(CmdEscPos.FonteNormal) && cmd.Fonte != CmdFonte.Normal)
+                builder.Append(Commandos[CmdEscPos.FonteNormal]);
 
             // Volta alinhamento para Esquerda.
-            if (Commandos.ContainsKey(EscPosCommand.AlinhadoEsquerda))
-                list.AddRange(Commandos[EscPosCommand.AlinhadoEsquerda]);
+            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && cmd.Alinhamento != CmdAlinhamento.Esquerda)
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
 
-            return list.ToArray();
+            // Texto sempre tem que terminar com o pulo de linha
+            builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
+            return builder.ToArray();
         }
 
         /// <summary>
@@ -198,7 +223,7 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// </summary>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        protected virtual byte[] ProcessCommand(ZeraCommand cmd) => Commandos.ContainsKey(EscPosCommand.Zera) ? Commandos[EscPosCommand.Zera] : new byte[0];
+        protected virtual byte[] ProcessCommand(ZeraCommand cmd) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : new byte[0];
 
         /// <summary>
         /// Processa o comando de Espaco Entre Linhas.
@@ -207,14 +232,245 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <returns></returns>
         protected virtual byte[] ProcessCommand(EspacoEntreLinhasCommand cmd)
         {
-            if (!Commandos.ContainsKey(EscPosCommand.EspacoEntreLinhasPadrao)) return new byte[0];
+            if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return new byte[0];
 
             var espacos = Math.Max((byte)0, cmd.Espaco);
-            if (espacos == 0) return Commandos[EscPosCommand.EspacoEntreLinhasPadrao];
+            if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
 
-            if (!Commandos.ContainsKey(EscPosCommand.EspacoEntreLinhas)) return new byte[0];
+            if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas)) return new byte[0];
 
-            return Commandos[EscPosCommand.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
+            return Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
+        }
+
+        protected virtual byte[] ProcessCommand(JumpLineCommand cmd)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
+
+            var linhas = Math.Max(1, cmd.Linhas);
+            using var builder = new ByteArrayBuilder();
+            for (var i = 0; i < linhas; i++)
+                builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
+
+            return builder.ToArray();
+        }
+
+        protected virtual byte[] ProcessCommand(CutCommand cmd)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && cmd.Parcial) return new byte[0];
+            if (!Commandos.ContainsKey(CmdEscPos.CorteTotal)) return new byte[0];
+
+            return cmd.Parcial ? Commandos[CmdEscPos.CorteParcial] : Commandos[CmdEscPos.CorteTotal];
+        }
+
+        protected virtual byte[] ProcessCommand(CashDrawerCommand cmd)
+        {
+            return Commandos.ContainsKey(CmdEscPos.Gaveta)
+                ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)cmd.Gaveta, cmd.TempoON, cmd.TempoOFF }).ToArray()
+                : new byte[0];
+        }
+
+        protected virtual byte[] ProcessCommand(BeepCommand cmd) => !Commandos.ContainsKey(CmdEscPos.Beep) ? new byte[0] : Commandos[CmdEscPos.Beep];
+
+        protected virtual byte[] ProcessCommand(BarcodeCommand cmd)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.IniciarBarcode)) return new byte[0];
+
+            using var builder = new ByteArrayBuilder();
+
+            switch (cmd.Alinhamento)
+            {
+                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                    break;
+
+                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                    break;
+
+                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // Formando o codigo de barras
+            byte[] barCode;
+            switch (cmd.Tipo)
+            {
+                case CmdBarcode.UPCA when Commandos.ContainsKey(CmdEscPos.BarcodeUPCA):
+                    barCode = Commandos[CmdEscPos.BarcodeUPCA];
+                    break;
+
+                case CmdBarcode.UPCE when Commandos.ContainsKey(CmdEscPos.BarcodeUPCE):
+                    barCode = Commandos[CmdEscPos.BarcodeUPCE];
+                    break;
+
+                case CmdBarcode.EAN13 when Commandos.ContainsKey(CmdEscPos.BarcodeEAN13):
+                    barCode = Commandos[CmdEscPos.BarcodeEAN13];
+                    break;
+
+                case CmdBarcode.EAN8 when Commandos.ContainsKey(CmdEscPos.BarcodeEAN8):
+                    barCode = Commandos[CmdEscPos.BarcodeEAN8];
+                    break;
+
+                case CmdBarcode.CODE39 when Commandos.ContainsKey(CmdEscPos.BarcodeCODE39):
+                    barCode = Commandos[CmdEscPos.BarcodeCODE39];
+                    break;
+
+                case CmdBarcode.Inter2of5 when Commandos.ContainsKey(CmdEscPos.BarcodeInter2of5):
+                    barCode = Commandos[CmdEscPos.BarcodeInter2of5];
+                    break;
+
+                case CmdBarcode.CodaBar when Commandos.ContainsKey(CmdEscPos.BarcodeCodaBar):
+                    barCode = Commandos[CmdEscPos.BarcodeCodaBar];
+                    break;
+
+                case CmdBarcode.CODE93 when Commandos.ContainsKey(CmdEscPos.BarcodeCODE93):
+                    barCode = Commandos[CmdEscPos.BarcodeCODE93];
+                    break;
+
+                case CmdBarcode.CODE128b when Commandos.ContainsKey(CmdEscPos.BarcodeCODE128):
+                case CmdBarcode.CODE128 when Commandos.ContainsKey(CmdEscPos.BarcodeCODE128):
+                    barCode = Commandos[CmdEscPos.BarcodeCODE128];
+                    if (!cmd.Code.StartsWith("{"))
+                        cmd.Code = "{B" + cmd.Code;
+                    break;
+
+                case CmdBarcode.CODE128a when Commandos.ContainsKey(CmdEscPos.BarcodeCODE128):
+                    barCode = Commandos[CmdEscPos.BarcodeCODE128];
+                    if (!cmd.Code.StartsWith("{"))
+                        cmd.Code = "{A" + cmd.Code;
+                    break;
+
+                case CmdBarcode.CODE128c when Commandos.ContainsKey(CmdEscPos.BarcodeCODE128):
+                    barCode = Commandos[CmdEscPos.BarcodeCODE128];
+                    var code = cmd.Code.OnlyNumbers();
+                    var s = code.Length;
+                    if (s % 2 != 0)
+                    {
+                        code = "0" + code;
+                        s++;
+                    }
+
+                    var code128c = "";
+                    var i = 0;
+                    while (i < s)
+                    {
+                        code128c += (char)code.Substring(i, 2).ToInt32();
+                        i += 2;
+                    }
+
+                    cmd.Code = "{C" + code128c;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var largura = cmd.Largura == 0 ? (byte)2 : Math.Max(Math.Min((byte)cmd.Largura, (byte)4), (byte)1);
+            var altura = cmd.Altura == 0 ? (byte)50 : Math.Max(Math.Min((byte)cmd.Altura, (byte)255), (byte)1);
+
+            var showCode = cmd.Exibir switch
+            {
+                CmdBarcodeText.SemTexto when Commandos.ContainsKey(CmdEscPos.BarcodeNoText) => Commandos[CmdEscPos.BarcodeNoText],
+                CmdBarcodeText.Acima when Commandos.ContainsKey(CmdEscPos.BarcodeTextAbove) => Commandos[CmdEscPos.BarcodeTextAbove],
+                CmdBarcodeText.Abaixo when Commandos.ContainsKey(CmdEscPos.BarcodeTextBelow) => Commandos[CmdEscPos.BarcodeTextBelow],
+                CmdBarcodeText.Ambos when Commandos.ContainsKey(CmdEscPos.BarcodeTextBoth) => Commandos[CmdEscPos.BarcodeTextBoth],
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            if (Commandos.ContainsKey(CmdEscPos.BarcodeWidth))
+                builder.Append(Commandos[CmdEscPos.BarcodeHeight], largura);
+
+            if (Commandos.ContainsKey(CmdEscPos.BarcodeHeight))
+                builder.Append(Commandos[CmdEscPos.BarcodeHeight], altura);
+
+            if (!showCode.IsNullOrEmpty())
+                builder.Append(showCode);
+
+            builder.Append(Commandos[CmdEscPos.IniciarBarcode], barCode);
+            builder.Append((byte)cmd.Code.Length);
+            builder.Append(Enconder.GetBytes(cmd.Code));
+
+            // Volta alinhamento para Esquerda.
+            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && cmd.Alinhamento != CmdAlinhamento.Esquerda)
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+            return builder.ToArray();
+        }
+
+        protected virtual byte[] ProcessCommand(LogoCommand cmd)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
+               !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
+
+            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
+
+            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
+            // Equipamentos(não Epson), mas que usam EscPosEpson...
+            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
+            // KeyCode1:= 1..255; KeyCode2:= 0
+
+            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
+
+            if (cmd.KC2 != 0)
+                return Commandos[CmdEscPos.LogoNew].Concat(new[] { cmd.KC1, cmd.KC2, cmd.FatorX, cmd.FatorY }).ToArray();
+
+            var keyCode = keyCodeUnico(cmd.KC1);
+            byte m = 0;
+            if (cmd.FatorX > 1)
+                m += 1;
+
+            if (cmd.FatorY > 1)
+                m += 2;
+
+            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
+        }
+
+        protected virtual byte[] ProcessCommand(QrCodeCommand cmd)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
+
+            using var builder = new ByteArrayBuilder();
+
+            switch (cmd.Alinhamento)
+            {
+                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                    break;
+
+                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                    break;
+
+                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var num = cmd.Code.Length + 3;
+            var pL = (byte)(num % 256);
+            var pH = (byte)(num / 256);
+
+            var initial = Commandos[CmdEscPos.QrCodeInitial];
+            builder.Append(initial, Commandos[CmdEscPos.QrCodeModel], (byte)cmd.Tipo, (byte)0);
+            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)cmd.Tamanho);
+            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)cmd.ErrorLevel);
+            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
+            // Precisa ser UTF8 mesmo para imprimir correto.
+            builder.Append(Encoding.UTF8.GetBytes(cmd.Code));
+            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+
+            // Volta alinhamento para Esquerda.
+            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && cmd.Alinhamento != CmdAlinhamento.Esquerda)
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+            return builder.ToArray();
         }
 
         /// <summary>
@@ -222,7 +478,7 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// </summary>
         /// <param name="texto"></param>
         /// <returns></returns>
-        protected virtual string TratarString(string texto) => texto.Replace("\r\n", Encoding.UTF8.GetString(Commandos[EscPosCommand.PuloDeLinha]));
+        protected virtual string TratarString(string texto) => texto.Replace("\r\n", "\n").Replace("\r", "\n");
 
         /// <summary>
         /// Função para inicializar o dicionario de comandos para ser usados no interpreter.

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="PrintLineCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,16 +29,19 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
+using System.Text;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class TextCommand : PrintCommand
+    /// <summary>
+    /// Exemplo de comando customizado, que gera linhas duplas ou simples, do tamanho solicitado.
+    /// </summary>
+    public sealed class PrintLineCommand : PrintCommand
     {
         #region Constructors
 
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public PrintLineCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
         }
 
@@ -46,16 +49,17 @@ namespace OpenAC.Net.EscPos.Command
 
         #region Properties
 
-        public string Texto { get; set; }
+        public int Tamanho { get; set; } = 48;
 
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
+        public bool Dupla { get; set; } = false;
 
         #endregion Properties
+
+        #region Methods
+
+        /// <inheritdoc />
+        protected override byte[] GetContet() => Encoding.UTF8.GetBytes(new string(Dupla ? '=' : '-', Tamanho) + '\n');
+
+        #endregion Methods
     }
 }

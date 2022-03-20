@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="BarcodeConfig.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,21 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-
-namespace OpenAC.Net.EscPos.Interpreter
+namespace OpenAC.Net.EscPos.Commom
 {
-    public static class EscPosInterpreterFactory
+    public sealed class BarcodeConfig
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo)
-        {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter();
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
-        }
+        #region Properties
+
+        public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
+
+        public int Altura { get; set; } = 0;
+
+        public int Largura { get; set; } = 0;
+
+        #endregion Properties
     }
 }

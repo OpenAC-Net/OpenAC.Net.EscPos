@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="CmdEscPos.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,66 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
-
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Commom
 {
-    public sealed class TextCommand : PrintCommand
+    public enum CmdEscPos
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
+        Zera,
+        EspacoEntreLinhas,
+        EspacoEntreLinhasPadrao,
+        LigaNegrito,
+        DesligaNegrito,
+        LigaExpandido,
+        DesligaExpandido,
+        LigaAlturaDupla,
+        DesligaAlturaDupla,
+        LigaSublinhado,
+        DesligaSublinhado,
+        LigaItalico,
+        DesligaItalico,
+        LigaCondensado,
+        DesligaCondensado,
+        LigaInvertido,
+        DesligaInvertido,
+        FonteNormal,
+        FonteA,
+        FonteB,
+        AlinhadoEsquerda,
+        AlinhadoDireita,
+        AlinhadoCentro,
+        Beep,
+        CorteTotal,
+        CorteParcial,
+        PuloDeLinha,
+        PuloDePagina,
+        LigaModoPagina,
+        DesligaModoPagina,
+        ImprimePagina,
+        PaginaDeCodigo,
+        Gaveta,
+        IniciarBarcode,
+        BarcodeWidth,
+        BarcodeHeight,
+        BarcodeNoText,
+        BarcodeTextAbove,
+        BarcodeTextBelow,
+        BarcodeTextBoth,
+        BarcodeUPCA,
+        BarcodeUPCE,
+        BarcodeEAN13,
+        BarcodeEAN8,
+        BarcodeCODE39,
+        BarcodeInter2of5,
+        BarcodeCodaBar,
+        BarcodeCODE93,
+        BarcodeCODE128,
+        LogoNew,
+        LogoOld,
+        QrCodeInitial,
+        QrCodeModel,
+        QrCodeSize,
+        QrCodeError,
+        QrCodeStore,
+        QrCodePrint,
     }
 }

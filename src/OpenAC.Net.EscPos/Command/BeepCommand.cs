@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="BeepCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class TextCommand : PrintCommand
+    public sealed class BeepCommand : PrintCommand
     {
         #region Constructors
 
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public BeepCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
         }
 
         #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
     }
 }

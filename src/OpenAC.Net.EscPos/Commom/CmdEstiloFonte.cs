@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="CmdEstiloFonte.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
+using System;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Commom
 {
-    public sealed class TextCommand : PrintCommand
+    [Flags]
+    public enum CmdEstiloFonte
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
+        Negrito = 1 << 0,
+        Sublinhado = 1 << 1,
+        Invertido = 1 << 2,
+        Italico = 1 << 3,
+        AlturaDupla = 1 << 4,
     }
 }

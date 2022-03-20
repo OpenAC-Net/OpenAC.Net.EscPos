@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosCommand.cs" company="OpenAC .Net">
+// <copyright file="ListExtensions.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,41 +29,34 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Command
+using System.Collections.Generic;
+
+namespace OpenAC.Net.EscPos.Extensions
 {
-    public enum EscPosCommand
+    internal static class ListExtensions
     {
-        Zera,
-        EspacoEntreLinhas,
-        EspacoEntreLinhasPadrao,
-        LigaNegrito,
-        DesligaNegrito,
-        LigaExpandido,
-        DesligaExpandido,
-        LigaAlturaDupla,
-        DesligaAlturaDupla,
-        LigaSublinhado,
-        DesligaSublinhado,
-        LigaItalico,
-        DesligaItalico,
-        LigaCondensado,
-        DesligaCondensado,
-        LigaInvertido,
-        DesligaInvertido,
-        FonteNormal,
-        FonteA,
-        FonteB,
-        AlinhadoEsquerda,
-        AlinhadoDireita,
-        AlinhadoCentro,
-        Beep,
-        CorteTotal,
-        CorteParcial,
-        PuloDeLinha,
-        PuloDePagina,
-        LigaModoPagina,
-        DesligaModoPagina,
-        ImprimePagina,
-        PaginaDeCodigo
+        public static bool AddRange<T>(this List<T> list, params object[] items)
+        {
+            var ignoredItems = false;
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case T itemT:
+                        list.Add(itemT);
+                        break;
+
+                    case IEnumerable<T> arrayT:
+                        list.AddRange(arrayT);
+                        break;
+
+                    default:
+                        ignoredItems = true;
+                        break;
+                }
+            }
+
+            return !ignoredItems;
+        }
     }
 }

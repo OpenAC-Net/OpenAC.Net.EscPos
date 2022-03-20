@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="CmdEstiloFonte.cs" company="OpenAC .Net">
+// <copyright file="QrCodeSize.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,17 +29,14 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Commom
 {
-    [Flags]
-    public enum CmdEstiloFonte
+    public enum QrCodeSize : byte
     {
-        Negrito = 1 << 0,
-        Sublinhado = 1 << 1,
-        Invertido = 1 << 2,
-        Italico = 1 << 3,
-        AlturaDupla = 1 << 4,
+        Minusculo = 2,
+        Pequeno = 3,
+        Normal = 4,
+        Grande = 5,
+        ExtraGrande = 6,
     }
 }

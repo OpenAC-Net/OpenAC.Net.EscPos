@@ -29,39 +29,47 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Command;
+using System;
+using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter
 {
+    /// <summary>
+    /// WIP - Work In Progress
+    /// </summary>
     public class BematechInterpreter : EscPosInterpreter
     {
+        public override byte[][] GetStatusCommand() => throw new NotImplementedException();
+
+        public override EscPosTipoStatus ProcessarStatus(byte[][] dados) => throw new NotImplementedException();
+
         /// <inheritdoc />
         protected override void InicializarComandos()
         {
-            Commandos.Add(EscPosCommand.Zera, new[] { Command.ESC, (byte)'@' });
-            Commandos.Add(EscPosCommand.Beep, new byte[] { Command.ESC, (byte)'(', (byte)'A', 4, 0, 1, 2, 1, 0 });
-            Commandos.Add(EscPosCommand.EspacoEntreLinhasPadrao, new byte[] { Command.ESC, 2 });
-            Commandos.Add(EscPosCommand.EspacoEntreLinhas, new byte[] { Command.ESC, 3 });
-            Commandos.Add(EscPosCommand.PaginaDeCodigo, new[] { Command.ESC, (byte)'t' });
-            Commandos.Add(EscPosCommand.FonteNormal, new byte[] { Command.ESC, (byte)'!', 0, Command.ESC, (byte)'H', Command.ESC, 5 });
-            Commandos.Add(EscPosCommand.FonteA, new[] { Command.ESC, (byte)'H' });
-            Commandos.Add(EscPosCommand.FonteB, new[] { Command.ESC, Command.SI });
-            Commandos.Add(EscPosCommand.AlinhadoEsquerda, new byte[] { Command.ESC, (byte)'a', 0 });
-            Commandos.Add(EscPosCommand.AlinhadoCentro, new byte[] { Command.ESC, (byte)'a', 1 });
-            Commandos.Add(EscPosCommand.AlinhadoDireita, new byte[] { Command.ESC, (byte)'a', 2 });
-            Commandos.Add(EscPosCommand.LigaExpandido, new byte[] { Command.ESC, (byte)'W', 1 });
-            Commandos.Add(EscPosCommand.DesligaExpandido, new byte[] { Command.ESC, (byte)'W', 0 });
-            Commandos.Add(EscPosCommand.LigaCondensado, new[] { Command.ESC, Command.SI });
-            Commandos.Add(EscPosCommand.DesligaCondensado, new[] { Command.ESC, (byte)'H' });
-            Commandos.Add(EscPosCommand.LigaNegrito, new[] { Command.ESC, (byte)'E' });
-            Commandos.Add(EscPosCommand.DesligaNegrito, new[] { Command.ESC, (byte)'F' });
-            Commandos.Add(EscPosCommand.LigaSublinhado, new byte[] { Command.ESC, (byte)'-', 1 });
-            Commandos.Add(EscPosCommand.DesligaSublinhado, new byte[] { Command.ESC, (byte)'-', 0 });
-            Commandos.Add(EscPosCommand.LigaAlturaDupla, new byte[] { Command.ESC, (byte)'d', 1 });
-            Commandos.Add(EscPosCommand.DesligaAlturaDupla, new byte[] { Command.ESC, (byte)'d', 0 });
-            Commandos.Add(EscPosCommand.CorteTotal, new[] { Command.ESC, (byte)'w' });
-            Commandos.Add(EscPosCommand.CorteParcial, new[] { Command.ESC, (byte)'m' });
-            Commandos.Add(EscPosCommand.PuloDeLinha, new[] { Command.LF });
+            Commandos.Add(CmdEscPos.Zera, new[] { CmdConst.ESC, (byte)'@' });
+            Commandos.Add(CmdEscPos.Beep, new byte[] { CmdConst.ESC, (byte)'(', (byte)'A', 4, 0, 1, 2, 1, 0 });
+            Commandos.Add(CmdEscPos.EspacoEntreLinhasPadrao, new byte[] { CmdConst.ESC, 2 });
+            Commandos.Add(CmdEscPos.EspacoEntreLinhas, new byte[] { CmdConst.ESC, 3 });
+            Commandos.Add(CmdEscPos.PaginaDeCodigo, new[] { CmdConst.ESC, (byte)'t' });
+            Commandos.Add(CmdEscPos.FonteNormal, new byte[] { CmdConst.ESC, (byte)'!', 0, CmdConst.ESC, (byte)'H', CmdConst.ESC, 5 });
+            Commandos.Add(CmdEscPos.FonteA, new[] { CmdConst.ESC, (byte)'H' });
+            Commandos.Add(CmdEscPos.FonteB, new[] { CmdConst.ESC, CmdConst.SI });
+            Commandos.Add(CmdEscPos.AlinhadoEsquerda, new byte[] { CmdConst.ESC, (byte)'a', 0 });
+            Commandos.Add(CmdEscPos.AlinhadoCentro, new byte[] { CmdConst.ESC, (byte)'a', 1 });
+            Commandos.Add(CmdEscPos.AlinhadoDireita, new byte[] { CmdConst.ESC, (byte)'a', 2 });
+            Commandos.Add(CmdEscPos.LigaExpandido, new byte[] { CmdConst.ESC, (byte)'W', 1 });
+            Commandos.Add(CmdEscPos.DesligaExpandido, new byte[] { CmdConst.ESC, (byte)'W', 0 });
+            Commandos.Add(CmdEscPos.LigaCondensado, new[] { CmdConst.ESC, CmdConst.SI });
+            Commandos.Add(CmdEscPos.DesligaCondensado, new[] { CmdConst.ESC, (byte)'H' });
+            Commandos.Add(CmdEscPos.LigaNegrito, new[] { CmdConst.ESC, (byte)'E' });
+            Commandos.Add(CmdEscPos.DesligaNegrito, new[] { CmdConst.ESC, (byte)'F' });
+            Commandos.Add(CmdEscPos.LigaSublinhado, new byte[] { CmdConst.ESC, (byte)'-', 1 });
+            Commandos.Add(CmdEscPos.DesligaSublinhado, new byte[] { CmdConst.ESC, (byte)'-', 0 });
+            Commandos.Add(CmdEscPos.LigaAlturaDupla, new byte[] { CmdConst.ESC, (byte)'d', 1 });
+            Commandos.Add(CmdEscPos.DesligaAlturaDupla, new byte[] { CmdConst.ESC, (byte)'d', 0 });
+            Commandos.Add(CmdEscPos.CorteTotal, new[] { CmdConst.ESC, (byte)'w' });
+            Commandos.Add(CmdEscPos.CorteParcial, new[] { CmdConst.ESC, (byte)'m' });
+            Commandos.Add(CmdEscPos.PuloDeLinha, new[] { CmdConst.LF });
         }
     }
 }

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="EscPosTipoStatus.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,26 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
+using System;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Commom
 {
-    public sealed class TextCommand : PrintCommand
+    [Flags]
+    public enum EscPosTipoStatus
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
+        Erro = 1 << 0,
+        ApenasEscrita = 1 << 1,
+        PoucoPapel = 1 << 2,
+        SemPapel = 1 << 3,
+        GavetaAberta = 1 << 4,
+        Imprimindo = 1 << 5,
+        OffLine = 1 << 6,
+        TampaAberta = 1 << 7,
+        ErroLeitura = 1 << 8,
+        Slip = 1 << 9,
+        MICR = 1 << 10,
+        AguardandoSlip = 1 << 11,
+        TOF = 1 << 12,
+        BOF = 1 << 13
     }
 }

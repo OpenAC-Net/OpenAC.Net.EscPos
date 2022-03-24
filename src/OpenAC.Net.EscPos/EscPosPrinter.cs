@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -53,7 +54,7 @@ namespace OpenAC.Net.EscPos
     {
         #region Fields
 
-        private readonly List<PrintCommand> commands;
+        private readonly List<IPrintCommand> commands;
         private OpenDeviceStream device;
         private EscPosInterpreter interpreter;
         private ProtocoloEscPos protocolo;
@@ -67,7 +68,7 @@ namespace OpenAC.Net.EscPos
         {
             Protocolo = protocolo;
             Device = device;
-            commands = new List<PrintCommand>();
+            commands = new List<IPrintCommand>();
         }
 
         ~EscPosPrinter() => Dispose();
@@ -528,6 +529,26 @@ namespace OpenAC.Net.EscPos
                 Tipo = tipo ?? QrCode.Tipo,
                 Tamanho = tamanho ?? QrCode.Tamanho,
                 ErrorLevel = erroLevel ?? QrCode.ErrorLevel,
+            };
+
+            commands.Add(cmd);
+        }
+
+        /// <summary>
+        /// Adicionado o comando para imprimir imagem ao buffer.
+        /// </summary>
+        /// <param name="imagem"></param>
+        /// <param name="isHdpi"></param>
+        public void ImprimirImagem(Image imagem, bool isHdpi = false)
+        {
+            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+            Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
+
+            var cmd = new ImageCommand(interpreter)
+            {
+                Imagem = imagem,
+                IsHiDPI = isHdpi
             };
 
             commands.Add(cmd);

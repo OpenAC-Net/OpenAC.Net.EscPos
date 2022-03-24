@@ -103,5 +103,29 @@ namespace OpenAC.Net.EscPos.Demo
             var status = posprinter.LerStatusImpressora();
             MessageBox.Show(status.ToString());
         }
+
+        private void btnImagem_Click(object sender, EventArgs e)
+        {
+            using var ofd = new OpenFileDialog();
+            ofd.CheckPathExists = true;
+            ofd.CheckFileExists = true;
+            ofd.Multiselect = false;
+            ofd.Filter = "";
+
+            if (ofd.ShowDialog().Equals(DialogResult.Cancel)) return;
+
+            var img = Image.FromFile(ofd.FileName);
+
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            {
+                o.Device.ControlePorta = true;
+                o.Device.IP = "192.168.0.10";
+            });
+
+            posprinter.Conectar();
+
+            posprinter.ImprimirImagem(img);
+            posprinter.Imprimir();
+        }
     }
 }

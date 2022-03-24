@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="ImageCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,25 +29,27 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Text;
+using System.Drawing;
 using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Command
 {
-    public static class EscPosInterpreterFactory
+    public sealed class ImageCommand : PrintCommand<ImageCommand>
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        #region Constructors
+
+        public ImageCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public Image Imagem { get; set; }
+
+        public bool IsHiDPI { get; set; } = false;
+
+        #endregion Properties
     }
 }

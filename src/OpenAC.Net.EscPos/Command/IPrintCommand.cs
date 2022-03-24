@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="IPrintCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,25 +29,10 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Text;
-using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
-
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Command
 {
-    public static class EscPosInterpreterFactory
+    public interface IPrintCommand
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
-        {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
-        }
+        byte[] Content { get; }
     }
 }

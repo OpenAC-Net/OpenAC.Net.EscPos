@@ -33,7 +33,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class JumpLineCommand : PrintCommand
+    public sealed class JumpLineCommand : PrintCommand<JumpLineCommand>
     {
         #region Constructors
 

@@ -33,7 +33,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public abstract class PrintCommand
+    public abstract class PrintCommand<TCommand> : IPrintCommand where TCommand : PrintCommand<TCommand>
     {
         #region Constructors
 
@@ -46,16 +46,13 @@ namespace OpenAC.Net.EscPos.Command
 
         #region Properties
 
-        public byte[] Content => GetContet();
+        /// <summary>
+        /// Conteudo em bytes do comando
+        /// </summary>
+        public byte[] Content => Interpreter.ProcessCommand(this as TCommand);
 
         protected EscPosInterpreter Interpreter { get; }
 
         #endregion Properties
-
-        #region Methods
-
-        protected virtual byte[] GetContet() => Interpreter.ProcessCommand(this);
-
-        #endregion Methods
     }
 }

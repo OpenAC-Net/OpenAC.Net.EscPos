@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="CashDrawerCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,24 +30,32 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
-using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
+using System.Collections.Generic;
+using System.Linq;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public static class EscPosInterpreterFactory
+    public sealed class CashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        #region Constructors
+
+        public CashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
         }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public override byte[] Resolve(CashDrawerCommand command)
+        {
+            return Commandos.ContainsKey(CmdEscPos.Gaveta)
+                ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
+                : new byte[0];
+        }
+
+        #endregion Methods
     }
 }

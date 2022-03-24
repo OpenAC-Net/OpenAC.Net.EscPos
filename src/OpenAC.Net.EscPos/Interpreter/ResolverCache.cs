@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="EpsonEscPosEscPosInterpreter.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,24 +30,52 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
-using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
+using System.Collections.Generic;
+using OpenAC.Net.Core;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Interpreter
 {
-    public static class EscPosInterpreterFactory
+    public sealed class ResolverCache
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        #region Fields
+
+        private readonly Dictionary<Type, ICommandResolver> resolverCache;
+
+        #endregion Fields
+
+        #region Constructors
+
+        public ResolverCache()
         {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
+            resolverCache = new Dictionary<Type, ICommandResolver>();
         }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public bool HasResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+        {
+            var tipo = typeof(TCommand);
+            return resolverCache.ContainsKey(tipo);
+        }
+
+        public void AddResolver<TCommand, TResolver>(TResolver resolver)
+            where TCommand : PrintCommand<TCommand>
+            where TResolver : CommandResolver<TCommand>
+        {
+            if (HasResolver<TCommand>()) throw new OpenException("Resolver já cadastrado para este comando.");
+
+            resolverCache.Add(typeof(TCommand), resolver);
+        }
+
+        public ICommandResolver GetResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+        {
+            return resolverCache[typeof(TCommand)];
+        }
+
+        #endregion Methods
     }
 }

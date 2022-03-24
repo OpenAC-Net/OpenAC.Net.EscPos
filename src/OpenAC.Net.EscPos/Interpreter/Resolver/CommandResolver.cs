@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="CommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,25 +29,35 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Text;
-using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
+using System.Collections.Generic;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public static class EscPosInterpreterFactory
+    public abstract class CommandResolver<TCommand> : ICommandResolver where TCommand : class, IPrintCommand
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        #region Constructors
+
+        protected CommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary)
         {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
+            Commandos = dictionary;
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        protected IReadOnlyDictionary<CmdEscPos, byte[]> Commandos { get; }
+
+        #endregion Properties
+
+        #region Methods
+
+        public abstract byte[] Resolve(TCommand command);
+
+        byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
+
+        #endregion Methods
     }
 }

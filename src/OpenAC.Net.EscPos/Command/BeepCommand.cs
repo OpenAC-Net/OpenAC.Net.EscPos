@@ -33,7 +33,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class BeepCommand : PrintCommand
+    public sealed class BeepCommand : PrintCommand<BeepCommand>
     {
         #region Constructors
 

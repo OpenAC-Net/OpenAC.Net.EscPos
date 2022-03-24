@@ -38,34 +38,24 @@ namespace OpenAC.Net.EscPos.Command
     /// <summary>
     /// WIP - Work In Progress
     /// </summary>
-    public sealed class ModoPaginaCommand : PrintCommand
+    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
     {
         #region Constructors
 
         public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
         {
-            Commands = new List<PrintCommand>();
+            Commands = new List<IPrintCommand>();
         }
 
         #endregion Constructors
 
         #region Properties
 
-        protected List<PrintCommand> Commands { get; }
+        protected List<IPrintCommand> Commands { get; }
 
         #endregion Properties
 
         #region Methods
-
-        protected override byte[] GetContet()
-        {
-            var comandos = new List<byte>();
-
-            foreach (var command in Commands)
-                comandos.AddRange(command.Content);
-
-            return comandos.ToArray();
-        }
 
         public void Clear() => Commands.Clear();
 

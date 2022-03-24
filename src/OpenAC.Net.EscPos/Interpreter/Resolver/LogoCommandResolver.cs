@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="TextCommand.cs" company="OpenAC .Net">
+// <copyright file="LogoCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,33 +29,55 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using OpenAC.Net.Core.Extensions;
+using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class TextCommand : PrintCommand<TextCommand>
+    public sealed class LogoCommandResolver : CommandResolver<LogoCommand>
     {
         #region Constructors
 
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public LogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
         #endregion Constructors
 
-        #region Properties
+        #region Methods
 
-        public string Texto { get; set; }
+        public override byte[] Resolve(LogoCommand command)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
+                !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
 
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
+            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
 
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
+            // Equipamentos(não Epson), mas que usam EscPosEpson...
+            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
+            // KeyCode1:= 1..255; KeyCode2:= 0
 
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
 
-        public CmdEstiloFonte? Estilo { get; set; } = null;
+            if (command.KC2 != 0)
+                return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
 
-        #endregion Properties
+            var keyCode = keyCodeUnico(command.KC1);
+            byte m = 0;
+            if (command.FatorX > 1)
+                m += 1;
+
+            if (command.FatorY > 1)
+                m += 2;
+
+            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
+        }
+
+        #endregion Methods
     }
 }

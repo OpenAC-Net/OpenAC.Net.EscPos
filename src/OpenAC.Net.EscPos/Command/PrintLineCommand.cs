@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Text;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
@@ -37,7 +36,7 @@ namespace OpenAC.Net.EscPos.Command
     /// <summary>
     /// Exemplo de comando customizado, que gera linhas duplas ou simples, do tamanho solicitado.
     /// </summary>
-    public sealed class PrintLineCommand : PrintCommand
+    public sealed class PrintLineCommand : PrintCommand<PrintLineCommand>
     {
         #region Constructors
 
@@ -54,12 +53,5 @@ namespace OpenAC.Net.EscPos.Command
         public bool Dupla { get; set; } = false;
 
         #endregion Properties
-
-        #region Methods
-
-        /// <inheritdoc />
-        protected override byte[] GetContet() => Encoding.UTF8.GetBytes(new string(Dupla ? '=' : '-', Tamanho) + '\n');
-
-        #endregion Methods
     }
 }

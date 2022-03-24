@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosInterpreterFactory.cs" company="OpenAC .Net">
+// <copyright file="JumpLineCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,24 +30,37 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
-using OpenAC.Net.EscPos.Interpreter;
-using OpenAC.Net.EscPos.Interpreter.Bematech;
-using OpenAC.Net.EscPos.Interpreter.Epson;
+using System.Collections.Generic;
+using OpenAC.Net.Devices.Commom;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public static class EscPosInterpreterFactory
+    public sealed class JumpLineCommandResolver : CommandResolver<JumpLineCommand>
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        #region Constructors
+
+        public JumpLineCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
         }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public override byte[] Resolve(JumpLineCommand command)
+        {
+            if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
+
+            var linhas = Math.Max(1, command.Linhas);
+            using var builder = new ByteArrayBuilder();
+            for (var i = 0; i < linhas; i++)
+                builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
+
+            return builder.ToArray();
+        }
+
+        #endregion Methods
     }
 }

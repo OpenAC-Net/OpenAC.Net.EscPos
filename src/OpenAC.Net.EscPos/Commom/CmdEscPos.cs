@@ -89,6 +89,6 @@ namespace OpenAC.Net.EscPos.Commom
         QrCodeSize,
         QrCodeError,
         QrCodeStore,
-        QrCodePrint,
+        QrCodePrint
     }
 }

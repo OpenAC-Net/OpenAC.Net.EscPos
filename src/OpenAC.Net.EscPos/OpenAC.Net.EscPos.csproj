@@ -66,10 +66,9 @@
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
 	</ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="OpenAC.Net.Core" Version="1.0.0.1" />
-    <PackageReference Include="OpenAC.Net.Devices" Version="1.2.0-preview.6" />
-  </ItemGroup>
-
+	
+	<ItemGroup>
+		<PackageReference Include="OpenAC.Net.Core" Version="1.0.0.1" />
+		<PackageReference Include="OpenAC.Net.Devices" Version="1.2.0-preview.8" />
+	</ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ListExtensions.cs" company="OpenAC .Net">
+// <copyright file="ByteArrayBuilderExtensions.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,24 +30,25 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using OpenAC.Net.Devices.Commom;
 
 namespace OpenAC.Net.EscPos.Extensions
 {
-    internal static class ListExtensions
+    internal static class ByteArrayBuilderExtensions
     {
-        public static bool AddRange<T>(this List<T> list, params object[] items)
+        public static bool Append(this ByteArrayBuilder list, params object[] items)
         {
             var ignoredItems = false;
             foreach (var item in items)
             {
                 switch (item)
                 {
-                    case T itemT:
-                        list.Add(itemT);
+                    case byte itemT:
+                        list.Append(itemT);
                         break;
 
-                    case IEnumerable<T> arrayT:
-                        list.AddRange(arrayT);
+                    case IEnumerable<byte> arrayT:
+                        list.Append(arrayT);
                         break;
 
                     default:

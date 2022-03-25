@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter
@@ -39,6 +40,16 @@ namespace OpenAC.Net.EscPos.Interpreter
     /// </summary>
     public class BematechInterpreter : EscPosInterpreter
     {
+        #region Constructors
+
+        public BematechInterpreter(Encoding enconder) : base(enconder)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
         public override byte[][] GetStatusCommand() => throw new NotImplementedException();
 
         public override EscPosTipoStatus ProcessarStatus(byte[][] dados) => throw new NotImplementedException();
@@ -71,5 +82,7 @@ namespace OpenAC.Net.EscPos.Interpreter
             Commandos.Add(CmdEscPos.CorteParcial, new[] { CmdConst.ESC, (byte)'m' });
             Commandos.Add(CmdEscPos.PuloDeLinha, new[] { CmdConst.LF });
         }
+
+        #endregion Methods
     }
 }

@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 
@@ -40,6 +41,16 @@ namespace OpenAC.Net.EscPos.Interpreter
     /// </summary>
     public class EpsonInterpreter : EscPosInterpreter
     {
+        #region Constructors
+
+        public EpsonInterpreter(Encoding enconder) : base(enconder)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
         /// <inheritdoc />
         public override byte[][] GetStatusCommand()
         {
@@ -179,5 +190,7 @@ namespace OpenAC.Net.EscPos.Interpreter
             Commandos.Add(CmdEscPos.QrCodeStore, new byte[] { 49, 80, 48 });
             Commandos.Add(CmdEscPos.QrCodePrint, new byte[] { 3, 0, 49, 81, 48 });
         }
+
+        #endregion Methods
     }
 }

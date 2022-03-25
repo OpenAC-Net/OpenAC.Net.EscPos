@@ -33,10 +33,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using OpenAC.Net.Core;
 using OpenAC.Net.Core.Logging;
 using OpenAC.Net.Devices;
+using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
@@ -92,6 +94,8 @@ namespace OpenAC.Net.EscPos
             }
         }
 
+        public Encoding Encoder { get; set; }
+
         /// <summary>
         /// Define/Obtém o espaço entre as linhas da impressão.
         /// </summary>
@@ -139,7 +143,7 @@ namespace OpenAC.Net.EscPos
             device = OpenDeviceFactory.Create(Device);
             device.Open();
 
-            interpreter = EscPosInterpreterFactory.Create(Protocolo);
+            interpreter = EscPosInterpreterFactory.Create(Protocolo, Encoder);
 
             Inicializar();
         }
@@ -459,12 +463,22 @@ namespace OpenAC.Net.EscPos
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="barcode"></param>
+        /// <param name="exibir"></param>
+        public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdBarcodeText exibir)
+        {
+            ImprimirBarcode(aTexto, barcode, CmdAlinhamento.Esquerda, exibir);
+        }
+
+        /// <summary>
+        /// Adiciona o comando de impressão de codigo de barras ao buffer.
+        /// </summary>
+        /// <param name="aTexto"></param>
+        /// <param name="barcode"></param>
         /// <param name="aAlinhamento"></param>
         /// <param name="exibir"></param>
         /// <param name="altura"></param>
         /// <param name="largura"></param>
-        public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda,
-            CmdBarcodeText exibir = CmdBarcodeText.SemTexto, int altura = 0, int largura = 0)
+        public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdAlinhamento aAlinhamento, CmdBarcodeText? exibir = null, int? altura = null, int? largura = null)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -475,9 +489,9 @@ namespace OpenAC.Net.EscPos
                 Tipo = barcode,
                 Code = aTexto,
                 Alinhamento = aAlinhamento,
-                Exibir = exibir,
-                Altura = altura,
-                Largura = largura
+                Exibir = exibir ?? Barcode.Exibir,
+                Altura = altura ?? Barcode.Altura,
+                Largura = largura ?? Barcode.Largura
             };
 
             commands.Add(cmd);
@@ -534,12 +548,12 @@ namespace OpenAC.Net.EscPos
             if (commands[0] is not ZeraCommand)
                 commands.Insert(0, new ZeraCommand(interpreter));
 
-            var comandos = new List<byte>();
+            using var builder = new ByteArrayBuilder();
 
             foreach (var command in commands)
-                comandos.AddRange(command.Content);
+                builder.Append(command.Content);
 
-            var dados = comandos.ToArray();
+            var dados = builder.ToArray();
 
             for (var i = 0; i < copias; i++)
                 device.Write(dados);

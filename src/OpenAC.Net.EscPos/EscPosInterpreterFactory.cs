@@ -30,18 +30,19 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos
 {
     public static class EscPosInterpreterFactory
     {
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo)
+        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
         {
             switch (protocolo)
             {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter();
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter();
+                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
+                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
             }

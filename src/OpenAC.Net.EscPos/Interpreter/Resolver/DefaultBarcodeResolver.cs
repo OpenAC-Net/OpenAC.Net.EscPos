@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="BarcodeCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="DefaultBarcodeResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -40,11 +40,11 @@ using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class BarcodeCommandResolver : CommandResolver<BarcodeCommand>
+    public sealed class DefaultBarcodeResolver : CommandResolver<BarcodeCommand>
     {
         #region Constructors
 
-        public BarcodeCommandResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
+        public DefaultBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
         {
             Enconder = enconder;
         }

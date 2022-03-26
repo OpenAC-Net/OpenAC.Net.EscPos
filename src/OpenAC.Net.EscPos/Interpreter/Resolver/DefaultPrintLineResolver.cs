@@ -6,11 +6,11 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class PrintLineCommandResolver : CommandResolver<PrintLineCommand>
+    public sealed class DefaultPrintLineResolver : CommandResolver<PrintLineCommand>
     {
         #region Constructors
 
-        public PrintLineCommandResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DefaultPrintLineResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
             Enconder = enconder;
         }

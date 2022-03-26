@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="QrCodeCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="ElginQrCodeCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -36,14 +36,15 @@ using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Elgin
 {
-    public sealed class QrCodeCommandResolver : CommandResolver<QrCodeCommand>
+    public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
     {
         #region Constructors
 
-        public QrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public ElginQrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -75,18 +76,56 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
                     throw new ArgumentOutOfRangeException();
             }
 
-            var num = command.Code.Length + 3;
-            var pL = (byte)(num % 256);
-            var pH = (byte)(num / 256);
+            // Symbol type: 1:Original type 2:Enhanced type(Recommended)
+            byte tipo;
+            switch (command.Tipo)
+            {
+                case QrCodeTipo.Model1:
+                    tipo = 1;
+                    break;
 
-            var initial = Commandos[CmdEscPos.QrCodeInitial];
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeModel], (byte)command.Tipo, (byte)0);
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.Tamanho);
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
-            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
-            // Precisa ser UTF8 mesmo para imprimir correto.
+                case QrCodeTipo.Micro:
+                case QrCodeTipo.Model2:
+                    tipo = 2;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            byte error;
+            switch (command.ErrorLevel)
+            {
+                case QrCodeErrorLevel.LevelL:
+                    error = (byte)'L';
+                    break;
+
+                case QrCodeErrorLevel.LevelM:
+                    error = (byte)'M';
+                    break;
+
+                case QrCodeErrorLevel.LevelQ:
+                    error = (byte)'Q';
+                    break;
+
+                case QrCodeErrorLevel.LevelH:
+                    error = (byte)'H';
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            builder.Append(new byte[] { CmdConst.GS, (byte)'o', 0 });  // Set parameters of QRCODE barcode
+            builder.Append((byte)command.Tamanho); // Basic element width
+            builder.Append(0); // Language mode: 0:Chinese 1:Japanese
+            builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
+            builder.Append(new[] { CmdConst.GS, (byte)'k' }); // Bar Code
+            builder.Append(11); // Type = QRCode. Number of Characters: 4-928
+            builder.Append(error);
+            builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual
             builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+            builder.Append(0);
 
             // Volta alinhamento para Esquerda.
             if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)

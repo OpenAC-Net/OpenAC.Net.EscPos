@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="BematechInterpreter.cs" company="OpenAC .Net">
+// <copyright file="ElginInterpreter.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,31 +29,32 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Text;
 using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Bematech;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech
+namespace OpenAC.Net.EscPos.Interpreter.Elgin
 {
-    /// <summary>
-    /// WIP - Work In Progress
-    /// </summary>
-    public class BematechInterpreter : EscPosInterpreter
+    public sealed class ElginInterpreter : EscPosInterpreter
     {
-        #region Constructors
-
-        internal BematechInterpreter(Encoding enconder) : base(enconder)
-        {
-            StatusResolver = new BematechStatusResolver();
-        }
-
-        #endregion Constructors
-
         #region Methods
 
-        /// <inheritdoc />
+        internal ElginInterpreter(Encoding enconder) : base(enconder)
+        {
+        }
+
+        #endregion Methods
+
+        public override byte[][] GetStatusCommand() => throw new NotImplementedException();
+
+        public override EscPosTipoStatus ProcessarStatus(byte[][] dados) => throw new NotImplementedException();
+
         protected override void ResolverInitialize()
         {
+            // Default
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscBema));
@@ -63,13 +64,13 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
             CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscBema));
 
-            // Custons
-            CommandResolver.AddResolver<CashDrawerCommand, BemaCashDrawerCommandResolver>(new BemaCashDrawerCommandResolver(DefaultCommands.EscBema));
+            // Iguais da Bema
             CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<LogoCommand, BemaLogoCommandResolver>(new BemaLogoCommandResolver(DefaultCommands.EscBema));
+
+            // Custons
+            CommandResolver.AddResolver<CashDrawerCommand, ElginCashDrawerResolver>(new ElginCashDrawerResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<QrCodeCommand, BemaQrCodeCommandResolver>(new BemaQrCodeCommandResolver(DefaultCommands.EscBema));
         }
-
-        #endregion Methods
     }
 }

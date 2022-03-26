@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="LogoCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="BemaCashDrawerCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -31,18 +31,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Bematech
 {
-    public sealed class LogoCommandResolver : CommandResolver<LogoCommand>
+    public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
     {
         #region Constructors
 
-        public LogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public BemaCashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -50,32 +49,16 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public override byte[] Resolve(LogoCommand command)
+        public override byte[] Resolve(CashDrawerCommand command)
         {
-            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
-                !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
-
-            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
-
-            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
-            // Equipamentos(não Epson), mas que usam EscPosEpson...
-            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
-            // KeyCode1:= 1..255; KeyCode2:= 0
-
-            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
-
-            if (command.KC2 != 0)
-                return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
-
-            var keyCode = keyCodeUnico(command.KC1);
-            byte m = 0;
-            if (command.FatorX > 1)
-                m += 1;
-
-            if (command.FatorY > 1)
-                m += 2;
-
-            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
+            var tempo = Math.Max(command.TempoON, command.TempoOFF);
+            switch (command.Gaveta)
+            {
+                case CmdGaveta.GavetaUm: return new byte[] { CmdConst.ESC, 128, tempo };
+                case CmdGaveta.GavetaDois: return new byte[] { CmdConst.ESC, (byte)'v', tempo };
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         #endregion Methods

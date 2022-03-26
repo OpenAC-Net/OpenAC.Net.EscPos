@@ -37,6 +37,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using OpenAC.Net.Core;
+using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.Core.Logging;
 using OpenAC.Net.Devices;
 using OpenAC.Net.Devices.Commom;
@@ -232,7 +233,9 @@ namespace OpenAC.Net.EscPos
 
             try
             {
-                var dados = interpreter.GetStatusCommand();
+                var dados = interpreter.StatusCommand;
+                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+
                 var ret = new List<byte[]>();
                 foreach (var dado in dados)
                 {
@@ -240,6 +243,8 @@ namespace OpenAC.Net.EscPos
                     Thread.Sleep(500);
                     ret.Add(device.Read());
                 }
+
+                if (!ret.Any()) return EscPosTipoStatus.ErroLeitura;
 
                 var status = interpreter.ProcessarStatus(ret.ToArray());
                 if (!Gaveta.SinalInvertido) return status;

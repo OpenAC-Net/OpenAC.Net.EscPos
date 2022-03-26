@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EpsonEscPosEscPosInterpreter.cs" company="OpenAC .Net">
+// <copyright file="DefaultLogoResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -31,55 +31,51 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAC.Net.Core;
+using System.Linq;
+using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Command;
-using OpenAC.Net.EscPos.Interpreter.Resolver;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ResolverCache
+    public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
     {
-        #region Fields
-
-        private readonly Dictionary<Type, ICommandResolver> resolverCache;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ResolverCache()
+        public DefaultLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            resolverCache = new Dictionary<Type, ICommandResolver>();
         }
 
         #endregion Constructors
 
         #region Methods
 
-        public bool HasResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+        public override byte[] Resolve(LogoCommand command)
         {
-            return resolverCache.ContainsKey(typeof(TCommand));
-        }
+            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
+                !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
 
-        public void AddResolver<TCommand, TResolver>(TResolver resolver)
-            where TCommand : PrintCommand<TCommand>
-            where TResolver : CommandResolver<TCommand>
-        {
-            if (HasResolver<TCommand>()) throw new OpenException("Resolver já cadastrado para este comando.");
+            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
 
-            resolverCache.Add(typeof(TCommand), resolver);
-        }
+            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
+            // Equipamentos(não Epson), mas que usam EscPosEpson...
+            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
+            // KeyCode1:= 1..255; KeyCode2:= 0
 
-        public void RemoveResolver<TCommand>() where TCommand : PrintCommand<TCommand>
-        {
-            if (!HasResolver<TCommand>()) throw new ResolverException("Resolver não cadastrado para este comando.");
+            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
 
-            resolverCache.Remove(typeof(TCommand));
-        }
+            if (command.KC2 != 0)
+                return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
 
-        public ICommandResolver GetResolver<TCommand>() where TCommand : PrintCommand<TCommand>
-        {
-            return resolverCache[typeof(TCommand)];
+            var keyCode = keyCodeUnico(command.KC1);
+            byte m = 0;
+            if (command.FatorX > 1)
+                m += 1;
+
+            if (command.FatorY > 1)
+                m += 2;
+
+            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
         }
 
         #endregion Methods

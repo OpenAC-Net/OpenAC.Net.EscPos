@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="BeepCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="BemaLogoCommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,18 +29,19 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
+using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Bematech
 {
-    public sealed class BeepCommandResolver : CommandResolver<BeepCommand>
+    public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
     {
         #region Constructors
 
-        public BeepCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public BemaLogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -48,7 +49,22 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public override byte[] Resolve(BeepCommand command) => !Commandos.ContainsKey(CmdEscPos.Beep) ? new byte[0] : Commandos[CmdEscPos.Beep];
+        public override byte[] Resolve(LogoCommand command)
+        {
+            int keyCode;
+            if (command.KC2 == 0)
+                keyCode = command.KC1 is >= 48 and <= 57 ? ((char)command.KC1).ToInt32() : command.KC1;
+            else
+                keyCode = new string(new[] { (char)command.KC1, (char)command.KC2 }).ToInt32();
+
+            var m = 0;
+            if (command.FatorX > 1)
+                m += 1;
+            if (command.FatorY > 1)
+                m += 2;
+
+            return new[] { CmdConst.FS, (byte)'p', (byte)keyCode, (byte)m };
+        }
 
         #endregion Methods
     }

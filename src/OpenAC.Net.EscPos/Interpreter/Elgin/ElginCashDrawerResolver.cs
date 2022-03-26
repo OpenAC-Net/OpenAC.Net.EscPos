@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ZeraCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="ElginCashDrawerResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,17 +29,19 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Elgin
 {
-    public sealed class ZeraCommandResolver : CommandResolver<ZeraCommand>
+    public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
     {
         #region Constructors
 
-        public ZeraCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public ElginCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -47,7 +49,11 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : new byte[0];
+        public override byte[] Resolve(CashDrawerCommand command)
+        {
+            var tempo = Math.Max(command.TempoON, command.TempoOFF);
+            return new[] { CmdConst.ESC, (byte)'v', (byte)'n', tempo };
+        }
 
         #endregion Methods
     }

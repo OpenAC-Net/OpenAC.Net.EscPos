@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ImageCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="DefaultImageResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -37,11 +37,11 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ImageCommandResolver : CommandResolver<ImageCommand>
+    public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
     {
         #region Constructors
 
-        public ImageCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DefaultImageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 

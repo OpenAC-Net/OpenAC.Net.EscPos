@@ -38,11 +38,11 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class TextCommandResolver : CommandResolver<TextCommand>
+    public sealed class DefaultTextResolver : CommandResolver<TextCommand>
     {
         #region Constructors
 
-        public TextCommandResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
+        public DefaultTextResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
         {
             Enconder = enconder;
         }

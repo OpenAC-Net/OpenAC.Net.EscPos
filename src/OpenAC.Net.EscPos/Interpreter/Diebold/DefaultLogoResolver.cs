@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="CashDrawerCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="DieboldLogoResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,19 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Diebold
 {
-    public sealed class CashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
+    public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
     {
         #region Constructors
 
-        public CashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DieboldLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -49,11 +48,9 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public override byte[] Resolve(CashDrawerCommand command)
+        public override byte[] Resolve(LogoCommand command)
         {
-            return Commandos.ContainsKey(CmdEscPos.Gaveta)
-                ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
-                : new byte[0];
+            return new byte[] { };
         }
 
         #endregion Methods

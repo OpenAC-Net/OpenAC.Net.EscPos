@@ -32,13 +32,17 @@
 using System;
 using System.Text;
 using OpenAC.Net.Core;
+using OpenAC.Net.Core.Logging;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter
 {
-    public abstract class EscPosInterpreter
+    /// <summary>
+    /// Classe base para geração de comandos EscPos.
+    /// </summary>
+    public abstract class EscPosInterpreter : IOpenLog
     {
         #region Constructors
 
@@ -58,9 +62,19 @@ namespace OpenAC.Net.EscPos.Interpreter
 
         #region Properties
 
+        /// <summary>
+        /// Encoding utilizado nos textos para envio a impressora.
+        /// </summary>
         public Encoding Enconder { get; }
 
+        public byte[][] StatusCommand => StatusResolver?.StatusCommand ?? new byte[0][];
+
+        /// <summary>
+        /// Cache que contem os resolvers dos comandos.
+        /// </summary>
         protected ResolverCache CommandResolver { get; } = new();
+
+        protected StatusResolver StatusResolver { get; set; }
 
         #endregion Properties
 
@@ -74,15 +88,22 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <exception cref="NotImplementedException"></exception>
         public byte[] ProcessCommand<TCommand>(TCommand command) where TCommand : PrintCommand<TCommand>
         {
-            if (!CommandResolver.HasResolver<TCommand>()) throw new ResolverException("Resolver não encontrado para o commando.");
+            if (!CommandResolver.HasResolver<TCommand>())
+            {
+                this.Log().Debug($"[{GetType().Name}] - [{nameof(TCommand)}]: comando não implementado.");
+                return new byte[0];
+            }
 
             var resolver = CommandResolver.GetResolver<TCommand>();
             return resolver.Resolve(command);
         }
 
-        public abstract byte[][] GetStatusCommand();
-
-        public abstract EscPosTipoStatus ProcessarStatus(byte[][] dados);
+        /// <summary>
+        /// Metodo usado para processar o status retornado pela impressora.
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <returns></returns>
+        public EscPosTipoStatus ProcessarStatus(byte[][] dados) => StatusResolver?.Resolve(dados) ?? EscPosTipoStatus.ErroLeitura;
 
         /// <summary>
         /// Função para inicializar o dicionario de comandos para ser usados no interpreter.

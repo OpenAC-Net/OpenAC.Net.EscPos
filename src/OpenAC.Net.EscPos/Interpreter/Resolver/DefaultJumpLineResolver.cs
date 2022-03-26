@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="CutCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="DefaultJumpLineResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -31,16 +31,17 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class CutCommandResolver : CommandResolver<CutCommand>
+    public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
     {
         #region Constructors
 
-        public CutCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DefaultJumpLineResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -48,12 +49,16 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public override byte[] Resolve(CutCommand command)
+        public override byte[] Resolve(JumpLineCommand command)
         {
-            if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return new byte[0];
-            if (!Commandos.ContainsKey(CmdEscPos.CorteTotal)) return new byte[0];
+            if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
 
-            return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : Commandos[CmdEscPos.CorteTotal];
+            var linhas = Math.Max(1, command.Linhas);
+            using var builder = new ByteArrayBuilder();
+            for (var i = 0; i < linhas; i++)
+                builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
+
+            return builder.ToArray();
         }
 
         #endregion Methods

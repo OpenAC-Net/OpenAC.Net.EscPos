@@ -18,7 +18,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnTxt_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
                 o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";
@@ -36,7 +36,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnCodBar_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
                 o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";
@@ -60,7 +60,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnQrCode_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
                 o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";
@@ -91,7 +91,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnStatus_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
                 o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";
@@ -116,7 +116,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             var img = Image.FromFile(ofd.FileName);
 
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.Epson, o =>
+            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
                 o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";

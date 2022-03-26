@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EspacoEntreLinhasCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="StatusResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,34 +30,33 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class EspacoEntreLinhasCommandResolver : CommandResolver<EspacoEntreLinhasCommand>
+    public abstract class StatusResolver
     {
+        #region Fields
+
+        private readonly Func<byte[][], EscPosTipoStatus> processStatus;
+
+        #endregion Fields
+
         #region Constructors
 
-        public EspacoEntreLinhasCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        protected StatusResolver(byte[][] command, Func<byte[][], EscPosTipoStatus> resolver)
         {
+            StatusCommand = command;
+            processStatus = resolver;
         }
 
         #endregion Constructors
 
         #region Methods
 
-        public override byte[] Resolve(EspacoEntreLinhasCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return new byte[0];
+        public byte[][] StatusCommand { get; }
 
-            var espacos = Math.Max((byte)0, command.Espaco);
-            if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
-
-            return !Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas) ? new byte[0] : Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
-        }
+        public EscPosTipoStatus Resolve(byte[][] dados) => processStatus(dados);
 
         #endregion Methods
     }

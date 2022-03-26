@@ -29,10 +29,8 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Text;
 using OpenAC.Net.EscPos.Command;
-using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Bematech;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
@@ -44,13 +42,12 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
 
         internal ElginInterpreter(Encoding enconder) : base(enconder)
         {
+            StatusResolver = new ElginStatusResolver();
         }
 
         #endregion Methods
 
-        public override byte[][] GetStatusCommand() => throw new NotImplementedException();
-
-        public override EscPosTipoStatus ProcessarStatus(byte[][] dados) => throw new NotImplementedException();
+        #region Methods
 
         protected override void ResolverInitialize()
         {
@@ -72,5 +69,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
             CommandResolver.AddResolver<CashDrawerCommand, ElginCashDrawerResolver>(new ElginCashDrawerResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<QrCodeCommand, BemaQrCodeCommandResolver>(new BemaQrCodeCommandResolver(DefaultCommands.EscBema));
         }
+
+        #endregion Methods
     }
 }

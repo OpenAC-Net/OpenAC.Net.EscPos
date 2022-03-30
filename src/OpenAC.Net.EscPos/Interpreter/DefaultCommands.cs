@@ -77,8 +77,8 @@ namespace OpenAC.Net.EscPos.Interpreter
                 {CmdEscPos.CorteParcial, new byte[] {CmdConst.GS, (byte) 'V', 1}},
 
                 // ModoPagina
-                {CmdEscPos.LigaModoPagina, new byte[] {CmdConst.ESC, (byte) 'L', 0}},
-                {CmdEscPos.DesligaModoPagina, new byte[] {CmdConst.ESC, (byte) 'S', 0}},
+                {CmdEscPos.LigaModoPagina, new byte[] {CmdConst.ESC, (byte) 'L'}},
+                {CmdEscPos.DesligaModoPagina, new byte[] {CmdConst.ESC, (byte) 'S'}},
 
                 // Gaveta
                 {CmdEscPos.Gaveta, new[] {CmdConst.ESC, (byte) 'p'}},

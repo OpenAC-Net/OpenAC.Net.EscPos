@@ -29,11 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
+using OpenAC.Net.Core.Logging;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public abstract class PrintCommand<TCommand> : IPrintCommand where TCommand : PrintCommand<TCommand>
+    public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCommand : PrintCommand<TCommand>
     {
         #region Constructors
 

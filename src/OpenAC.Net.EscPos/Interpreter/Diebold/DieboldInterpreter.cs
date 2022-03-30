@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Linq;
 using System.Text;
 using OpenAC.Net.EscPos.Command;
@@ -70,6 +69,8 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
             CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(commandos));
             CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
             CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
+            CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(commandos));
+
             CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, commandos));
             CommandResolver.AddResolver<LogoCommand, DieboldLogoResolver>(new DieboldLogoResolver(commandos));
             CommandResolver.AddResolver<QrCodeCommand, DieboldQrCodeResolver>(new DieboldQrCodeResolver(commandos));

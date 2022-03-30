@@ -37,6 +37,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnStatus = new System.Windows.Forms.Button();
             this.btnImagem = new System.Windows.Forms.Button();
+            this.txtModoPagina = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,11 +133,22 @@
             this.btnImagem.UseVisualStyleBackColor = true;
             this.btnImagem.Click += new System.EventHandler(this.btnImagem_Click);
             // 
+            // txtModoPagina
+            // 
+            this.txtModoPagina.Location = new System.Drawing.Point(510, 584);
+            this.txtModoPagina.Name = "txtModoPagina";
+            this.txtModoPagina.Size = new System.Drawing.Size(182, 60);
+            this.txtModoPagina.TabIndex = 7;
+            this.txtModoPagina.Text = "Modo Pagina";
+            this.txtModoPagina.UseVisualStyleBackColor = true;
+            this.txtModoPagina.Click += new System.EventHandler(this.txtModoPagina_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1504, 840);
+            this.Controls.Add(this.txtModoPagina);
             this.Controls.Add(this.btnImagem);
             this.Controls.Add(this.btnStatus);
             this.Controls.Add(this.tabControl1);
@@ -163,5 +175,6 @@
         private TabPage tabPage2;
         private Button btnStatus;
         private Button btnImagem;
+        private Button txtModoPagina;
     }
 }

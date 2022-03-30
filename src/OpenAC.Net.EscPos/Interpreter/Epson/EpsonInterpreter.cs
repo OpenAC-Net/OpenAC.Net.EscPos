@@ -66,6 +66,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
             CommandResolver.AddResolver<LogoCommand, DefaultLogoResolver>(new DefaultLogoResolver(DefaultCommands.EscPos));
             CommandResolver.AddResolver<QrCodeCommand, DefaultQrCodeResolver>(new DefaultQrCodeResolver(DefaultCommands.EscPos));
             CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscPos));
+            CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(DefaultCommands.EscPos));
         }
 
         #endregion Methods

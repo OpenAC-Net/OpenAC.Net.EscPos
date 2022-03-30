@@ -285,16 +285,15 @@ namespace OpenAC.Net.EscPos
         /// Adiciona o comando de imprimir linha ao buffer.
         /// </summary>
         /// <param name="dupla"></param>
-        public void ImprimirLinha(bool dupla = false)
+        public void ImprimirLinha(int tamanho, bool dupla = false)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
             Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
-            //Todo: Implementar o calculo do tamano da colunas de acordo com a fonte.
             var cmd = new PrintLineCommand(interpreter)
             {
-                Tamanho = 48
+                Tamanho = tamanho
             };
 
             commands.Add(cmd);
@@ -348,7 +347,7 @@ namespace OpenAC.Net.EscPos
         /// <param name="kc2"></param>
         /// <param name="fatorX"></param>
         /// <param name="fatorY"></param>
-        public void ImprimirLogo(int kc1 = -1, int kc2 = -1, int fatorX = -1, int fatorY = -1)
+        public void ImprimirLogo(byte? kc1 = null, byte? kc2 = null, byte? fatorX = null, byte? fatorY = null)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -356,10 +355,10 @@ namespace OpenAC.Net.EscPos
 
             var cmd = new LogoCommand(interpreter)
             {
-                KC1 = kc1 < 0 ? Logo.KC1 : (byte)kc1,
-                KC2 = kc2 < 0 ? Logo.KC2 : (byte)kc2,
-                FatorX = fatorX < 0 ? Logo.FatorX : (byte)fatorX,
-                FatorY = fatorY < 0 ? Logo.FatorY : (byte)fatorY,
+                KC1 = kc1 ?? Logo.KC1,
+                KC2 = kc2 ?? Logo.KC2,
+                FatorX = fatorX ?? Logo.FatorX,
+                FatorY = fatorY ?? Logo.FatorY
             };
 
             commands.Add(cmd);
@@ -403,6 +402,17 @@ namespace OpenAC.Net.EscPos
         public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho)
         {
             ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, CmdAlinhamento.Esquerda, null);
+        }
+
+        /// <summary>
+        /// Adicionao o comando de impressão de texto ao buffer.
+        /// </summary>
+        /// <param name="aTexto"></param>
+        /// <param name="tamanho"></param>
+        /// <param name="aEstilo"></param>
+        public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho, CmdEstiloFonte aEstilo)
+        {
+            ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, CmdAlinhamento.Esquerda, aEstilo);
         }
 
         /// <summary>
@@ -462,6 +472,16 @@ namespace OpenAC.Net.EscPos
             };
 
             commands.Add(cmd);
+        }
+
+        /// <summary>
+        /// Adiciona o comando de impressão de codigo de barras ao buffer.
+        /// </summary>
+        /// <param name="aTexto"></param>
+        /// <param name="barcode"></param>
+        public void ImprimirBarcode(string aTexto, CmdBarcode barcode)
+        {
+            ImprimirBarcode(aTexto, barcode, CmdAlinhamento.Esquerda);
         }
 
         /// <summary>
@@ -557,6 +577,21 @@ namespace OpenAC.Net.EscPos
             };
 
             commands.Add(cmd);
+        }
+
+        /// <summary>
+        /// Inicia o modo pagina em impressoras compativeis.
+        /// </summary>
+        /// <returns></returns>
+        public ModoPaginaCommand IniciarModoPagina()
+        {
+            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+            Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
+
+            var cmd = new ModoPaginaCommand(interpreter);
+            commands.Add(cmd);
+            return cmd;
         }
 
         /// <summary>

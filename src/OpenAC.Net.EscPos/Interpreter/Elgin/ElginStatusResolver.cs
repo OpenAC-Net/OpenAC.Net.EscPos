@@ -50,21 +50,33 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
 
                     var b = dados[0][0];
                     if (!bitTest(b, 0))
-                        status |= EscPosTipoStatus.OffLine;
+                        status = EscPosTipoStatus.OffLine;
 
                     if (bitTest(b, 1))
-                        status |= EscPosTipoStatus.SemPapel;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.SemPapel;
+                        else
+                            status = EscPosTipoStatus.SemPapel;
 
                     if (bitTest(b, 2))
-                        status |= EscPosTipoStatus.GavetaAberta;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.GavetaAberta;
+                        else
+                            status = EscPosTipoStatus.GavetaAberta;
 
                     if (bitTest(b, 3))
-                        status |= EscPosTipoStatus.TampaAberta;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.TampaAberta;
+                        else
+                            status = EscPosTipoStatus.TampaAberta;
 
                     if (bitTest(b, 4))
-                        status |= EscPosTipoStatus.PoucoPapel;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.PoucoPapel;
+                        else
+                            status = EscPosTipoStatus.PoucoPapel;
 
-                    return status ?? EscPosTipoStatus.ErroLeitura;
+                    return status ?? EscPosTipoStatus.Nenhum;
                 })
         {
         }

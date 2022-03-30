@@ -54,13 +54,23 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
                     {
                         var b = ret[0];
                         if (!bitTest(b, 2))
-                            status |= EscPosTipoStatus.GavetaAberta;
+                            status = EscPosTipoStatus.GavetaAberta;
+
                         if (bitTest(b, 3))
-                            status |= EscPosTipoStatus.OffLine;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.OffLine;
+                            else
+                                status = EscPosTipoStatus.OffLine;
                         if (bitTest(b, 5))
-                            status |= EscPosTipoStatus.Erro;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.Erro;
+                            else
+                                status = EscPosTipoStatus.Erro;
                         if (bitTest(b, 6))
-                            status |= EscPosTipoStatus.Imprimindo;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.Imprimindo;
+                            else
+                                status = EscPosTipoStatus.Imprimindo;
                     }
 
                     ret = dados[1];
@@ -68,13 +78,25 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
                     {
                         var b = ret[0];
                         if (bitTest(b, 2))
-                            status |= EscPosTipoStatus.TampaAberta;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.TampaAberta;
+                            else
+                                status = EscPosTipoStatus.TampaAberta;
                         if (bitTest(b, 3))
-                            status |= EscPosTipoStatus.Imprimindo;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.Imprimindo;
+                            else
+                                status = EscPosTipoStatus.Imprimindo;
                         if (bitTest(b, 5))
-                            status |= EscPosTipoStatus.SemPapel;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.SemPapel;
+                            else
+                                status = EscPosTipoStatus.SemPapel;
                         if (bitTest(b, 6))
-                            status |= EscPosTipoStatus.Erro;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.Erro;
+                            else
+                                status = EscPosTipoStatus.Erro;
                     }
 
                     ret = dados[2];
@@ -82,13 +104,19 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
                     {
                         var b = ret[0];
                         if (bitTest(b, 2) && bitTest(b, 3))
-                            status |= EscPosTipoStatus.PoucoPapel;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.PoucoPapel;
+                            else
+                                status = EscPosTipoStatus.PoucoPapel;
 
                         if (bitTest(b, 5) && bitTest(b, 6))
-                            status |= EscPosTipoStatus.SemPapel;
+                            if (status.HasValue)
+                                status |= EscPosTipoStatus.SemPapel;
+                            else
+                                status = EscPosTipoStatus.SemPapel;
                     }
 
-                    return status ?? EscPosTipoStatus.ErroLeitura;
+                    return status ?? EscPosTipoStatus.Nenhum;
                 })
         { }
     }

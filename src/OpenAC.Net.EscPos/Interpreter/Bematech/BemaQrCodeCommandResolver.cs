@@ -101,7 +101,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
                     throw new ArgumentOutOfRangeException();
             }
 
-            builder.Append(new byte[] { CmdConst.GS, 107, 81, erroLevel, (byte)command.Tamanho, 0, 1, pL, pH });
+            builder.Append(new byte[] { CmdConst.GS, 107, 81, erroLevel, (byte)command.LarguraModulo, 0, 1, pL, pH });
             builder.Append(Encoding.UTF8.GetBytes(command.Code));
 
             // Volta alinhamento para Esquerda.

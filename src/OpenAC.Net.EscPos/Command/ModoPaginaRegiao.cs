@@ -301,7 +301,7 @@ namespace OpenAC.Net.EscPos.Command
         /// <param name="aAlinhamento"></param>
         public void ImprimirQrCode(string texto, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
         {
-            ImprimirQrCode(texto, QrCodeTipo.Model2, QrCodeSize.Normal, QrCodeErrorLevel.LevelL, aAlinhamento);
+            ImprimirQrCode(texto, QrCodeTipo.Model2, QrCodeModSize.Normal, QrCodeErrorLevel.LevelL, aAlinhamento);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace OpenAC.Net.EscPos.Command
         /// <param name="tamanho"></param>
         /// <param name="erroLevel"></param>
         /// <param name="aAlinhamento"></param>
-        public void ImprimirQrCode(string texto, QrCodeTipo tipo = QrCodeTipo.Model2, QrCodeSize tamanho = QrCodeSize.Normal,
+        public void ImprimirQrCode(string texto, QrCodeTipo tipo = QrCodeTipo.Model2, QrCodeModSize tamanho = QrCodeModSize.Normal,
             QrCodeErrorLevel erroLevel = QrCodeErrorLevel.LevelL, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -322,7 +322,7 @@ namespace OpenAC.Net.EscPos.Command
                 Code = texto,
                 Alinhamento = aAlinhamento,
                 Tipo = tipo,
-                Tamanho = tamanho,
+                LarguraModulo = tamanho,
                 ErrorLevel = erroLevel,
             };
 

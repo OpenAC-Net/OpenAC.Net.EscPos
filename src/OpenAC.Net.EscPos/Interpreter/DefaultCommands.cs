@@ -43,8 +43,8 @@ namespace OpenAC.Net.EscPos.Interpreter
                 // Diversos
                 {CmdEscPos.Zera, new[] {CmdConst.ESC, (byte) '@'}},
                 {CmdEscPos.Beep, new byte[] {CmdConst.ESC, (byte) '(', (byte) 'A', 5, 0, 97, 100, 1, 50, 50}},
-                {CmdEscPos.EspacoEntreLinhasPadrao, new byte[] {CmdConst.ESC, 2}},
-                {CmdEscPos.EspacoEntreLinhas, new byte[] {CmdConst.ESC, 3}},
+                {CmdEscPos.EspacoEntreLinhasPadrao, new[] {CmdConst.ESC, (byte)'2'}},
+                {CmdEscPos.EspacoEntreLinhas, new[] {CmdConst.ESC, (byte)'3'}},
                 {CmdEscPos.PaginaDeCodigo, new[] {CmdConst.ESC, (byte) 't'}},
                 {CmdEscPos.PuloDeLinha, new[] {CmdConst.LF}},
                 {CmdEscPos.PuloDePagina, new[] {CmdConst.FF}},
@@ -67,6 +67,8 @@ namespace OpenAC.Net.EscPos.Interpreter
                 {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'E', 0}},
                 {CmdEscPos.LigaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 1}},
                 {CmdEscPos.DesligaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 0}},
+                //{CmdEscPos.LigaItalico, new byte[] {CmdConst.GS, (byte) 'B', 1}},
+                //{CmdEscPos.DesligaItalico, new byte[] {CmdConst.GS, (byte) 'B', 0}},
                 {CmdEscPos.LigaInvertido, new byte[] {CmdConst.GS, (byte) 'B', 1}},
                 {CmdEscPos.DesligaInvertido, new byte[] {CmdConst.GS, (byte) 'B', 0}},
                 {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.GS, (byte) '!', 1}},
@@ -77,8 +79,8 @@ namespace OpenAC.Net.EscPos.Interpreter
                 {CmdEscPos.CorteParcial, new byte[] {CmdConst.GS, (byte) 'V', 1}},
 
                 // ModoPagina
-                {CmdEscPos.LigaModoPagina, new byte[] {CmdConst.ESC, (byte) 'L'}},
-                {CmdEscPos.DesligaModoPagina, new byte[] {CmdConst.ESC, (byte) 'S'}},
+                {CmdEscPos.LigaModoPagina, new[] {CmdConst.ESC, (byte) 'L'}},
+                {CmdEscPos.DesligaModoPagina, new[] {CmdConst.ESC, (byte) 'S'}},
 
                 // Gaveta
                 {CmdEscPos.Gaveta, new[] {CmdConst.ESC, (byte) 'p'}},

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="QrCodeSize.cs" company="OpenAC .Net">
+// <copyright file="QrCodeModSize.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -31,7 +31,7 @@
 
 namespace OpenAC.Net.EscPos.Commom
 {
-    public enum QrCodeSize : byte
+    public enum QrCodeModSize : byte
     {
         Minusculo = 2,
         Pequeno = 3,

@@ -35,7 +35,6 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using OpenAC.Net.Core;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.Core.Logging;
@@ -51,7 +50,7 @@ namespace OpenAC.Net.EscPos
     /// Classe para impressão EscPos.
     /// </summary>
     /// <typeparam name="TConfig"></typeparam>
-    public sealed class EscPosPrinter<TConfig> : IDisposable, IOpenLog where TConfig : IDeviceConfig
+    public sealed class EscPosPrinter<TConfig> : OpenDisposable, IOpenLog where TConfig : IDeviceConfig
     {
         #region Fields
 
@@ -60,6 +59,7 @@ namespace OpenAC.Net.EscPos
         private EscPosInterpreter interpreter;
         private ProtocoloEscPos protocolo;
         private bool inicializada;
+        private Encoding encoder;
 
         #endregion Fields
 
@@ -67,12 +67,13 @@ namespace OpenAC.Net.EscPos
 
         internal EscPosPrinter(ProtocoloEscPos protocolo, TConfig device)
         {
+            encoder = OpenEncoding.IBM850;
+            commands = new List<IPrintCommand>();
+
             Protocolo = protocolo;
             Device = device;
-            commands = new List<IPrintCommand>();
+            interpreter = EscPosInterpreterFactory.Create(protocolo, encoder);
         }
-
-        ~EscPosPrinter() => Dispose();
 
         #endregion Constructors
 
@@ -92,11 +93,32 @@ namespace OpenAC.Net.EscPos
             set
             {
                 Guard.Against<OpenException>(Conectado, "Não pode mudar o protocolo quando esta conectado.");
+                if (protocolo == value) return;
+
                 protocolo = value;
+
+                interpreter = null;
+                interpreter = EscPosInterpreterFactory.Create(value, Encoder);
             }
         }
 
-        public Encoding Encoder { get; set; }
+        /// <summary>
+        /// Define/Obtém o enconding para comunicação com a impressora.
+        /// </summary>
+        public Encoding Encoder
+        {
+            get => encoder;
+            set
+            {
+                Guard.Against<OpenException>(Conectado, "Não pode mudar o protocolo quando esta conectado.");
+                if (encoder == value) return;
+
+                encoder = value;
+
+                interpreter = null;
+                interpreter = EscPosInterpreterFactory.Create(protocolo, value);
+            }
+        }
 
         /// <summary>
         /// Define/Obtém o espaço entre as linhas da impressão.
@@ -128,7 +150,15 @@ namespace OpenAC.Net.EscPos
         /// </summary>
         public QrCodeConfig QrCode { get; } = new();
 
+        /// <summary>
+        /// Define se esta conectado com a impressora.
+        /// </summary>
         public bool Conectado => device?.Conectado ?? false;
+
+        /// <summary>
+        /// Retorna se o protocolo tem suporte ao modo pagina.
+        /// </summary>
+        public bool SuportaModoPagina => interpreter?.CommandResolver?.HasResolver<ModoPaginaCommand>() ?? false;
 
         #endregion properties
 
@@ -144,8 +174,6 @@ namespace OpenAC.Net.EscPos
 
             device = OpenDeviceFactory.Create(Device);
             device.Open();
-
-            interpreter = EscPosInterpreterFactory.Create(Protocolo, Encoder);
 
             Inicializar();
         }
@@ -228,25 +256,24 @@ namespace OpenAC.Net.EscPos
         /// <returns></returns>
         public EscPosTipoStatus LerStatusImpressora(int tentativas = 1)
         {
-            //ToDo: resolver o problema da função não estar funcionando.
             Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
             try
             {
-                var dados = interpreter.StatusCommand;
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
-
-                var ret = new List<byte[]>();
-                foreach (var dado in dados)
+                byte[][] ret;
+                var leituras = 0;
+                do
                 {
-                    device.Write(dado);
-                    Thread.Sleep(500);
-                    ret.Add(device.Read());
-                }
+                    var dados = interpreter.StatusCommand;
+                    if (dados.IsNullOrEmpty()) return EscPosTipoStatus.Nenhum;
+
+                    ret = dados.Select(dado => device.WriteRead(dado, 10)).ToArray();
+                    leituras++;
+                } while (leituras < tentativas && !ret.Any());
 
                 if (!ret.Any()) return EscPosTipoStatus.ErroLeitura;
 
-                var status = interpreter.ProcessarStatus(ret.ToArray());
+                var status = interpreter.ProcessarStatus(ret);
                 if (!Gaveta.SinalInvertido) return status;
 
                 if (status.HasFlag(EscPosTipoStatus.GavetaAberta))
@@ -284,6 +311,7 @@ namespace OpenAC.Net.EscPos
         /// <summary>
         /// Adiciona o comando de imprimir linha ao buffer.
         /// </summary>
+        /// <param name="tamanho"></param>
         /// <param name="dupla"></param>
         public void ImprimirLinha(int tamanho, bool dupla = false)
         {
@@ -541,7 +569,7 @@ namespace OpenAC.Net.EscPos
         /// <param name="tamanho"></param>
         /// <param name="erroLevel"></param>
         /// <param name="aAlinhamento"></param>
-        public void ImprimirQrCode(string texto, QrCodeTipo? tipo = null, QrCodeSize? tamanho = null, QrCodeErrorLevel? erroLevel = null, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
+        public void ImprimirQrCode(string texto, QrCodeTipo? tipo = null, QrCodeModSize? tamanho = null, QrCodeErrorLevel? erroLevel = null, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -552,7 +580,7 @@ namespace OpenAC.Net.EscPos
                 Code = texto,
                 Alinhamento = aAlinhamento,
                 Tipo = tipo ?? QrCode.Tipo,
-                Tamanho = tamanho ?? QrCode.Tamanho,
+                LarguraModulo = tamanho ?? QrCode.Tamanho,
                 ErrorLevel = erroLevel ?? QrCode.ErrorLevel,
             };
 
@@ -623,7 +651,7 @@ namespace OpenAC.Net.EscPos
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        protected override void DisposeManaged()
         {
             if (Conectado)
                 Desconectar();

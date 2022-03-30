@@ -72,7 +72,7 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <summary>
         /// Cache que contem os resolvers dos comandos.
         /// </summary>
-        protected ResolverCache CommandResolver { get; } = new();
+        public ResolverCache CommandResolver { get; } = new();
 
         protected StatusResolver StatusResolver { get; set; }
 

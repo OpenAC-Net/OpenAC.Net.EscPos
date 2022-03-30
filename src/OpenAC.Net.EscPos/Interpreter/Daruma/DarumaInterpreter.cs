@@ -29,10 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma
 {
@@ -50,82 +51,55 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
 
         protected override void ResolverInitialize()
         {
-            // ToDo: terminar de implementar
             var commandos = new Dictionary<CmdEscPos, byte[]>
             {
                 // Diversos
                 {CmdEscPos.Zera, new[] {CmdConst.ESC, (byte) '@'}},
-                {CmdEscPos.Beep, new byte[] {CmdConst.ESC, (byte) '(', (byte) 'A', 5, 0, 97, 100, 1, 50, 50}},
-                {CmdEscPos.EspacoEntreLinhasPadrao, new byte[] {CmdConst.ESC, 2}},
-                {CmdEscPos.EspacoEntreLinhas, new byte[] {CmdConst.ESC, 3}},
-                {CmdEscPos.PaginaDeCodigo, new[] {CmdConst.ESC, (byte) 't'}},
+                {CmdEscPos.Beep, new[] {CmdConst.BELL}},
+                {CmdEscPos.EspacoEntreLinhasPadrao, new[] {CmdConst.ESC, (byte)'2'}},
+                {CmdEscPos.EspacoEntreLinhas, new[] {CmdConst.ESC, (byte)'3'}},
                 {CmdEscPos.PuloDeLinha, new[] {CmdConst.LF}},
-                {CmdEscPos.PuloDePagina, new[] {CmdConst.FF}},
-                {CmdEscPos.ImprimePagina, new[] {CmdConst.ESC, CmdConst.FF}},
 
                 // Alinhamento
-                {CmdEscPos.AlinhadoEsquerda, new byte[] {CmdConst.ESC, (byte) 'a', 0}},
-                {CmdEscPos.AlinhadoCentro, new byte[] {CmdConst.ESC, (byte) 'a', 1}},
-                {CmdEscPos.AlinhadoDireita, new byte[] {CmdConst.ESC, (byte) 'a', 2}},
+                {CmdEscPos.AlinhadoEsquerda, new byte[] {CmdConst.ESC, (byte) 'j', 0}},
+                {CmdEscPos.AlinhadoCentro, new byte[] {CmdConst.ESC, (byte) 'j', 1}},
+                {CmdEscPos.AlinhadoDireita, new byte[] {CmdConst.ESC, (byte) 'j', 2}},
 
                 // Fonte
-                {CmdEscPos.FonteNormal, new byte[] {CmdConst.ESC, (byte) '!', 0}},
-                {CmdEscPos.FonteA, new byte[] {CmdConst.ESC, (byte) 'M', 0}},
-                {CmdEscPos.FonteB, new byte[] {CmdConst.ESC, (byte) 'M', 1}},
-                {CmdEscPos.LigaExpandido, new byte[] {CmdConst.GS, (byte) '!', 16}},
-                {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.GS, (byte) '!', 0}},
-                {CmdEscPos.LigaCondensado, new[] {CmdConst.SI}},
+                {CmdEscPos.FonteNormal, new byte[] {CmdConst.ESC, (byte) '!', 0, CmdConst.DC2}},
+                {CmdEscPos.FonteA, new[] {CmdConst.DC4}},
+                {CmdEscPos.FonteB, new[] {CmdConst.ESC, CmdConst.SI}},
+                {CmdEscPos.LigaExpandido, new byte[] {CmdConst.GS, (byte)'W', 1}},
+                {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.GS, (byte)'W', 0}},
+                {CmdEscPos.LigaCondensado, new[] {CmdConst.ESC, CmdConst.SI}},
                 {CmdEscPos.DesligaCondensado, new[] {CmdConst.DC2}},
-                {CmdEscPos.LigaNegrito, new byte[] {CmdConst.ESC, (byte) 'E', 1}},
-                {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'E', 0}},
+                {CmdEscPos.LigaNegrito, new byte[] {CmdConst.ESC, (byte) 'E'}},
+                {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'F'}},
                 {CmdEscPos.LigaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 1}},
                 {CmdEscPos.DesligaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 0}},
-                {CmdEscPos.LigaInvertido, new byte[] {CmdConst.GS, (byte) 'B', 1}},
-                {CmdEscPos.DesligaInvertido, new byte[] {CmdConst.GS, (byte) 'B', 0}},
-                {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.GS, (byte) '!', 1}},
-                {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.GS, (byte) '!', 0}},
+                {CmdEscPos.LigaItalico, new byte[] {CmdConst.ESC, (byte)'4', 1}},
+                {CmdEscPos.DesligaItalico, new byte[] {CmdConst.ESC, (byte)'4', 0}},
+                {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 1}},
+                {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 0}},
 
                 //Corte
-                {CmdEscPos.CorteTotal, new byte[] {CmdConst.GS, (byte) 'V', 0}},
-                {CmdEscPos.CorteParcial, new byte[] {CmdConst.GS, (byte) 'V', 1}},
-
-                // ModoPagina
-                {CmdEscPos.LigaModoPagina, new byte[] {CmdConst.ESC, (byte) 'L', 0}},
-                {CmdEscPos.DesligaModoPagina, new byte[] {CmdConst.ESC, (byte) 'S', 0}},
-
-                // Gaveta
-                {CmdEscPos.Gaveta, new[] {CmdConst.ESC, (byte) 'p'}},
-
-                // Barcodes
-                {CmdEscPos.IniciarBarcode, new byte[] {CmdConst.GS, 107}},
-                {CmdEscPos.BarcodeWidth, new byte[] {CmdConst.GS, 119}},
-                {CmdEscPos.BarcodeHeight, new byte[] {CmdConst.GS, 104}},
-                {CmdEscPos.BarcodeNoText, new byte[] {CmdConst.GS, 72, 0}},
-                {CmdEscPos.BarcodeTextAbove, new byte[] {CmdConst.GS, 72, 1}},
-                {CmdEscPos.BarcodeTextBelow, new byte[] {CmdConst.GS, 72, 2}},
-                {CmdEscPos.BarcodeTextBoth, new byte[] {CmdConst.GS, 72, 3}},
-                {CmdEscPos.BarcodeUPCA, new byte[] {65}},
-                {CmdEscPos.BarcodeUPCE, new byte[] {66}},
-                {CmdEscPos.BarcodeEAN13, new byte[] {67}},
-                {CmdEscPos.BarcodeEAN8, new byte[] {68}},
-                {CmdEscPos.BarcodeCODE39, new byte[] {69}},
-                {CmdEscPos.BarcodeInter2of5, new byte[] {70}},
-                {CmdEscPos.BarcodeCodaBar, new byte[] {71}},
-                {CmdEscPos.BarcodeCODE93, new byte[] {72}},
-                {CmdEscPos.BarcodeCODE128, new byte[] {73}},
-
-                // Logo
-                {CmdEscPos.LogoNew, new byte[] {CmdConst.GS, 40, 76, 6, 0, 48, 69}},
-                {CmdEscPos.LogoOld, new byte[] {CmdConst.FS, 112}},
-
-                // QrCode
-                {CmdEscPos.QrCodeInitial, new byte[] {CmdConst.GS, 40, 107}},
-                {CmdEscPos.QrCodeModel, new byte[] {4, 0, 49, 65}},
-                {CmdEscPos.QrCodeSize, new byte[] {3, 0, 49, 67}},
-                {CmdEscPos.QrCodeError, new byte[] {3, 0, 49, 69}},
-                {CmdEscPos.QrCodeStore, new byte[] {49, 80, 48}},
-                {CmdEscPos.QrCodePrint, new byte[] {3, 0, 49, 81, 48}}
+                {CmdEscPos.CorteTotal, new[] {CmdConst.GS, (byte) 'm'}},
+                {CmdEscPos.CorteParcial, new[] {CmdConst.GS, (byte) 'm'}}
             };
+
+            CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
+            CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
+            CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(commandos));
+            CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, commandos));
+            CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
+            CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
+            CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
+            CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
+
+            CommandResolver.AddResolver<CashDrawerCommand, DarumaCashDrawerResolver>(new DarumaCashDrawerResolver(commandos));
+            CommandResolver.AddResolver<BarcodeCommand, DarumaBarcodeResolver>(new DarumaBarcodeResolver(Enconder, commandos));
+            CommandResolver.AddResolver<LogoCommand, DarumaLogoResolver>(new DarumaLogoResolver(commandos));
+            CommandResolver.AddResolver<QrCodeCommand, DarumaQrCodeResolver>(new DarumaQrCodeResolver(commandos));
         }
 
         #endregion Methods

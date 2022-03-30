@@ -33,11 +33,17 @@ namespace OpenAC.Net.EscPos.Commom
 {
     internal static class CmdConst
     {
+        public static byte NUL => 0;
+
         public static byte ESC => 27;
 
         public static byte FS => 28;
 
         public static byte GS => 29;
+
+        public static byte BS => 8;
+
+        public static byte TAB => 9;
 
         public static byte LF => 10;
 
@@ -48,5 +54,11 @@ namespace OpenAC.Net.EscPos.Commom
         public static byte SI => 15;
 
         public static byte DC2 => 18;
+
+        public static byte DC4 => 20;
+
+        public static byte SYN => 22;
+
+        public static byte BELL => 7;
     }
 }

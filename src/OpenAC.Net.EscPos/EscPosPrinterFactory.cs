@@ -30,7 +30,6 @@
 // ***********************************************************************
 
 using System;
-using OpenAC.Net.Core;
 using OpenAC.Net.Devices;
 
 namespace OpenAC.Net.EscPos
@@ -45,11 +44,7 @@ namespace OpenAC.Net.EscPos
         public static EscPosPrinter<SerialConfig> CreateSerial(ProtocoloEscPos protocolo, Action<EscPosPrinter<SerialConfig>> config = null)
         {
             var serialConfig = new SerialConfig();
-            var ret = new EscPosPrinter<SerialConfig>(protocolo, serialConfig)
-            {
-                Encoder = OpenEncoding.IBM850
-            };
-
+            var ret = new EscPosPrinter<SerialConfig>(protocolo, serialConfig);
             config?.Invoke(ret);
             return ret;
         }
@@ -57,11 +52,7 @@ namespace OpenAC.Net.EscPos
         public static EscPosPrinter<TCPConfig> CreateTCP(ProtocoloEscPos protocolo, Action<EscPosPrinter<TCPConfig>> config = null)
         {
             var tcpConfig = new TCPConfig("", 9100);
-            var ret = new EscPosPrinter<TCPConfig>(protocolo, tcpConfig)
-            {
-                Encoder = OpenEncoding.IBM850
-            };
-
+            var ret = new EscPosPrinter<TCPConfig>(protocolo, tcpConfig);
             config?.Invoke(ret);
             return ret;
         }
@@ -69,10 +60,7 @@ namespace OpenAC.Net.EscPos
         public static EscPosPrinter<RawConfig> CreateRaw(ProtocoloEscPos protocolo, Action<EscPosPrinter<RawConfig>> config = null)
         {
             var rawConfig = new RawConfig();
-            var ret = new EscPosPrinter<RawConfig>(protocolo, rawConfig)
-            {
-                Encoder = OpenEncoding.IBM850
-            };
+            var ret = new EscPosPrinter<RawConfig>(protocolo, rawConfig);
             config?.Invoke(ret);
             return ret;
         }
@@ -80,10 +68,7 @@ namespace OpenAC.Net.EscPos
         public static EscPosPrinter<FileConfig> CreateFile(ProtocoloEscPos protocolo, Action<EscPosPrinter<FileConfig>> config = null)
         {
             var fileConfig = new FileConfig();
-            var ret = new EscPosPrinter<FileConfig>(protocolo, fileConfig)
-            {
-                Encoder = OpenEncoding.IBM850
-            };
+            var ret = new EscPosPrinter<FileConfig>(protocolo, fileConfig);
             config?.Invoke(ret);
             return ret;
         }

@@ -47,7 +47,7 @@ namespace OpenAC.Net.EscPos.Commom
 
         public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;
 
-        public QrCodeSize Tamanho { get; set; } = QrCodeSize.Normal;
+        public QrCodeModSize Tamanho { get; set; } = QrCodeModSize.Normal;
 
         public QrCodeErrorLevel ErrorLevel { get; set; } = QrCodeErrorLevel.LevelL;
 

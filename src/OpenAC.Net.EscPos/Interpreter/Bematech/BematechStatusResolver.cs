@@ -51,27 +51,51 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
                     EscPosTipoStatus? status = null;
                     var b = dados[0][0];
                     if (bitTest(b, 2))
-                        status |= EscPosTipoStatus.Imprimindo;
+                        status = EscPosTipoStatus.Imprimindo;
                     if (bitTest(b, 3))
-                        status |= EscPosTipoStatus.OffLine;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.OffLine;
+                        else
+                            status = EscPosTipoStatus.OffLine;
                     if (bitTest(b, 4))
-                        status |= EscPosTipoStatus.Imprimindo;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.Imprimindo;
+                        else
+                            status = EscPosTipoStatus.Imprimindo;
 
                     b = dados[0][1];
                     if (bitTest(b, 1))
-                        status |= EscPosTipoStatus.PoucoPapel;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.PoucoPapel;
+                        else
+                            status = EscPosTipoStatus.PoucoPapel;
                     if (bitTest(b, 2))
-                        status |= EscPosTipoStatus.SemPapel;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.SemPapel;
+                        else
+                            status = EscPosTipoStatus.SemPapel;
                     if (!bitTest(b, 4))
-                        status |= EscPosTipoStatus.GavetaAberta;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.GavetaAberta;
+                        else
+                            status = EscPosTipoStatus.GavetaAberta;
                     if (bitTest(b, 5))
-                        status |= EscPosTipoStatus.SemPapel;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.SemPapel;
+                        else
+                            status = EscPosTipoStatus.SemPapel;
                     if (bitTest(b, 6))
-                        status |= EscPosTipoStatus.Erro;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.Erro;
+                        else
+                            status = EscPosTipoStatus.Erro;
                     if (!bitTest(b, 7))
-                        status |= EscPosTipoStatus.TampaAberta;
+                        if (status.HasValue)
+                            status |= EscPosTipoStatus.TampaAberta;
+                        else
+                            status = EscPosTipoStatus.TampaAberta;
 
-                    return status ?? EscPosTipoStatus.ErroLeitura;
+                    return status ?? EscPosTipoStatus.Nenhum;
                 })
         {
         }

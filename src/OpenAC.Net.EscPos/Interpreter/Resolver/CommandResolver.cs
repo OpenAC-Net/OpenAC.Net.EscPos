@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="CommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,53 +30,33 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public abstract class CommandResolver<TCommand> : ICommandResolver where TCommand : class, IPrintCommand
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        protected CommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary)
         {
-            regioes = new List<ModoPaginaRegiao>();
+            Commandos = dictionary;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
+        protected IReadOnlyDictionary<CmdEscPos, byte[]> Commandos { get; }
 
         #endregion Properties
 
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
-        {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+        public abstract byte[] Resolve(TCommand command);
 
-            regioes.Add(regiao);
-            return regiao;
-        }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
+        byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
 
         #endregion Methods
     }

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="ElginStatusResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,55 +29,44 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using System;
+using OpenAC.Net.Core.Extensions;
+using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Elgin
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class ElginStatusResolver : StatusResolver
     {
-        #region Fields
+        public ElginStatusResolver() :
+            base(new[] { new byte[] { 5 } },
+                dados =>
+                {
+                    if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
 
-        protected List<ModoPaginaRegiao> regioes;
+                    EscPosTipoStatus? status = null;
 
-        #endregion Fields
+                    var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
 
-        #region Constructors
+                    var b = dados[0][0];
+                    if (!bitTest(b, 0))
+                        status |= EscPosTipoStatus.OffLine;
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+                    if (bitTest(b, 1))
+                        status |= EscPosTipoStatus.SemPapel;
+
+                    if (bitTest(b, 2))
+                        status |= EscPosTipoStatus.GavetaAberta;
+
+                    if (bitTest(b, 3))
+                        status |= EscPosTipoStatus.TampaAberta;
+
+                    if (bitTest(b, 4))
+                        status |= EscPosTipoStatus.PoucoPapel;
+
+                    return status ?? EscPosTipoStatus.ErroLeitura;
+                })
         {
-            regioes = new List<ModoPaginaRegiao>();
         }
-
-        #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
-        #region Methods
-
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
-        {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
-
-            regioes.Add(regiao);
-            return regiao;
-        }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
-
-        #endregion Methods
     }
 }

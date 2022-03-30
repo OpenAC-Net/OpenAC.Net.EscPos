@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="DefaultEspacoEntreLinhasResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,54 +29,35 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using System.Linq;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEntreLinhasCommand>
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public DefaultEspacoEntreLinhasResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            regioes = new List<ModoPaginaRegiao>();
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+        public override byte[] Resolve(EspacoEntreLinhasCommand command)
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+            if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return new byte[0];
 
-            regioes.Add(regiao);
-            return regiao;
+            var espacos = Math.Max((byte)0, command.Espaco);
+            if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
+
+            return !Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas) ? new byte[0] : Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
         }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
 
         #endregion Methods
     }

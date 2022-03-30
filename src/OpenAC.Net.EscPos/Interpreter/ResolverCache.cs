@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="EpsonEscPosEscPosInterpreter.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,54 +29,58 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.Core;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class ResolverCache
     {
         #region Fields
 
-        protected List<ModoPaginaRegiao> regioes;
+        private readonly Dictionary<Type, ICommandResolver> resolverCache;
 
         #endregion Fields
 
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public ResolverCache()
         {
-            regioes = new List<ModoPaginaRegiao>();
+            resolverCache = new Dictionary<Type, ICommandResolver>();
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+        public bool HasResolver<TCommand>() where TCommand : PrintCommand<TCommand>
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
-
-            regioes.Add(regiao);
-            return regiao;
+            return resolverCache.ContainsKey(typeof(TCommand));
         }
 
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
+        public void AddResolver<TCommand, TResolver>(TResolver resolver)
+            where TCommand : PrintCommand<TCommand>
+            where TResolver : CommandResolver<TCommand>
+        {
+            if (HasResolver<TCommand>()) throw new OpenException("Resolver já cadastrado para este comando.");
+
+            resolverCache.Add(typeof(TCommand), resolver);
+        }
+
+        public void RemoveResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+        {
+            if (!HasResolver<TCommand>()) throw new ResolverException("Resolver não cadastrado para este comando.");
+
+            resolverCache.Remove(typeof(TCommand));
+        }
+
+        public ICommandResolver GetResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+        {
+            return resolverCache[typeof(TCommand)];
+        }
 
         #endregion Methods
     }

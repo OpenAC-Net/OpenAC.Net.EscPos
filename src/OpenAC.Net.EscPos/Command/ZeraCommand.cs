@@ -33,7 +33,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class ZeraCommand : PrintCommand
+    public sealed class ZeraCommand : PrintCommand<ZeraCommand>
     {
         #region Constructors
 

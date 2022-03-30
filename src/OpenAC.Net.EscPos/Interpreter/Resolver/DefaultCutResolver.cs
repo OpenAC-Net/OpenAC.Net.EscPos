@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="DefaultCutResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,54 +29,32 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class DefaultCutResolver : CommandResolver<CutCommand>
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public DefaultCutResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            regioes = new List<ModoPaginaRegiao>();
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+        public override byte[] Resolve(CutCommand command)
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+            if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return new byte[0];
+            if (!Commandos.ContainsKey(CmdEscPos.CorteTotal)) return new byte[0];
 
-            regioes.Add(regiao);
-            return regiao;
+            return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : Commandos[CmdEscPos.CorteTotal];
         }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
 
         #endregion Methods
     }

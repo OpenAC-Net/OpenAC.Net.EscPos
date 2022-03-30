@@ -32,6 +32,11 @@
 using System;
 using System.Text;
 using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.EscPos.Interpreter.Bematech;
+using OpenAC.Net.EscPos.Interpreter.Daruma;
+using OpenAC.Net.EscPos.Interpreter.Diebold;
+using OpenAC.Net.EscPos.Interpreter.Elgin;
+using OpenAC.Net.EscPos.Interpreter.Epson;
 
 namespace OpenAC.Net.EscPos
 {
@@ -41,8 +46,11 @@ namespace OpenAC.Net.EscPos
         {
             switch (protocolo)
             {
-                case ProtocoloEscPos.Epson: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.Bematech: return new BematechInterpreter(enconder);
+                case ProtocoloEscPos.EscPos: return new EpsonInterpreter(enconder);
+                case ProtocoloEscPos.EscBema: return new BematechInterpreter(enconder);
+                case ProtocoloEscPos.EscDaruma: return new DarumaInterpreter(enconder);
+                case ProtocoloEscPos.EscElgin: return new ElginInterpreter(enconder);
+                case ProtocoloEscPos.EscDiebold: return new DieboldInterpreter(enconder);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
             }

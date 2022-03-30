@@ -34,7 +34,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class EspacoEntreLinhasCommand : PrintCommand
+    public sealed class EspacoEntreLinhasCommand : PrintCommand<EspacoEntreLinhasCommand>
     {
         #region Constructors
 

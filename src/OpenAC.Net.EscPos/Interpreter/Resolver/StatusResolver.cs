@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="StatusResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,54 +29,34 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using System;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public abstract class StatusResolver
     {
         #region Fields
 
-        protected List<ModoPaginaRegiao> regioes;
+        private readonly Func<byte[][], EscPosTipoStatus> processStatus;
 
         #endregion Fields
 
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        protected StatusResolver(byte[][] command, Func<byte[][], EscPosTipoStatus> resolver)
         {
-            regioes = new List<ModoPaginaRegiao>();
+            StatusCommand = command;
+            processStatus = resolver;
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
-        {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+        public byte[][] StatusCommand { get; }
 
-            regioes.Add(regiao);
-            return regiao;
-        }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
+        public EscPosTipoStatus Resolve(byte[][] dados) => processStatus(dados);
 
         #endregion Methods
     }

@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="ICommandResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,55 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.EscPos.Command;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public interface ICommandResolver
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
-        #region Constructors
-
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-            regioes = new List<ModoPaginaRegiao>();
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
-        #region Methods
-
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
-        {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
-
-            regioes.Add(regiao);
-            return regiao;
-        }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
-
-        #endregion Methods
+        byte[] Resolve(IPrintCommand command);
     }
 }

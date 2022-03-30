@@ -34,7 +34,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class BarcodeCommand : PrintCommand
+    public sealed class BarcodeCommand : PrintCommand<BarcodeCommand>
     {
         #region Constructors
 

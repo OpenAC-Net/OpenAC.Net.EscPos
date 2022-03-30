@@ -34,7 +34,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class TextCommand : PrintCommand
+    public sealed class TextCommand : PrintCommand<TextCommand>
     {
         #region Constructors
 

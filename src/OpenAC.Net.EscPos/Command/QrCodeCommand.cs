@@ -35,7 +35,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class QrCodeCommand : PrintCommand
+    public sealed class QrCodeCommand : PrintCommand<QrCodeCommand>
     {
         #region Constructors
 

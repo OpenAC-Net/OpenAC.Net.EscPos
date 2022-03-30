@@ -33,7 +33,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
 {
-    public sealed class CutCommand : PrintCommand
+    public sealed class CutCommand : PrintCommand<CutCommand>
     {
         #region Constructors
 

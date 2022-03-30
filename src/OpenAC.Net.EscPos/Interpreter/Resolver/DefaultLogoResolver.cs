@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="DefaultLogoResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,54 +29,54 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using System.Linq;
+using OpenAC.Net.Core.Extensions;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public DefaultLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            regioes = new List<ModoPaginaRegiao>();
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+        public override byte[] Resolve(LogoCommand command)
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
+                !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
 
-            regioes.Add(regiao);
-            return regiao;
+            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
+
+            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
+            // Equipamentos(não Epson), mas que usam EscPosEpson...
+            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
+            // KeyCode1:= 1..255; KeyCode2:= 0
+
+            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
+
+            if (command.KC2 != 0)
+                return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
+
+            var keyCode = keyCodeUnico(command.KC1);
+            byte m = 0;
+            if (command.FatorX > 1)
+                m += 1;
+
+            if (command.FatorY > 1)
+                m += 2;
+
+            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
         }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
 
         #endregion Methods
     }

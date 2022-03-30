@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ModoPaginaCommand.cs" company="OpenAC .Net">
+// <copyright file="DieboldQrCodeResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,53 +30,44 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using OpenAC.Net.EscPos.Interpreter;
+using System.Text;
+using OpenAC.Net.Devices.Commom;
+using OpenAC.Net.EscPos.Command;
+using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Extensions;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Interpreter.Diebold
 {
-    public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+    public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
     {
-        #region Fields
-
-        protected List<ModoPaginaRegiao> regioes;
-
-        #endregion Fields
-
         #region Constructors
 
-        public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
+        public DieboldQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
-            regioes = new List<ModoPaginaRegiao>();
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        /// <summary>
-        /// Comandos para serem impressos dentro do modo pagina.
-        /// </summary>
-        public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
-
-        #endregion Properties
-
         #region Methods
 
-        public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+        public override byte[] Resolve(QrCodeCommand command)
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
-            {
-                Largura = largura,
-                Altura = altura,
-                Esquerda = esqueda,
-                Topo = topo
-            };
+            var num = command.Code.Length + 3;
+            var pL = (byte)(num % 256);
+            var pH = (byte)(num / 256);
 
-            regioes.Add(regiao);
-            return regiao;
+            var initial = Commandos[CmdEscPos.QrCodeInitial];
+            using var builder = new ByteArrayBuilder();
+            builder.Append(initial, new byte[] { 3, 0, (byte)'1', (byte)'B' });
+            builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)0 : (byte)1); // 0 - A esquerda, 1 - Centralizar
+            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.Tamanho); // Error Level
+            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
+            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
+            builder.Append(Encoding.UTF8.GetBytes(command.Code));
+            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+            return builder.ToArray();
         }
-
-        public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
 
         #endregion Methods
     }

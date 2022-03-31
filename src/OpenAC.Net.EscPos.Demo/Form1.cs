@@ -1,10 +1,16 @@
+using System.Drawing.Printing;
+using System.IO.Ports;
 using System.Text;
+using OpenAC.Net.Core;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Demo.Commom;
 
 namespace OpenAC.Net.EscPos.Demo
 {
     public partial class Form1 : Form
     {
+        #region Constructors
+
         public Form1()
         {
             InitializeComponent();
@@ -14,15 +20,106 @@ namespace OpenAC.Net.EscPos.Demo
             // Adiciona esta linha ao programa antes de usar o EscPos.
             // Isso so precisa ser feito 1 vez então faça na inialização do seu programa.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            tbcDeviceConfig.HideTabHeaders();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            cbbConexao.EnumDataSource(TipoConexao.Serial);
+            cbbProtocolo.EnumDataSource(ProtocoloEscPos.EscPos);
+            cbbEnconding.EnumDataSource(PaginaCodigo.pc850);
+            cbbPortas.SetDataSource(SerialPort.GetPortNames());
+            cbbImpressoras.SetDataSource(PrinterSettings.InstalledPrinters.Cast<string>());
+            cbbVelocidade.EnumDataSource(SerialBaud.Bd9600);
+            cbbDataBits.EnumDataSource(SerialDataBits.Db8);
+            cbbParity.EnumDataSource(Parity.None);
+            cbbStopBits.EnumDataSource(StopBits.None);
+            cbbHandshake.EnumDataSource(Handshake.None);
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        private EscPosPrinter GetPosPrinter()
+        {
+            var tipo = cbbConexao.GetSelectedValue<TipoConexao>();
+            var protocolo = cbbProtocolo.GetSelectedValue<ProtocoloEscPos>();
+            var paginaCodigo = cbbEnconding.GetSelectedValue<PaginaCodigo>();
+
+            var encoding = paginaCodigo switch
+            {
+                PaginaCodigo.pc437 => Encoding.GetEncoding(437),
+                PaginaCodigo.pc850 => OpenEncoding.IBM850,
+                PaginaCodigo.pc852 => Encoding.GetEncoding("IBM852"),
+                PaginaCodigo.pc860 => OpenEncoding.IBM860,
+                PaginaCodigo.pcUTF8 => Encoding.UTF8,
+                PaginaCodigo.pc1252 => OpenEncoding.CP1252,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            EscPosPrinter ret = tipo switch
+            {
+                TipoConexao.Serial => EscPosPrinterFactory.CreateSerial(o =>
+                {
+                    o.Device.Porta = cbbPortas.GetSelectedValue<string>();
+                    o.Device.Baud = (int)cbbVelocidade.GetSelectedValue<SerialBaud>();
+                    o.Device.DataBits = (int)cbbDataBits.GetSelectedValue<SerialDataBits>();
+                    o.Device.Parity = cbbParity.GetSelectedValue<Parity>();
+                    o.Device.StopBits = cbbStopBits.GetSelectedValue<StopBits>();
+                    o.Device.Handshake = cbbHandshake.GetSelectedValue<Handshake>();
+                }),
+                TipoConexao.TCP => EscPosPrinterFactory.CreateTCP(o =>
+                {
+                    o.Device.IP = txtIP.Text;
+                    o.Device.Porta = (int)nudPorta.Value;
+                }),
+                TipoConexao.RAW => EscPosPrinterFactory.CreateRaw(o =>
+                {
+                    o.Device.Impressora = cbbImpressoras.GetSelectedValue<string>();
+                }),
+                TipoConexao.File => EscPosPrinterFactory.CreateFile(o =>
+                {
+                    o.Device.CreateIfNotExits = true;
+                    o.Device.File = txtArquivo.Text;
+                }),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            ret.Protocolo = protocolo;
+            ret.Encoder = encoding;
+            ret.Device.ControlePorta = chkControlePortas.Checked;
+            ret.EspacoEntreLinhas = (byte)nudEspacos.Value;
+            ret.LinhasEntreCupons = (byte)nudLinhas.Value;
+
+            return ret;
+        }
+
+        #endregion Methods
+
+        #region EventHandlers
+
+        private void cbbConexao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tipo = cbbConexao.GetSelectedValue<TipoConexao>();
+            tbcDeviceConfig.SelectedTab = tipo switch
+            {
+                TipoConexao.Serial => tbpSerial,
+                TipoConexao.TCP => tbpTCP,
+                TipoConexao.RAW => tbpRAW,
+                TipoConexao.File => tbpFile,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            txtArquivo.Text = Helpers.OpenFile("txt files (*.txt)|*.txt|All files (*.*)|*.*");
         }
 
         private void btnTxt_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.LinhasEntreCupons = 4;
 
@@ -36,11 +133,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnCodBar_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.LinhasEntreCupons = 4;
 
@@ -60,11 +153,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnQrCode_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.LinhasEntreCupons = 4;
 
@@ -91,11 +180,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void btnStatus_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.Conectar();
 
@@ -115,11 +200,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             var img = Image.FromFile(ofd.FileName);
 
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.Conectar();
 
@@ -130,11 +211,7 @@ namespace OpenAC.Net.EscPos.Demo
 
         private void txtModoPagina_Click(object sender, EventArgs e)
         {
-            using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
-            {
-                o.Device.ControlePorta = true;
-                o.Device.IP = "192.168.0.10";
-            });
+            using var posprinter = GetPosPrinter();
 
             posprinter.Conectar();
             posprinter.CodigoBarras.Altura = 40;
@@ -193,5 +270,7 @@ namespace OpenAC.Net.EscPos.Demo
             posprinter.CortarPapel();
             posprinter.Imprimir();
         }
+
+        #endregion EventHandlers
     }
 }

@@ -44,14 +44,16 @@ namespace OpenAC.Net.EscPos.Command
         #region Fields
 
         private readonly List<IPrintCommand> commands;
+        private readonly ModoPaginaCommand parent;
         private readonly EscPosInterpreter interpreter;
 
         #endregion Fields
 
         #region Constructors
 
-        internal ModoPaginaRegiao(EscPosInterpreter interpreter)
+        internal ModoPaginaRegiao(ModoPaginaCommand parent, EscPosInterpreter interpreter)
         {
+            this.parent = parent;
             this.interpreter = interpreter;
             commands = new List<IPrintCommand>();
         }
@@ -81,16 +83,17 @@ namespace OpenAC.Net.EscPos.Command
 
         #region Methods
 
+        /// <summary>
+        /// Limpa o buffer de impressão da região.
+        /// </summary>
         public void Clear() => commands.Clear();
 
         /// <summary>
-        /// Adiciona o comando de pular linhas ao buffer.
+        /// Adiciona o comando de pular linhas ao buffer de impressão da região.
         /// </summary>
         /// <param name="aLinhas"></param>
         public void PularLinhas(int aLinhas)
         {
-            this.Log().Debug("PularLinhas");
-
             var cmd = new JumpLineCommand(interpreter)
             {
                 Linhas = Math.Max(aLinhas, 1)
@@ -100,14 +103,12 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adiciona o comando de imprimir linha ao buffer.
+        /// Adiciona o comando de imprimir linha ao buffer de impressão da região.
         /// </summary>
+        /// <param name="tamanho"></param>
         /// <param name="dupla"></param>
         public void ImprimirLinha(int tamanho, bool dupla = false)
         {
-            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
-
-            //Todo: Implementar o calculo do tamano da colunas de acordo com a fonte.
             var cmd = new PrintLineCommand(interpreter)
             {
                 Tamanho = tamanho
@@ -117,29 +118,47 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de logo ao buffer.
+        /// Adiciona o comando de abrir gaveta ao buffer de impressão da região.
         /// </summary>
-        /// <param name="kc1"></param>
-        /// <param name="kc2"></param>
-        /// <param name="fatorX"></param>
-        /// <param name="fatorY"></param>
-        public void ImprimirLogo(byte kc1, byte kc2, byte fatorX, byte fatorY)
+        /// <param name="aGaveta"></param>
+        public void AbrirGaveta(CmdGaveta aGaveta = CmdGaveta.GavetaUm)
         {
-            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name} {(byte)aGaveta}");
 
-            var cmd = new LogoCommand(interpreter)
+            var cmd = new CashDrawerCommand(interpreter)
             {
-                KC1 = kc1,
-                KC2 = kc2,
-                FatorX = fatorX,
-                FatorY = fatorY,
+                Gaveta = aGaveta,
+                TempoON = parent.Gaveta.TempoON,
+                TempoOFF = parent.Gaveta.TempoOFF
             };
 
             commands.Add(cmd);
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adiciona o comando de impressão de logo ao buffer de impressão da região.
+        /// </summary>
+        /// <param name="kc1"></param>
+        /// <param name="kc2"></param>
+        /// <param name="fatorX"></param>
+        /// <param name="fatorY"></param>
+        public void ImprimirLogo(byte? kc1 = null, byte? kc2 = null, byte? fatorX = null, byte? fatorY = null)
+        {
+            this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+            var cmd = new LogoCommand(interpreter)
+            {
+                KC1 = kc1 ?? parent.Logo.KC1,
+                KC2 = kc2 ?? parent.Logo.KC2,
+                FatorX = fatorX ?? parent.Logo.FatorX,
+                FatorY = fatorY ?? parent.Logo.FatorY
+            };
+
+            commands.Add(cmd);
+        }
+
+        /// <summary>
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         public void ImprimirTexto(string aTexto)
@@ -148,7 +167,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="aAlinhamento"></param>
@@ -158,7 +177,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="tamanho"></param>
@@ -169,7 +188,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="tamanho"></param>
@@ -179,7 +198,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="tamanho"></param>
@@ -190,7 +209,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="aEstilo"></param>
@@ -200,7 +219,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="aAlinhamento"></param>
@@ -211,7 +230,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="tamanho"></param>
@@ -223,7 +242,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adicionao o comando de impressão de texto ao buffer.
+        /// Adicionao o comando de impressão de texto ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="fonte"></param>
@@ -247,7 +266,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de codigo de barras ao buffer.
+        /// Adiciona o comando de impressão de codigo de barras ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="barcode"></param>
@@ -257,7 +276,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de codigo de barras ao buffer.
+        /// Adiciona o comando de impressão de codigo de barras ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="barcode"></param>
@@ -268,7 +287,7 @@ namespace OpenAC.Net.EscPos.Command
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de codigo de barras ao buffer.
+        /// Adiciona o comando de impressão de codigo de barras ao buffer de impressão da região.
         /// </summary>
         /// <param name="aTexto"></param>
         /// <param name="barcode"></param>
@@ -276,8 +295,7 @@ namespace OpenAC.Net.EscPos.Command
         /// <param name="exibir"></param>
         /// <param name="altura"></param>
         /// <param name="largura"></param>
-        public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdAlinhamento aAlinhamento,
-            CmdBarcodeText exibir = CmdBarcodeText.SemTexto, int altura = 0, int largura = 0)
+        public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdAlinhamento aAlinhamento, CmdBarcodeText? exibir = null, int? altura = null, int? largura = null)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -286,34 +304,33 @@ namespace OpenAC.Net.EscPos.Command
                 Tipo = barcode,
                 Code = aTexto,
                 Alinhamento = aAlinhamento,
-                Exibir = exibir,
-                Altura = altura,
-                Largura = largura
+                Exibir = exibir ?? parent.CodigoBarras.Exibir,
+                Altura = altura ?? parent.CodigoBarras.Altura,
+                Largura = largura ?? parent.CodigoBarras.Largura
             };
 
             commands.Add(cmd);
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de QrCode ao buffer.
+        /// Adiciona o comando de impressão de QrCode ao buffer de impressão da região.
         /// </summary>
         /// <param name="texto"></param>
         /// <param name="aAlinhamento"></param>
         public void ImprimirQrCode(string texto, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
         {
-            ImprimirQrCode(texto, QrCodeTipo.Model2, QrCodeModSize.Normal, QrCodeErrorLevel.LevelL, aAlinhamento);
+            ImprimirQrCode(texto, null, 0, null, aAlinhamento);
         }
 
         /// <summary>
-        /// Adiciona o comando de impressão de QrCode ao buffer.
+        /// Adiciona o comando de impressão de QrCode ao buffer de impressão da região.
         /// </summary>
         /// <param name="texto"></param>
         /// <param name="tipo"></param>
         /// <param name="tamanho"></param>
         /// <param name="erroLevel"></param>
         /// <param name="aAlinhamento"></param>
-        public void ImprimirQrCode(string texto, QrCodeTipo tipo = QrCodeTipo.Model2, QrCodeModSize tamanho = QrCodeModSize.Normal,
-            QrCodeErrorLevel erroLevel = QrCodeErrorLevel.LevelL, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
+        public void ImprimirQrCode(string texto, QrCodeTipo? tipo = null, QrCodeModSize? tamanho = null, QrCodeErrorLevel? erroLevel = null, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -321,16 +338,16 @@ namespace OpenAC.Net.EscPos.Command
             {
                 Code = texto,
                 Alinhamento = aAlinhamento,
-                Tipo = tipo,
-                LarguraModulo = tamanho,
-                ErrorLevel = erroLevel,
+                Tipo = tipo ?? parent.QrCode.Tipo,
+                LarguraModulo = tamanho ?? parent.QrCode.Tamanho,
+                ErrorLevel = erroLevel ?? parent.QrCode.ErrorLevel,
             };
 
             commands.Add(cmd);
         }
 
         /// <summary>
-        /// Adicionado o comando para imprimir imagem ao buffer.
+        /// Adicionado o comando para imprimir imagem ao buffer de impressão da região.
         /// </summary>
         /// <param name="imagem"></param>
         /// <param name="isHdpi"></param>

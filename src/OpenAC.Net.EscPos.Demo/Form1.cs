@@ -137,9 +137,9 @@ namespace OpenAC.Net.EscPos.Demo
             });
 
             posprinter.Conectar();
-            posprinter.Barcode.Altura = 40;
-            posprinter.Barcode.Largura = 2;
-            posprinter.Barcode.Exibir = CmdBarcodeText.SemTexto;
+            posprinter.CodigoBarras.Altura = 40;
+            posprinter.CodigoBarras.Largura = 2;
+            posprinter.CodigoBarras.Exibir = CmdBarcodeText.SemTexto;
 
             var modoPagina = posprinter.IniciarModoPagina();
 

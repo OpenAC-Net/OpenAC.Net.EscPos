@@ -29,7 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos.Commom
 {
     public enum ProtocoloEscPos
     {
@@ -38,5 +38,9 @@ namespace OpenAC.Net.EscPos
         EscDaruma,
         EscElgin,
         EscDiebold,
+        EscGPrinter,
+        EscDatecs,
+        EscZJiang,
+        EscPosStar
     }
 }

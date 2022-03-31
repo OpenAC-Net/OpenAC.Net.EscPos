@@ -31,17 +31,32 @@
 
 using System;
 using System.Text;
+using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 using OpenAC.Net.EscPos.Interpreter.Bematech;
 using OpenAC.Net.EscPos.Interpreter.Daruma;
+using OpenAC.Net.EscPos.Interpreter.Datecs;
 using OpenAC.Net.EscPos.Interpreter.Diebold;
 using OpenAC.Net.EscPos.Interpreter.Elgin;
 using OpenAC.Net.EscPos.Interpreter.Epson;
+using OpenAC.Net.EscPos.Interpreter.GPrinter;
+using OpenAC.Net.EscPos.Interpreter.PosStar;
+using OpenAC.Net.EscPos.Interpreter.ZJiang;
 
 namespace OpenAC.Net.EscPos
 {
+    /// <summary>
+    ///
+    /// </summary>
     public static class EscPosInterpreterFactory
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="protocolo"></param>
+        /// <param name="enconder"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
         {
             switch (protocolo)
@@ -51,6 +66,10 @@ namespace OpenAC.Net.EscPos
                 case ProtocoloEscPos.EscDaruma: return new DarumaInterpreter(enconder);
                 case ProtocoloEscPos.EscElgin: return new ElginInterpreter(enconder);
                 case ProtocoloEscPos.EscDiebold: return new DieboldInterpreter(enconder);
+                case ProtocoloEscPos.EscGPrinter: return new GPrinterInterpreter(enconder);
+                case ProtocoloEscPos.EscDatecs: return new DatecsInterpreter(enconder);
+                case ProtocoloEscPos.EscZJiang: return new ZJiangInterpreter(enconder);
+                case ProtocoloEscPos.EscPosStar: return new PosStarInterpreter(enconder);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
             }

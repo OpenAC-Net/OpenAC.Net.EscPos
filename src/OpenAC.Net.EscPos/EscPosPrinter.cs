@@ -138,7 +138,7 @@ namespace OpenAC.Net.EscPos
         /// <summary>
         /// Define/Obtém as configurações padrão do codigo de barras.
         /// </summary>
-        public BarcodeConfig Barcode { get; } = new();
+        public BarcodeConfig CodigoBarras { get; } = new();
 
         /// <summary>
         /// Define/Obtém as configurações padrão para impressão do logo.
@@ -543,9 +543,9 @@ namespace OpenAC.Net.EscPos
                 Tipo = barcode,
                 Code = aTexto,
                 Alinhamento = aAlinhamento,
-                Exibir = exibir ?? Barcode.Exibir,
-                Altura = altura ?? Barcode.Altura,
-                Largura = largura ?? Barcode.Largura
+                Exibir = exibir ?? CodigoBarras.Exibir,
+                Altura = altura ?? CodigoBarras.Altura,
+                Largura = largura ?? CodigoBarras.Largura
             };
 
             commands.Add(cmd);
@@ -617,7 +617,14 @@ namespace OpenAC.Net.EscPos
 
             Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
-            var cmd = new ModoPaginaCommand(interpreter);
+            var cmd = new ModoPaginaCommand(interpreter)
+            {
+                EspacoEntreLinhas = EspacoEntreLinhas,
+                QrCode = QrCode,
+                Gaveta = Gaveta,
+                CodigoBarras = CodigoBarras,
+                Logo = Logo
+            };
             commands.Add(cmd);
             return cmd;
         }

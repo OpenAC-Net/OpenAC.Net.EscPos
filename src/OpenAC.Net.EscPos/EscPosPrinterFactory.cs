@@ -31,6 +31,7 @@
 
 using System;
 using OpenAC.Net.Devices;
+using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos
 {

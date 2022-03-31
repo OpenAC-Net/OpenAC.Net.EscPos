@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="DarumaInterpreter.cs" company="OpenAC .Net">
+// <copyright file="DatecsInterpreter.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,63 +29,36 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Epson;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Daruma
+namespace OpenAC.Net.EscPos.Interpreter.Datecs
 {
-    public sealed class DarumaInterpreter : EscPosInterpreter
+    /// <summary>
+    /// Classe de interpretação com comandos da Epson.
+    /// </summary>
+    public class DatecsInterpreter : EscPosInterpreter
     {
         #region Constructors
 
-        public DarumaInterpreter(Encoding enconder) : base(enconder)
+        internal DatecsInterpreter(Encoding enconder) : base(enconder)
         {
+            StatusResolver = new EpsonStatusResolver();
         }
 
         #endregion Constructors
 
         #region Methods
 
+        /// <inheritdoc />
         protected override void ResolverInitialize()
         {
-            var commandos = new Dictionary<CmdEscPos, byte[]>
-            {
-                // Diversos
-                {CmdEscPos.Zera, new[] {CmdConst.ESC, (byte) '@'}},
-                {CmdEscPos.Beep, new[] {CmdConst.BELL}},
-                {CmdEscPos.EspacoEntreLinhasPadrao, new[] {CmdConst.ESC, (byte)'2'}},
-                {CmdEscPos.EspacoEntreLinhas, new[] {CmdConst.ESC, (byte)'3'}},
-                {CmdEscPos.PuloDeLinha, new[] {CmdConst.LF}},
-
-                // Alinhamento
-                {CmdEscPos.AlinhadoEsquerda, new byte[] {CmdConst.ESC, (byte) 'j', 0}},
-                {CmdEscPos.AlinhadoCentro, new byte[] {CmdConst.ESC, (byte) 'j', 1}},
-                {CmdEscPos.AlinhadoDireita, new byte[] {CmdConst.ESC, (byte) 'j', 2}},
-
-                // Fonte
-                {CmdEscPos.FonteNormal, new byte[] {CmdConst.ESC, (byte) '!', 0, CmdConst.DC2}},
-                {CmdEscPos.FonteA, new[] {CmdConst.DC4}},
-                {CmdEscPos.FonteB, new[] {CmdConst.ESC, CmdConst.SI}},
-                {CmdEscPos.LigaExpandido, new byte[] {CmdConst.GS, (byte)'W', 1}},
-                {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.GS, (byte)'W', 0}},
-                {CmdEscPos.LigaCondensado, new[] {CmdConst.ESC, CmdConst.SI}},
-                {CmdEscPos.DesligaCondensado, new[] {CmdConst.DC2}},
-                {CmdEscPos.LigaNegrito, new byte[] {CmdConst.ESC, (byte) 'E'}},
-                {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'F'}},
-                {CmdEscPos.LigaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 1}},
-                {CmdEscPos.DesligaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 0}},
-                {CmdEscPos.LigaItalico, new byte[] {CmdConst.ESC, (byte)'4', 1}},
-                {CmdEscPos.DesligaItalico, new byte[] {CmdConst.ESC, (byte)'4', 0}},
-                {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 1}},
-                {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 0}},
-
-                //Corte
-                {CmdEscPos.CorteTotal, new[] {CmdConst.GS, (byte) 'm'}},
-                {CmdEscPos.CorteParcial, new[] {CmdConst.GS, (byte) 'm'}}
-            };
+            var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            commandos[CmdEscPos.Beep] = new[] { CmdConst.BELL };
 
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
@@ -93,13 +66,13 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
             CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, commandos));
             CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
             CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
+            CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(commandos));
             CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
+            CommandResolver.AddResolver<BarcodeCommand, DefaultBarcodeResolver>(new DefaultBarcodeResolver(Enconder, commandos));
+            CommandResolver.AddResolver<LogoCommand, DefaultLogoResolver>(new DefaultLogoResolver(commandos));
             CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
-
-            CommandResolver.AddResolver<CashDrawerCommand, DarumaCashDrawerResolver>(new DarumaCashDrawerResolver(commandos));
-            CommandResolver.AddResolver<BarcodeCommand, DarumaBarcodeResolver>(new DarumaBarcodeResolver(Enconder, commandos));
-            CommandResolver.AddResolver<LogoCommand, DarumaLogoResolver>(new DarumaLogoResolver(commandos));
-            CommandResolver.AddResolver<QrCodeCommand, DarumaQrCodeResolver>(new DarumaQrCodeResolver(commandos));
+            CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(commandos));
+            CommandResolver.AddResolver<QrCodeCommand, DatecsQrCodeResolver>(new DatecsQrCodeResolver(commandos));
         }
 
         #endregion Methods

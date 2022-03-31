@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
@@ -58,13 +59,38 @@ namespace OpenAC.Net.EscPos.Command
         /// </summary>
         public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
 
+        /// <summary>
+        /// Define/Obtém o espaço entre as linhas da impressão.
+        /// </summary>
+        public byte EspacoEntreLinhas { get; set; } = 0;
+
+        /// <summary>
+        /// Define/Obtém as configurações padrão da gaveta.
+        /// </summary>
+        public GavetaConfig Gaveta { get; set; } = new();
+
+        /// <summary>
+        /// Define/Obtém as configurações padrão do codigo de barras.
+        /// </summary>
+        public BarcodeConfig CodigoBarras { get; set; } = new();
+
+        /// <summary>
+        /// Define/Obtém as configurações padrão para impressão do logo.
+        /// </summary>
+        public LogoConfig Logo { get; set; } = new();
+
+        /// <summary>
+        /// Define/Obtém as configurações padrão para impressão do QrCode.
+        /// </summary>
+        public QrCodeConfig QrCode { get; set; } = new();
+
         #endregion Properties
 
         #region Methods
 
         public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
         {
-            var regiao = new ModoPaginaRegiao(Interpreter)
+            var regiao = new ModoPaginaRegiao(this, Interpreter)
             {
                 Largura = largura,
                 Altura = altura,

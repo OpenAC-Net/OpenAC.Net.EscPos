@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ElginQrCodeCommandResolver.cs" company="OpenAC .Net">
+// <copyright file="DarumaBarcodeResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -35,40 +35,44 @@ using System.Text;
 using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin
+namespace OpenAC.Net.EscPos.Interpreter.Daruma
 {
-    public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
+    public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
     {
         #region Constructors
 
-        public ElginQrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DarumaBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
         {
+            Enconder = enconder;
         }
 
         #endregion Constructors
 
+        #region Properties
+
+        public Encoding Enconder { get; }
+
+        #endregion Properties
+
         #region Methods
 
-        public override byte[] Resolve(QrCodeCommand command)
+        public override byte[] Resolve(BarcodeCommand command)
         {
-            if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
-
             using var builder = new ByteArrayBuilder();
 
             switch (command.Alinhamento)
             {
-                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                case CmdAlinhamento.Esquerda:
                     builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
                     break;
 
-                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                case CmdAlinhamento.Centro:
                     builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
                     break;
 
-                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                case CmdAlinhamento.Direita:
                     builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
                     break;
 
@@ -76,59 +80,71 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
                     throw new ArgumentOutOfRangeException();
             }
 
-            // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-            byte tipo;
+            // Formando o codigo de barras
+            byte[] barCode;
             switch (command.Tipo)
             {
-                case QrCodeTipo.Model1:
-                    tipo = 1;
+                case CmdBarcode.UPCA:
+                    barCode = new byte[] { 8 };
                     break;
 
-                case QrCodeTipo.Micro:
-                case QrCodeTipo.Model2:
-                    tipo = 2;
+                case CmdBarcode.EAN13:
+                    barCode = new byte[] { 1 };
+                    break;
+
+                case CmdBarcode.EAN8:
+                    barCode = new byte[] { 2 };
+                    break;
+
+                case CmdBarcode.CODE39:
+                    barCode = new byte[] { 6 };
+                    break;
+
+                case CmdBarcode.Inter2of5:
+                    barCode = new byte[] { 4 };
+                    break;
+
+                case CmdBarcode.CodaBar:
+                    barCode = new byte[] { 9 };
+                    break;
+
+                case CmdBarcode.CODE93:
+                    barCode = new byte[] { 7 };
+                    break;
+
+                case CmdBarcode.CODE128b:
+                case CmdBarcode.CODE128:
+                case CmdBarcode.CODE128a:
+                case CmdBarcode.CODE128c:
+                    barCode = new byte[] { 5 };
                     break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            byte error;
-            switch (command.ErrorLevel)
+            var largura = command.Largura == 0 ? (byte)2 : Math.Max(Math.Min((byte)command.Largura, (byte)5), (byte)2);
+            var altura = command.Altura == 0 ? (byte)50 : Math.Max(Math.Min((byte)command.Altura, (byte)200), (byte)50);
+
+            var showCode = command.Exibir switch
             {
-                case QrCodeErrorLevel.LevelL:
-                    error = (byte)'L';
-                    break;
+                CmdBarcodeText.SemTexto => new byte[] { 0 },
+                CmdBarcodeText.Acima => new byte[] { 0 },
+                CmdBarcodeText.Abaixo => new byte[] { 1 },
+                CmdBarcodeText.Ambos => new byte[] { 0 },
+                _ => new byte[0]
+            };
 
-                case QrCodeErrorLevel.LevelM:
-                    error = (byte)'M';
-                    break;
-
-                case QrCodeErrorLevel.LevelQ:
-                    error = (byte)'Q';
-                    break;
-
-                case QrCodeErrorLevel.LevelH:
-                    error = (byte)'H';
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            builder.Append(new byte[] { CmdConst.GS, (byte)'o', 0 });  // Set parameters of QRCODE barcode
-            builder.Append((byte)command.LarguraModulo); // Basic element width
-            builder.Append(0); // Language mode: 0:Chinese 1:Japanese
-            builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-            builder.Append(new[] { CmdConst.GS, (byte)'k' }); // Bar Code
-            builder.Append(11); // Type = QRCode. Number of Characters: 4-928
-            builder.Append(error);
-            builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual
-            builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(0);
+            builder.Append(new[] { CmdConst.ESC, (byte)'b' });
+            builder.Append(barCode);
+            builder.Append(largura);
+            builder.Append(altura);
+            builder.Append(showCode);
+            builder.Append(Enconder.GetBytes(command.Code));
+            builder.Append(CmdConst.NUL);
 
             // Volta alinhamento para Esquerda.
-            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
+            if (command.Alinhamento != CmdAlinhamento.Esquerda)
                 builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
 
             return builder.ToArray();

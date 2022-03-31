@@ -36,19 +36,20 @@ namespace OpenAC.Net.EscPos.Commom
     [Flags]
     public enum EscPosTipoStatus
     {
-        Erro = 1 << 0,
-        ApenasEscrita = 1 << 1,
-        PoucoPapel = 1 << 2,
-        SemPapel = 1 << 3,
-        GavetaAberta = 1 << 4,
-        Imprimindo = 1 << 5,
-        OffLine = 1 << 6,
-        TampaAberta = 1 << 7,
-        ErroLeitura = 1 << 8,
-        Slip = 1 << 9,
-        MICR = 1 << 10,
-        AguardandoSlip = 1 << 11,
-        TOF = 1 << 12,
-        BOF = 1 << 13
+        Nenhum = 1 << 0,
+        Erro = 1 << 1,
+        ApenasEscrita = 1 << 2,
+        PoucoPapel = 1 << 3,
+        SemPapel = 1 << 4,
+        GavetaAberta = 1 << 5,
+        Imprimindo = 1 << 6,
+        OffLine = 1 << 7,
+        TampaAberta = 1 << 8,
+        ErroLeitura = 1 << 9,
+        Slip = 1 << 10,
+        MICR = 1 << 11,
+        AguardandoSlip = 1 << 12,
+        TOF = 1 << 13,
+        BOF = 1 << 14
     }
 }

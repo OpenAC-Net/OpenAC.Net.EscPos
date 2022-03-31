@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="DieboldQrCodeResolver.cs" company="OpenAC .Net">
+// <copyright file="DatecsQrCodeResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,21 +29,21 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Diebold
+namespace OpenAC.Net.EscPos.Interpreter.Datecs
 {
-    public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
+    public sealed class DatecsQrCodeResolver : CommandResolver<QrCodeCommand>
     {
         #region Constructors
 
-        public DieboldQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+        public DatecsQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
         {
         }
 
@@ -53,19 +53,61 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
 
         public override byte[] Resolve(QrCodeCommand command)
         {
-            var num = command.Code.Length + 3;
+            using var builder = new ByteArrayBuilder();
+
+            switch (command.Alinhamento)
+            {
+                case CmdAlinhamento.Esquerda:
+                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                    break;
+
+                case CmdAlinhamento.Centro:
+                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                    break;
+
+                case CmdAlinhamento.Direita:
+                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var num = command.Code.Length;
             var pL = (byte)(num % 256);
             var pH = (byte)(num / 256);
 
-            var initial = Commandos[CmdEscPos.QrCodeInitial];
-            using var builder = new ByteArrayBuilder();
-            builder.Append(initial, new byte[] { 3, 0, (byte)'1', (byte)'B' });
-            builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)0 : (byte)1); // 0 - A esquerda, 1 - Centralizar
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo); // Error Level
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
-            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
+            byte largura = command.LarguraModulo switch
+            {
+                QrCodeModSize.Minusculo => 1,
+                QrCodeModSize.Pequeno => 4,
+                QrCodeModSize.Normal => 6,
+                QrCodeModSize.Grande => 8,
+                QrCodeModSize.ExtraGrande => 10,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            byte erro = command.ErrorLevel switch
+            {
+                QrCodeErrorLevel.LevelL => 1,
+                QrCodeErrorLevel.LevelM => 2,
+                QrCodeErrorLevel.LevelQ => 3,
+                QrCodeErrorLevel.LevelH => 4,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            builder.Append(new byte[] { CmdConst.GS, (byte)'S', 0 });
+            builder.Append(new[] { CmdConst.GS, (byte)'Q' });
+            builder.Append(6);
+            builder.Append(largura);
+            builder.Append(erro);
+            builder.Append(new[] { pL, pH });
             builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+
+            // Volta alinhamento para Esquerda.
+            if (command.Alinhamento != CmdAlinhamento.Esquerda)
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
             return builder.ToArray();
         }
 

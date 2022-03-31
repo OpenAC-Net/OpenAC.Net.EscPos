@@ -93,13 +93,12 @@ namespace OpenAC.Net.EscPos.Demo
         {
             using var posprinter = EscPosPrinterFactory.CreateTCP(ProtocoloEscPos.EscPos, o =>
             {
-                o.Device.ControlePorta = false;
+                o.Device.ControlePorta = true;
                 o.Device.IP = "192.168.0.10";
             });
 
             posprinter.Conectar();
 
-            // Teste de Status falhando também
             var status = posprinter.LerStatusImpressora();
             MessageBox.Show(status.ToString());
         }
@@ -138,9 +137,9 @@ namespace OpenAC.Net.EscPos.Demo
             });
 
             posprinter.Conectar();
-            posprinter.Barcode.Altura = 40;
-            posprinter.Barcode.Largura = 2;
-            posprinter.Barcode.Exibir = CmdBarcodeText.SemTexto;
+            posprinter.CodigoBarras.Altura = 40;
+            posprinter.CodigoBarras.Largura = 2;
+            posprinter.CodigoBarras.Exibir = CmdBarcodeText.SemTexto;
 
             var modoPagina = posprinter.IniciarModoPagina();
 

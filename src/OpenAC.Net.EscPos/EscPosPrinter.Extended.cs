@@ -29,6 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using OpenAC.Net.Devices;
 
 namespace OpenAC.Net.EscPos
@@ -40,6 +41,10 @@ namespace OpenAC.Net.EscPos
     public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDeviceConfig
     {
         #region Constructors
+
+        public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
+        {
+        }
 
         public EscPosPrinter(TConfig device) : base(device)
         {

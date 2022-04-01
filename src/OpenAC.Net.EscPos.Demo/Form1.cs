@@ -2,6 +2,7 @@ using System.Drawing.Printing;
 using System.IO.Ports;
 using System.Text;
 using OpenAC.Net.Core;
+using OpenAC.Net.Devices;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Demo.Commom;
 
@@ -60,36 +61,50 @@ namespace OpenAC.Net.EscPos.Demo
 
             EscPosPrinter ret = tipo switch
             {
-                TipoConexao.Serial => EscPosPrinterFactory.CreateSerial(o =>
+                TipoConexao.Serial => new EscPosPrinter<SerialConfig>()
                 {
-                    o.Device.Porta = cbbPortas.GetSelectedValue<string>();
-                    o.Device.Baud = (int)cbbVelocidade.GetSelectedValue<SerialBaud>();
-                    o.Device.DataBits = (int)cbbDataBits.GetSelectedValue<SerialDataBits>();
-                    o.Device.Parity = cbbParity.GetSelectedValue<Parity>();
-                    o.Device.StopBits = cbbStopBits.GetSelectedValue<StopBits>();
-                    o.Device.Handshake = cbbHandshake.GetSelectedValue<Handshake>();
-                }),
-                TipoConexao.TCP => EscPosPrinterFactory.CreateTCP(o =>
+                    Device =
+                    {
+                        Porta = cbbPortas.GetSelectedValue<string>(),
+                        Baud = (int)cbbVelocidade.GetSelectedValue<SerialBaud>(),
+                        DataBits = (int)cbbDataBits.GetSelectedValue<SerialDataBits>(),
+                        Parity = cbbParity.GetSelectedValue<Parity>(),
+                        StopBits = cbbStopBits.GetSelectedValue<StopBits>(),
+                        Handshake = cbbHandshake.GetSelectedValue<Handshake>(),
+                    }
+                },
+                TipoConexao.TCP => new EscPosPrinter<TCPConfig>()
                 {
-                    o.Device.IP = txtIP.Text;
-                    o.Device.Porta = (int)nudPorta.Value;
-                }),
-                TipoConexao.RAW => EscPosPrinterFactory.CreateRaw(o =>
+                    Device =
+                    {
+                        IP = txtIP.Text,
+                        Porta = (int)nudPorta.Value
+                    }
+                },
+                TipoConexao.RAW => new EscPosPrinter<RawConfig>()
                 {
-                    o.Device.Impressora = cbbImpressoras.GetSelectedValue<string>();
-                }),
-                TipoConexao.File => EscPosPrinterFactory.CreateFile(o =>
+                    Device =
+                    {
+                        Impressora = cbbImpressoras.GetSelectedValue<string>(),
+                    }
+                },
+                TipoConexao.File => new EscPosPrinter<FileConfig>()
                 {
-                    o.Device.CreateIfNotExits = true;
-                    o.Device.File = txtArquivo.Text;
-                }),
+                    Device =
+                    {
+                        CreateIfNotExits = true,
+                        File = txtArquivo.Text,
+                    }
+                },
                 _ => throw new ArgumentOutOfRangeException()
             };
 
             ret.Protocolo = protocolo;
             ret.Encoder = encoding;
             ret.Device.ControlePorta = chkControlePortas.Checked;
+
             ret.EspacoEntreLinhas = (byte)nudEspacos.Value;
+
             ret.LinhasEntreCupons = (byte)nudLinhas.Value;
 
             return ret;

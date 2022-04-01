@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="EscPosPrinterFactory.cs" company="OpenAC .Net">
+// <copyright file="EscPosPrinter.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -31,47 +31,34 @@
 
 using System;
 using OpenAC.Net.Devices;
-using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos
 {
-    public static class EscPosPrinterFactory
+    /// <summary>
+    /// Classe para impressão EscPos.
+    /// </summary>
+    /// <typeparam name="TConfig"></typeparam>
+    public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDeviceConfig
     {
-        public static EscPosPrinter<TConfig> Create<TConfig>(ProtocoloEscPos protocolo, TConfig config) where TConfig : IDeviceConfig
+        #region Constructors
+
+        public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
         {
-            return new EscPosPrinter<TConfig>(protocolo, config);
         }
 
-        public static EscPosPrinter<SerialConfig> CreateSerial(ProtocoloEscPos protocolo, Action<EscPosPrinter<SerialConfig>> config = null)
+        public EscPosPrinter(TConfig device) : base(device)
         {
-            var serialConfig = new SerialConfig();
-            var ret = new EscPosPrinter<SerialConfig>(protocolo, serialConfig);
-            config?.Invoke(ret);
-            return ret;
         }
 
-        public static EscPosPrinter<TCPConfig> CreateTCP(ProtocoloEscPos protocolo, Action<EscPosPrinter<TCPConfig>> config = null)
-        {
-            var tcpConfig = new TCPConfig("", 9100);
-            var ret = new EscPosPrinter<TCPConfig>(protocolo, tcpConfig);
-            config?.Invoke(ret);
-            return ret;
-        }
+        #endregion Constructors
 
-        public static EscPosPrinter<RawConfig> CreateRaw(ProtocoloEscPos protocolo, Action<EscPosPrinter<RawConfig>> config = null)
-        {
-            var rawConfig = new RawConfig();
-            var ret = new EscPosPrinter<RawConfig>(protocolo, rawConfig);
-            config?.Invoke(ret);
-            return ret;
-        }
+        #region properties
 
-        public static EscPosPrinter<FileConfig> CreateFile(ProtocoloEscPos protocolo, Action<EscPosPrinter<FileConfig>> config = null)
-        {
-            var fileConfig = new FileConfig();
-            var ret = new EscPosPrinter<FileConfig>(protocolo, fileConfig);
-            config?.Invoke(ret);
-            return ret;
-        }
+        /// <summary>
+        /// Configuações de comunicação com a impressora.
+        /// </summary>
+        public new TConfig Device => (TConfig)base.Device;
+
+        #endregion properties
     }
 }

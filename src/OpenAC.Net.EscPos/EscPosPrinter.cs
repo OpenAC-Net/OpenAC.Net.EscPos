@@ -46,11 +46,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos
 {
-    /// <summary>
-    /// Classe para impressão EscPos.
-    /// </summary>
-    /// <typeparam name="TConfig"></typeparam>
-    public sealed class EscPosPrinter<TConfig> : OpenDisposable, IOpenLog where TConfig : IDeviceConfig
+    public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         #region Fields
 
@@ -65,13 +61,15 @@ namespace OpenAC.Net.EscPos
 
         #region Constructors
 
-        internal EscPosPrinter(ProtocoloEscPos protocolo, TConfig device)
+        protected EscPosPrinter(IDeviceConfig device)
         {
+            Guard.Against<ArgumentNullException>(device == null, "As configurações de device não pode ser nulas.");
+
+            Device = device;
             encoder = OpenEncoding.IBM850;
             commands = new List<IPrintCommand>();
 
-            Protocolo = protocolo;
-            Device = device;
+            protocolo = ProtocoloEscPos.EscPos;
             interpreter = EscPosInterpreterFactory.Create(protocolo, encoder);
         }
 
@@ -82,7 +80,7 @@ namespace OpenAC.Net.EscPos
         /// <summary>
         /// Configuações de comunicação com a impressora.
         /// </summary>
-        public TConfig Device { get; }
+        public IDeviceConfig Device { get; }
 
         /// <summary>
         /// Define/Obtém o protocolo de comunicação.

@@ -66,9 +66,10 @@ namespace OpenAC.Net.EscPos
             Guard.Against<ArgumentNullException>(device == null, "As configurações de device não pode ser nulas.");
 
             Device = device;
-            encoder = OpenEncoding.IBM850;
+
             commands = new List<IPrintCommand>();
 
+            encoder = OpenEncoding.IBM850;
             protocolo = ProtocoloEscPos.EscPos;
             interpreter = EscPosInterpreterFactory.Create(protocolo, encoder);
         }
@@ -590,7 +591,7 @@ namespace OpenAC.Net.EscPos
         /// </summary>
         /// <param name="imagem"></param>
         /// <param name="isHdpi"></param>
-        public void ImprimirImagem(Image imagem, bool isHdpi = false)
+        public void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
         {
             this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 

@@ -118,9 +118,7 @@ namespace OpenAC.Net.EscPos.Demo
             ret.Protocolo = protocolo;
             ret.Encoder = encoding;
             ret.Device.ControlePorta = chkControlePortas.Checked;
-
             ret.EspacoEntreLinhas = (byte)nudEspacos.Value;
-
             ret.LinhasEntreCupons = (byte)nudLinhas.Value;
 
             return ret;

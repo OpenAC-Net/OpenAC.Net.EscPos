@@ -29,11 +29,19 @@
         private void InitializeComponent()
         {
             this.btnText = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.btnCodBar = new System.Windows.Forms.Button();
             this.btnQrCode = new System.Windows.Forms.Button();
             this.tbcDeviceConfig = new System.Windows.Forms.TabControl();
             this.tbpSerial = new System.Windows.Forms.TabPage();
+            this.cbbStopBits = new System.Windows.Forms.ComboBox();
+            this.cbbHandshake = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cbbParity = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.cbbDataBits = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.cbbVelocidade = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.cbbPortas = new System.Windows.Forms.ComboBox();
@@ -74,14 +82,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.cbbDataBits = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cbbParity = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cbbHandshake = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.cbbStopBits = new System.Windows.Forms.ComboBox();
+            this.btnSalvar = new System.Windows.Forms.Button();
             this.tbcDeviceConfig.SuspendLayout();
             this.tbpSerial.SuspendLayout();
             this.tbpTCP.SuspendLayout();
@@ -97,7 +98,7 @@
             // 
             // btnText
             // 
-            this.btnText.Location = new System.Drawing.Point(510, 518);
+            this.btnText.Location = new System.Drawing.Point(510, 452);
             this.btnText.Name = "btnText";
             this.btnText.Size = new System.Drawing.Size(182, 60);
             this.btnText.TabIndex = 0;
@@ -105,21 +106,21 @@
             this.btnText.UseVisualStyleBackColor = true;
             this.btnText.Click += new System.EventHandler(this.btnTxt_Click);
             // 
-            // richTextBox1
+            // rtbLog
             // 
-            this.richTextBox1.BackColor = System.Drawing.SystemColors.Info;
-            this.richTextBox1.Location = new System.Drawing.Point(510, 12);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.richTextBox1.Size = new System.Drawing.Size(746, 500);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.WordWrap = false;
+            this.rtbLog.BackColor = System.Drawing.SystemColors.Info;
+            this.rtbLog.Location = new System.Drawing.Point(510, 12);
+            this.rtbLog.Name = "rtbLog";
+            this.rtbLog.ReadOnly = true;
+            this.rtbLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.rtbLog.Size = new System.Drawing.Size(746, 434);
+            this.rtbLog.TabIndex = 1;
+            this.rtbLog.Text = "";
+            this.rtbLog.WordWrap = false;
             // 
             // btnCodBar
             // 
-            this.btnCodBar.Location = new System.Drawing.Point(698, 518);
+            this.btnCodBar.Location = new System.Drawing.Point(698, 452);
             this.btnCodBar.Name = "btnCodBar";
             this.btnCodBar.Size = new System.Drawing.Size(182, 60);
             this.btnCodBar.TabIndex = 2;
@@ -129,7 +130,7 @@
             // 
             // btnQrCode
             // 
-            this.btnQrCode.Location = new System.Drawing.Point(886, 518);
+            this.btnQrCode.Location = new System.Drawing.Point(886, 452);
             this.btnQrCode.Name = "btnQrCode";
             this.btnQrCode.Size = new System.Drawing.Size(182, 60);
             this.btnQrCode.TabIndex = 3;
@@ -147,7 +148,7 @@
             this.tbcDeviceConfig.Location = new System.Drawing.Point(3, 27);
             this.tbcDeviceConfig.Name = "tbcDeviceConfig";
             this.tbcDeviceConfig.SelectedIndex = 0;
-            this.tbcDeviceConfig.Size = new System.Drawing.Size(478, 320);
+            this.tbcDeviceConfig.Size = new System.Drawing.Size(478, 300);
             this.tbcDeviceConfig.TabIndex = 4;
             // 
             // tbpSerial
@@ -167,10 +168,82 @@
             this.tbpSerial.Location = new System.Drawing.Point(4, 34);
             this.tbpSerial.Name = "tbpSerial";
             this.tbpSerial.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSerial.Size = new System.Drawing.Size(470, 282);
+            this.tbpSerial.Size = new System.Drawing.Size(470, 262);
             this.tbpSerial.TabIndex = 0;
             this.tbpSerial.Text = "Serial";
             this.tbpSerial.UseVisualStyleBackColor = true;
+            // 
+            // cbbStopBits
+            // 
+            this.cbbStopBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbStopBits.FormattingEnabled = true;
+            this.cbbStopBits.Location = new System.Drawing.Point(117, 165);
+            this.cbbStopBits.Name = "cbbStopBits";
+            this.cbbStopBits.Size = new System.Drawing.Size(265, 33);
+            this.cbbStopBits.TabIndex = 24;
+            // 
+            // cbbHandshake
+            // 
+            this.cbbHandshake.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbHandshake.FormattingEnabled = true;
+            this.cbbHandshake.Location = new System.Drawing.Point(117, 204);
+            this.cbbHandshake.Name = "cbbHandshake";
+            this.cbbHandshake.Size = new System.Drawing.Size(265, 33);
+            this.cbbHandshake.TabIndex = 23;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(9, 207);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(107, 25);
+            this.label15.TabIndex = 22;
+            this.label15.Text = "Handshake";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 168);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(83, 25);
+            this.label14.TabIndex = 20;
+            this.label14.Text = "StopBits\n";
+            // 
+            // cbbParity
+            // 
+            this.cbbParity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbParity.FormattingEnabled = true;
+            this.cbbParity.Location = new System.Drawing.Point(117, 126);
+            this.cbbParity.Name = "cbbParity";
+            this.cbbParity.Size = new System.Drawing.Size(265, 33);
+            this.cbbParity.TabIndex = 19;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 129);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 25);
+            this.label13.TabIndex = 18;
+            this.label13.Text = "Parity";
+            // 
+            // cbbDataBits
+            // 
+            this.cbbDataBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbDataBits.FormattingEnabled = true;
+            this.cbbDataBits.Location = new System.Drawing.Point(117, 87);
+            this.cbbDataBits.Name = "cbbDataBits";
+            this.cbbDataBits.Size = new System.Drawing.Size(265, 33);
+            this.cbbDataBits.TabIndex = 17;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 90);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(89, 25);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "Data Bits";
             // 
             // cbbVelocidade
             // 
@@ -217,7 +290,7 @@
             this.tbpTCP.Location = new System.Drawing.Point(4, 34);
             this.tbpTCP.Name = "tbpTCP";
             this.tbpTCP.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpTCP.Size = new System.Drawing.Size(470, 282);
+            this.tbpTCP.Size = new System.Drawing.Size(470, 262);
             this.tbpTCP.TabIndex = 1;
             this.tbpTCP.Text = "TCP";
             this.tbpTCP.UseVisualStyleBackColor = true;
@@ -335,7 +408,7 @@
             // 
             // btnStatus
             // 
-            this.btnStatus.Location = new System.Drawing.Point(1074, 518);
+            this.btnStatus.Location = new System.Drawing.Point(1074, 452);
             this.btnStatus.Name = "btnStatus";
             this.btnStatus.Size = new System.Drawing.Size(182, 60);
             this.btnStatus.TabIndex = 5;
@@ -345,7 +418,7 @@
             // 
             // btnImagem
             // 
-            this.btnImagem.Location = new System.Drawing.Point(698, 584);
+            this.btnImagem.Location = new System.Drawing.Point(698, 518);
             this.btnImagem.Name = "btnImagem";
             this.btnImagem.Size = new System.Drawing.Size(182, 60);
             this.btnImagem.TabIndex = 6;
@@ -355,7 +428,7 @@
             // 
             // txtModoPagina
             // 
-            this.txtModoPagina.Location = new System.Drawing.Point(510, 584);
+            this.txtModoPagina.Location = new System.Drawing.Point(510, 518);
             this.txtModoPagina.Name = "txtModoPagina";
             this.txtModoPagina.Size = new System.Drawing.Size(182, 60);
             this.txtModoPagina.TabIndex = 7;
@@ -365,7 +438,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(510, 650);
+            this.button1.Location = new System.Drawing.Point(510, 584);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(182, 60);
             this.button1.TabIndex = 10;
@@ -379,7 +452,7 @@
             this.tbcConfigurações.Location = new System.Drawing.Point(12, 12);
             this.tbcConfigurações.Name = "tbcConfigurações";
             this.tbcConfigurações.SelectedIndex = 0;
-            this.tbcConfigurações.Size = new System.Drawing.Size(488, 276);
+            this.tbcConfigurações.Size = new System.Drawing.Size(488, 256);
             this.tbcConfigurações.TabIndex = 11;
             // 
             // tbpConfigurações
@@ -399,7 +472,7 @@
             this.tbpConfigurações.Location = new System.Drawing.Point(4, 34);
             this.tbpConfigurações.Name = "tbpConfigurações";
             this.tbpConfigurações.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpConfigurações.Size = new System.Drawing.Size(480, 238);
+            this.tbpConfigurações.Size = new System.Drawing.Size(480, 218);
             this.tbpConfigurações.TabIndex = 0;
             this.tbpConfigurações.Text = "Configurações";
             this.tbpConfigurações.UseVisualStyleBackColor = true;
@@ -408,7 +481,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(6, 200);
+            this.label10.Location = new System.Drawing.Point(249, 165);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(66, 25);
             this.label10.TabIndex = 22;
@@ -416,7 +489,7 @@
             // 
             // nudLinhas
             // 
-            this.nudLinhas.Location = new System.Drawing.Point(107, 198);
+            this.nudLinhas.Location = new System.Drawing.Point(350, 163);
             this.nudLinhas.Maximum = new decimal(new int[] {
             255,
             0,
@@ -534,16 +607,16 @@
             // 
             this.groupBox1.Controls.Add(this.tbcDeviceConfig);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.groupBox1.Location = new System.Drawing.Point(12, 294);
+            this.groupBox1.Location = new System.Drawing.Point(12, 274);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(484, 350);
+            this.groupBox1.Size = new System.Drawing.Size(484, 330);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Conexão";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(886, 584);
+            this.button2.Location = new System.Drawing.Point(886, 518);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(182, 60);
             this.button2.TabIndex = 13;
@@ -551,7 +624,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1074, 584);
+            this.button3.Location = new System.Drawing.Point(1074, 518);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(182, 60);
             this.button3.TabIndex = 14;
@@ -559,7 +632,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(698, 650);
+            this.button4.Location = new System.Drawing.Point(698, 584);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(182, 60);
             this.button4.TabIndex = 15;
@@ -567,7 +640,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(886, 650);
+            this.button5.Location = new System.Drawing.Point(886, 584);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(182, 60);
             this.button5.TabIndex = 16;
@@ -575,89 +648,28 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(1074, 650);
+            this.button6.Location = new System.Drawing.Point(1074, 584);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(182, 60);
             this.button6.TabIndex = 17;
             this.button6.UseVisualStyleBackColor = true;
             // 
-            // cbbDataBits
+            // btnSalvar
             // 
-            this.cbbDataBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbDataBits.FormattingEnabled = true;
-            this.cbbDataBits.Location = new System.Drawing.Point(117, 87);
-            this.cbbDataBits.Name = "cbbDataBits";
-            this.cbbDataBits.Size = new System.Drawing.Size(265, 33);
-            this.cbbDataBits.TabIndex = 17;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 90);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(89, 25);
-            this.label12.TabIndex = 16;
-            this.label12.Text = "Data Bits";
-            // 
-            // cbbParity
-            // 
-            this.cbbParity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbParity.FormattingEnabled = true;
-            this.cbbParity.Location = new System.Drawing.Point(117, 126);
-            this.cbbParity.Name = "cbbParity";
-            this.cbbParity.Size = new System.Drawing.Size(265, 33);
-            this.cbbParity.TabIndex = 19;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 129);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(62, 25);
-            this.label13.TabIndex = 18;
-            this.label13.Text = "Parity";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 168);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(83, 25);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "StopBits\n";
-            // 
-            // cbbHandshake
-            // 
-            this.cbbHandshake.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbHandshake.FormattingEnabled = true;
-            this.cbbHandshake.Location = new System.Drawing.Point(117, 204);
-            this.cbbHandshake.Name = "cbbHandshake";
-            this.cbbHandshake.Size = new System.Drawing.Size(265, 33);
-            this.cbbHandshake.TabIndex = 23;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(9, 207);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(107, 25);
-            this.label15.TabIndex = 22;
-            this.label15.Text = "Handshake";
-            // 
-            // cbbStopBits
-            // 
-            this.cbbStopBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbStopBits.FormattingEnabled = true;
-            this.cbbStopBits.Location = new System.Drawing.Point(117, 165);
-            this.cbbStopBits.Name = "cbbStopBits";
-            this.cbbStopBits.Size = new System.Drawing.Size(265, 33);
-            this.cbbStopBits.TabIndex = 24;
+            this.btnSalvar.Location = new System.Drawing.Point(384, 610);
+            this.btnSalvar.Name = "btnSalvar";
+            this.btnSalvar.Size = new System.Drawing.Size(112, 34);
+            this.btnSalvar.TabIndex = 18;
+            this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.UseVisualStyleBackColor = true;
+            this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1268, 722);
+            this.ClientSize = new System.Drawing.Size(1268, 658);
+            this.Controls.Add(this.btnSalvar);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -671,7 +683,7 @@
             this.Controls.Add(this.btnStatus);
             this.Controls.Add(this.btnQrCode);
             this.Controls.Add(this.btnCodBar);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.rtbLog);
             this.Controls.Add(this.btnText);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
@@ -701,7 +713,7 @@
         #endregion
 
         private Button btnText;
-        private RichTextBox richTextBox1;
+        private RichTextBox rtbLog;
         private Button btnCodBar;
         private Button btnQrCode;
         private TabControl tbcDeviceConfig;
@@ -754,5 +766,6 @@
         private ComboBox cbbHandshake;
         private Label label15;
         private ComboBox cbbStopBits;
+        private Button btnSalvar;
     }
 }

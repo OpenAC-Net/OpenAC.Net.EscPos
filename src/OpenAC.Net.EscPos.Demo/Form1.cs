@@ -1,6 +1,10 @@
 using System.Drawing.Printing;
 using System.IO.Ports;
 using System.Text;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+using NLog.Windows.Forms;
 using OpenAC.Net.Core;
 using OpenAC.Net.Devices;
 using OpenAC.Net.EscPos.Commom;
@@ -10,6 +14,12 @@ namespace OpenAC.Net.EscPos.Demo
 {
     public partial class Form1 : Form
     {
+        #region Fields
+
+        private readonly OpenConfig config;
+
+        #endregion Fields
+
         #region Constructors
 
         public Form1()
@@ -22,10 +32,14 @@ namespace OpenAC.Net.EscPos.Demo
             // Isso so precisa ser feito 1 vez então faça na inialização do seu programa.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             tbcDeviceConfig.HideTabHeaders();
+
+            config = OpenConfig.CreateOrLoad(Path.Combine(Application.StartupPath, "escpos.config"));
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            InitializeLog();
+
             cbbConexao.EnumDataSource(TipoConexao.Serial);
             cbbProtocolo.EnumDataSource(ProtocoloEscPos.EscPos);
             cbbEnconding.EnumDataSource(PaginaCodigo.pc850);
@@ -36,6 +50,8 @@ namespace OpenAC.Net.EscPos.Demo
             cbbParity.EnumDataSource(Parity.None);
             cbbStopBits.EnumDataSource(StopBits.None);
             cbbHandshake.EnumDataSource(Handshake.None);
+
+            LoadConfig();
         }
 
         #endregion Constructors
@@ -110,9 +126,111 @@ namespace OpenAC.Net.EscPos.Demo
             return ret;
         }
 
+        private void InitializeLog()
+        {
+            var config = new LoggingConfiguration();
+            var target = new RichTextBoxTarget
+            {
+                UseDefaultRowColoringRules = true,
+                Layout = @"${date:format=dd/MM/yyyy HH\:mm\:ss} - ${message}",
+                FormName = Name,
+                ControlName = rtbLog.Name,
+                AutoScroll = true
+            };
+
+            config.AddTarget("RichTextBox", target);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+
+            var infoTarget = new FileTarget
+            {
+                FileName = "${basedir:dir=Logs:file=ACBrNFSe.log}",
+                Layout = "${processid}|${longdate}|${level:uppercase=true}|" +
+                         "${event-context:item=Context}|${logger}|${message}",
+                CreateDirs = true,
+                Encoding = Encoding.UTF8,
+                MaxArchiveFiles = 93,
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveNumbering = ArchiveNumberingMode.Date,
+                ArchiveFileName = "${basedir}/Logs/Archive/${date:format=yyyy}/${date:format=MM}/EscPos_{{#}}.log",
+                ArchiveDateFormat = "dd.MM.yyyy"
+            };
+
+            config.AddTarget("infoFile", infoTarget);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, infoTarget));
+            LogManager.Configuration = config;
+        }
+
+        private void SaveConfig()
+        {
+            config.Set("ProtocoloEscPos", cbbProtocolo.GetSelectedValue<ProtocoloEscPos>());
+            config.Set("TipoConexao", cbbConexao.GetSelectedValue<TipoConexao>());
+            config.Set("PaginaCodigo", cbbEnconding.GetSelectedValue<PaginaCodigo>());
+            config.Set("ControlePorta", chkControlePortas.Checked);
+            config.Set("EspacoEntreLinhas", nudEspacos.Value);
+            config.Set("LinhasEntreCupom", nudLinhas.Value);
+
+            //Serial
+            config.Set("SerialPorta", cbbPortas.GetSelectedValue<string>());
+            config.Set("SerialVelocidade", cbbVelocidade.GetSelectedValue<SerialBaud>());
+            config.Set("SerialDataBits", cbbDataBits.GetSelectedValue<SerialDataBits>());
+            config.Set("SerialParaty", cbbParity.GetSelectedValue<Parity>());
+            config.Set("SerialStopBits", cbbStopBits.GetSelectedValue<StopBits>());
+            config.Set("SerialHandhsake", cbbHandshake.GetSelectedValue<Handshake>());
+
+            //TCP
+            config.Set("TCPIP", txtIP.Text);
+            config.Set("TCPPorta", nudPorta.Value);
+
+            //Raw
+            config.Set("RawImpressora", cbbImpressoras.GetSelectedValue<string>());
+
+            //File
+            config.Set("FileArquivo", txtArquivo.Text);
+
+            config.Save();
+        }
+
+        private void LoadConfig()
+        {
+            cbbProtocolo.SetSelectedValue(config.Get("ProtocoloEscPos", ProtocoloEscPos.EscPos));
+            cbbConexao.SetSelectedValue(config.Get("TipoConexao", TipoConexao.Serial));
+            cbbEnconding.SetSelectedValue(config.Get("PaginaCodigo", PaginaCodigo.pc850));
+            chkControlePortas.Checked = config.Get("ControlePorta", true);
+            nudEspacos.Value = config.Get("EspacoEntreLinhas", 0M);
+            nudLinhas.Value = config.Get("LinhasEntreCupom", 0M);
+
+            //Serial
+            cbbPortas.SetSelectedValue(config.Get("SerialPorta", cbbPortas.GetSelectedValue<string>()));
+            cbbVelocidade.SetSelectedValue(config.Get("SerialVelocidade", SerialBaud.Bd9600));
+            cbbDataBits.SetSelectedValue(config.Get("SerialDataBits", SerialDataBits.Db8));
+            cbbParity.SetSelectedValue(config.Get("SerialParaty", Parity.None));
+            cbbStopBits.SetSelectedValue(config.Get("SerialStopBits", StopBits.None));
+            cbbHandshake.SetSelectedValue(config.Get("SerialHandhsake", Handshake.None));
+
+            //TCP
+            txtIP.Text = config.Get("TCPIP", "");
+            nudPorta.Value = config.Get("TCPPorta", 9100M);
+
+            //Raw
+            cbbImpressoras.SetSelectedValue(config.Get("RawImpressora", cbbImpressoras.GetSelectedValue<string>()));
+
+            //File
+            txtArquivo.Text = config.Get("FileArquivo", "");
+        }
+
         #endregion Methods
 
         #region EventHandlers
+
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            txtArquivo.Text = Helpers.OpenFile("txt files (*.txt)|*.txt|All files (*.*)|*.*");
+        }
+
+        private void btnSalvar_Click(object sender, EventArgs e)
+        {
+            SaveConfig();
+        }
 
         private void cbbConexao_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -125,11 +243,6 @@ namespace OpenAC.Net.EscPos.Demo
                 TipoConexao.File => tbpFile,
                 _ => throw new ArgumentOutOfRangeException()
             };
-        }
-
-        private void btnOpenFile_Click(object sender, EventArgs e)
-        {
-            txtArquivo.Text = Helpers.OpenFile("txt files (*.txt)|*.txt|All files (*.*)|*.*");
         }
 
         private void btnTxt_Click(object sender, EventArgs e)

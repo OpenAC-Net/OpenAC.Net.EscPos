@@ -26,7 +26,7 @@ public static class UIExtensions
         return ((ItemData<T>)cmb.SelectedItem).Content;
     }
 
-    public static void SetSelectedValue<T>(this ComboBox cmb, T valor) where T : struct
+    public static void SetSelectedValue<T>(this ComboBox cmb, T valor)
     {
         var dataSource = (ItemData<T>[])cmb.DataSource;
         cmb.SelectedItem = dataSource.SingleOrDefault(x => x.Content.Equals(valor));

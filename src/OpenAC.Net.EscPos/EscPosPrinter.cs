@@ -78,7 +78,7 @@ namespace OpenAC.Net.EscPos
         #region properties
 
         /// <summary>
-        /// Configuações de comunicação com a impressora.
+        /// Configurações de comunicação com a impressora.
         /// </summary>
         public IDeviceConfig Device { get; }
 

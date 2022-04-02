@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System.Drawing;
+using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command
@@ -45,6 +46,8 @@ namespace OpenAC.Net.EscPos.Command
         #endregion Constructors
 
         #region Properties
+
+        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
         public Image Imagem { get; set; }
 

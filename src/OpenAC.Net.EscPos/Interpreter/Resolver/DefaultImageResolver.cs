@@ -29,6 +29,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using OpenAC.Net.Devices.Commom;
@@ -54,6 +55,24 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
             if (command.Imagem == null) return new byte[0];
 
             using var builder = new ByteArrayBuilder();
+
+            switch (command.Alinhamento)
+            {
+                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                    break;
+
+                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                    break;
+
+                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             var bmp = new Bitmap(command.Imagem);
 
@@ -106,6 +125,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
             }
 
             builder.Append(new byte[] { 27, (byte)'@' });
+
+            // Volta alinhamento para Esquerda.
+            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
 
             return builder.ToArray();
         }

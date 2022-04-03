@@ -69,22 +69,22 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
                 {CmdEscPos.FonteNormal, new byte[] {CmdConst.ESC, (byte) '!', 0, CmdConst.DC2}},
                 {CmdEscPos.FonteA, new[] {CmdConst.DC4}},
                 {CmdEscPos.FonteB, new[] {CmdConst.ESC, CmdConst.SI}},
-                {CmdEscPos.LigaExpandido, new byte[] {CmdConst.GS, (byte)'W', 1}},
-                {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.GS, (byte)'W', 0}},
+                {CmdEscPos.LigaExpandido, new byte[] {CmdConst.ESC, (byte)'W', 1}},
+                {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.ESC, (byte)'W', 0}},
                 {CmdEscPos.LigaCondensado, new[] {CmdConst.ESC, CmdConst.SI}},
-                {CmdEscPos.DesligaCondensado, new[] {CmdConst.DC2}},
+                {CmdEscPos.DesligaCondensado, new[] { CmdConst.ESC, CmdConst.DC2, CmdConst.DC4}},
                 {CmdEscPos.LigaNegrito, new byte[] {CmdConst.ESC, (byte) 'E'}},
                 {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'F'}},
                 {CmdEscPos.LigaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 1}},
                 {CmdEscPos.DesligaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 0}},
                 {CmdEscPos.LigaItalico, new byte[] {CmdConst.ESC, (byte)'4', 1}},
                 {CmdEscPos.DesligaItalico, new byte[] {CmdConst.ESC, (byte)'4', 0}},
-                {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 1}},
-                {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.GS, (byte)'w', 0}},
+                {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.ESC, (byte)'w', 1}},
+                {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.ESC, (byte)'w', 0}},
 
                 //Corte
-                {CmdEscPos.CorteTotal, new[] {CmdConst.GS, (byte) 'm'}},
-                {CmdEscPos.CorteParcial, new[] {CmdConst.GS, (byte) 'm'}}
+                {CmdEscPos.CorteTotal, new[] {CmdConst.ESC, (byte) 'm'}},
+                {CmdEscPos.CorteParcial, new[] {CmdConst.ESC, (byte) 'm'}}
             };
 
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

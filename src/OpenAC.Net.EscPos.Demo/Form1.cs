@@ -252,6 +252,24 @@ namespace OpenAC.Net.EscPos.Demo
             posprinter.Conectar();
 
             posprinter.ImprimirTexto("¡…Õ”⁄·ÈÌÛ˙Á«„ı√’ Í¿‡", CmdAlinhamento.Centro);
+            posprinter.ImprimirTexto("TESTE NORMAL ESQUERDA", CmdAlinhamento.Esquerda);
+            posprinter.ImprimirTexto("TESTE NORMAL DIREITA", CmdAlinhamento.Direita);
+            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirTexto("TESTE EXPANDIDO", CmdFonte.Normal, CmdTamanhoFonte.Expandida, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirTexto("TESTE CONDENSADO", CmdFonte.Normal, CmdTamanhoFonte.Condensada, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirTexto("TESTE NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirTexto("TESTE DUPLO EXPANDIDO", CmdFonte.Normal, CmdTamanhoFonte.Expandida, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
+            posprinter.ImprimirTexto("TESTE DUPLO CONDESADO", CmdFonte.Normal, CmdTamanhoFonte.Condensada, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
+            posprinter.ImprimirTexto("TESTE DUPLO NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
+            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirTexto("TESTE NEGRITO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Negrito);
+            posprinter.ImprimirTexto("TESTE ITALICO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Italico);
+            posprinter.ImprimirTexto("TESTE SUBLINHADO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Sublinhado);
+            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirTexto("TESTE FONTE NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirTexto("TESTE FONTE A", CmdFonte.FonteA, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirTexto("TESTE FONTE B", CmdFonte.FonteB, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
 
             posprinter.CortarPapel();
             posprinter.Imprimir();

@@ -590,6 +590,7 @@ namespace OpenAC.Net.EscPos
         /// Adicionado o comando para imprimir imagem ao buffer.
         /// </summary>
         /// <param name="imagem"></param>
+        /// <param name="aAlinhamento"></param>
         /// <param name="isHdpi"></param>
         public void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
         {

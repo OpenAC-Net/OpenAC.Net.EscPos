@@ -94,8 +94,8 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
             CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
             CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
             CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
-            CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
 
+            CommandResolver.AddResolver<ImageCommand, DarumaImageResolver>(new DarumaImageResolver(commandos));
             CommandResolver.AddResolver<CashDrawerCommand, DarumaCashDrawerResolver>(new DarumaCashDrawerResolver(commandos));
             CommandResolver.AddResolver<BarcodeCommand, DarumaBarcodeResolver>(new DarumaBarcodeResolver(Enconder, commandos));
             CommandResolver.AddResolver<LogoCommand, DarumaLogoResolver>(new DarumaLogoResolver(commandos));

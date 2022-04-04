@@ -44,7 +44,6 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
 
         internal EpsonInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
         }
 
         #endregion Constructors
@@ -52,8 +51,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new EpsonStatusResolver();
+
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscPos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscPos));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscPos));

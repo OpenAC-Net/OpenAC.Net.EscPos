@@ -55,7 +55,7 @@ namespace OpenAC.Net.EscPos.Interpreter.ZJiang
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.CorteTotal] = new byte[] { CmdConst.GS, (byte)'V', 1 };

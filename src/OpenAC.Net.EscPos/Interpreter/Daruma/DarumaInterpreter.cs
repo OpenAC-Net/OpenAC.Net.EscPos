@@ -41,7 +41,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
     {
         #region Constructors
 
-        public DarumaInterpreter(Encoding enconder) : base(enconder)
+        internal DarumaInterpreter(Encoding enconder) : base(enconder)
         {
         }
 
@@ -49,8 +49,11 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
 
         #region Methods
 
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new DarumaStatusResolver();
+            RazaoColuna.Condensada = 0.8421M;  // 48 / 57
+
             var commandos = new Dictionary<CmdEscPos, byte[]>
             {
                 // Diversos

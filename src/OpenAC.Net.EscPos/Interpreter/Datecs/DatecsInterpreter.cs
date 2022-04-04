@@ -47,7 +47,6 @@ namespace OpenAC.Net.EscPos.Interpreter.Datecs
 
         internal DatecsInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
         }
 
         #endregion Constructors
@@ -55,8 +54,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Datecs
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new EpsonStatusResolver();
+
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.Beep] = new[] { CmdConst.BELL };
 

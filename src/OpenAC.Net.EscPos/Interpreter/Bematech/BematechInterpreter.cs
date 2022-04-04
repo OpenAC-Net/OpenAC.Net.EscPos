@@ -44,7 +44,6 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
 
         internal BematechInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new BematechStatusResolver();
         }
 
         #endregion Constructors
@@ -52,8 +51,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new BematechStatusResolver();
+
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscBema));

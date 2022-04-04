@@ -43,9 +43,8 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
     {
         #region Constructors
 
-        public DieboldInterpreter(Encoding enconder) : base(enconder)
+        internal DieboldInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
         }
 
         #endregion Constructors
@@ -53,8 +52,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new EpsonStatusResolver();
+
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.DesligaExpandido] = new byte[] { CmdConst.ESC, (byte)'!', 0 };
             commandos[CmdEscPos.LigaItalico] = new byte[] { CmdConst.ESC, 4 };

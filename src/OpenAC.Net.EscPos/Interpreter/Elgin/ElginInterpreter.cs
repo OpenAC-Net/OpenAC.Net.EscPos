@@ -42,15 +42,16 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
 
         internal ElginInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new ElginStatusResolver();
         }
 
         #endregion Methods
 
         #region Methods
 
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
+            StatusResolver = new ElginStatusResolver();
+
             // Default
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscBema));

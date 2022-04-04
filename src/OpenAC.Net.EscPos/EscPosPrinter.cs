@@ -159,6 +159,35 @@ namespace OpenAC.Net.EscPos
         /// </summary>
         public bool SuportaModoPagina => interpreter?.CommandResolver?.HasResolver<ModoPaginaCommand>() ?? false;
 
+        /// <summary>
+        /// Define/Obtém a quantidade de coluna quando a fonte é normal.
+        /// </summary>
+        public int Colunas { get; set; } = 48;
+
+        /// <summary>
+        /// Retorna a quantidade de colunas quando a fonte é expandida.
+        /// </summary>
+        public int ColunasExpandida
+        {
+            get
+            {
+                if (interpreter == null) return 0;
+                return (int)Math.Truncate(Colunas / interpreter.RazaoColuna.Expandida);
+            }
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de colunas quando a fonte é concensada.
+        /// </summary>
+        public int ColunasCondensada
+        {
+            get
+            {
+                if (interpreter == null) return 0;
+                return (int)Math.Truncate(Colunas / interpreter.RazaoColuna.Condensada);
+            }
+        }
+
         #endregion properties
 
         #region Methods

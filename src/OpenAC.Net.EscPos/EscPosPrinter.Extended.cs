@@ -42,10 +42,17 @@ namespace OpenAC.Net.EscPos
     {
         #region Constructors
 
+        /// <summary>
+        ///
+        /// </summary>
         public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
         {
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="device"></param>
         public EscPosPrinter(TConfig device) : base(device)
         {
         }

@@ -55,7 +55,7 @@ namespace OpenAC.Net.EscPos.Interpreter
             Guard.Against<ArgumentNullException>(enconder == null, $"{nameof(enconder)} não pode ser nulo.");
 
             Enconder = enconder;
-            ResolverInitialize();
+            IniciarInterpreter();
         }
 
         #endregion Constructors
@@ -73,6 +73,8 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// Cache que contem os resolvers dos comandos.
         /// </summary>
         public ResolverCache CommandResolver { get; } = new();
+
+        public RazaoColunaFonte RazaoColuna { get; } = new();
 
         protected StatusResolver StatusResolver { get; set; }
 
@@ -108,7 +110,7 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// <summary>
         /// Função para inicializar o dicionario de comandos para ser usados no interpreter.
         /// </summary>
-        protected abstract void ResolverInitialize();
+        protected abstract void IniciarInterpreter();
 
         #endregion Methods
     }

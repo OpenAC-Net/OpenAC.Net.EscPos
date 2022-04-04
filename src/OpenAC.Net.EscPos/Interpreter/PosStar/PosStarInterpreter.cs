@@ -55,7 +55,7 @@ namespace OpenAC.Net.EscPos.Interpreter.PosStar
         #region Methods
 
         /// <inheritdoc />
-        protected override void ResolverInitialize()
+        protected override void IniciarInterpreter()
         {
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, CmdConst.GS, CmdConst.BELL, 1, 2, 5 };

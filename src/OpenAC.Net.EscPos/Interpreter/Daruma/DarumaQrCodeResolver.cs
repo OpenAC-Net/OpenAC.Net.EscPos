@@ -78,7 +78,9 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
             {
                 if (command.ErrorLevel < QrCodeErrorLevel.LevelM)
                     command.ErrorLevel = QrCodeErrorLevel.LevelM;
-
+            }
+            if (command.Code.Length > 512)
+            {
                 if (command.LarguraModulo < QrCodeModSize.Normal)
                     command.LarguraModulo = QrCodeModSize.Normal;
             }
@@ -111,7 +113,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
             var pH = (byte)(num / 256);
 
             builder.Append(new byte[] { CmdConst.ESC, 129, pL, pH });
-            builder.Append((byte)command.LarguraModulo + 1);
+            builder.Append((byte)(command.LarguraModulo + 1));
             builder.Append(error);
             // Precisa ser UTF8 mesmo para imprimir correto.
             builder.Append(Encoding.UTF8.GetBytes(command.Code));

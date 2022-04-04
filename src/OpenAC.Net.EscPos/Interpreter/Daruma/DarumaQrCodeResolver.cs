@@ -74,16 +74,11 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (command.Code.Length > 256)
-            {
-                if (command.ErrorLevel < QrCodeErrorLevel.LevelM)
-                    command.ErrorLevel = QrCodeErrorLevel.LevelM;
-            }
-            if (command.Code.Length > 512)
-            {
-                if (command.LarguraModulo < QrCodeModSize.Normal)
-                    command.LarguraModulo = QrCodeModSize.Normal;
-            }
+            if (command.Code.Length > 256 && command.ErrorLevel < QrCodeErrorLevel.LevelM)
+                command.ErrorLevel = QrCodeErrorLevel.LevelM;
+
+            if (command.Code.Length < 256 || (command.Code.Length > 512 && command.LarguraModulo > QrCodeModSize.Normal))
+                command.LarguraModulo = QrCodeModSize.Normal;
 
             byte[] error;
             switch (command.ErrorLevel)

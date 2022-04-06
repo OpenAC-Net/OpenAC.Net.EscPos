@@ -31,6 +31,7 @@
 
 using System;
 using System.Text;
+using OpenAC.Net.Core;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 using OpenAC.Net.EscPos.Interpreter.Bematech;
@@ -54,11 +55,22 @@ namespace OpenAC.Net.EscPos
         ///
         /// </summary>
         /// <param name="protocolo"></param>
-        /// <param name="enconder"></param>
+        /// <param name="paginaCodigo"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, Encoding enconder)
+        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, PaginaCodigo paginaCodigo)
         {
+            var enconder = paginaCodigo switch
+            {
+                PaginaCodigo.pc437 => Encoding.GetEncoding(437),
+                PaginaCodigo.pc850 => OpenEncoding.IBM850,
+                PaginaCodigo.pc852 => Encoding.GetEncoding("IBM852"),
+                PaginaCodigo.pc860 => OpenEncoding.IBM860,
+                PaginaCodigo.pcUTF8 => Encoding.UTF8,
+                PaginaCodigo.pc1252 => OpenEncoding.CP1252,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
             switch (protocolo)
             {
                 case ProtocoloEscPos.EscPos: return new EpsonInterpreter(enconder);

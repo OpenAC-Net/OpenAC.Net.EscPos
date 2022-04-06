@@ -61,6 +61,7 @@ namespace OpenAC.Net.EscPos.Interpreter.ZJiang
             commandos[CmdEscPos.CorteTotal] = new byte[] { CmdConst.GS, (byte)'V', 1 };
             commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, (byte)'B', 1, 3 };
 
+            CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(commandos));

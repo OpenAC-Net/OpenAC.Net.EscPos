@@ -63,6 +63,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
             CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscBema));
 
             // Iguais da Bema
+            CommandResolver.AddResolver<CodePageCommand, BemaCodePageResolver>(new BemaCodePageResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<LogoCommand, BemaLogoCommandResolver>(new BemaLogoCommandResolver(DefaultCommands.EscBema));
 

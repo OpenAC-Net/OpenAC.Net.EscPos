@@ -34,8 +34,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using OpenAC.Net.Core;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.Core.Logging;
@@ -56,7 +54,7 @@ namespace OpenAC.Net.EscPos
         private EscPosInterpreter interpreter;
         private ProtocoloEscPos protocolo;
         private bool inicializada;
-        private Encoding encoder;
+        private PaginaCodigo paginaCodigo;
 
         #endregion Fields
 
@@ -70,9 +68,9 @@ namespace OpenAC.Net.EscPos
 
             commands = new List<IPrintCommand>();
 
-            encoder = OpenEncoding.IBM850;
+            paginaCodigo = PaginaCodigo.pc850;
             protocolo = ProtocoloEscPos.EscPos;
-            interpreter = EscPosInterpreterFactory.Create(protocolo, encoder);
+            interpreter = EscPosInterpreterFactory.Create(protocolo, paginaCodigo);
         }
 
         #endregion Constructors
@@ -98,22 +96,22 @@ namespace OpenAC.Net.EscPos
                 protocolo = value;
 
                 interpreter = null;
-                interpreter = EscPosInterpreterFactory.Create(value, Encoder);
+                interpreter = EscPosInterpreterFactory.Create(value, PaginaCodigo);
             }
         }
 
         /// <summary>
         /// Define/Obtém o enconding para comunicação com a impressora.
         /// </summary>
-        public Encoding Encoder
+        public PaginaCodigo PaginaCodigo
         {
-            get => encoder;
+            get => paginaCodigo;
             set
             {
                 Guard.Against<OpenException>(Conectado, "Não pode mudar o protocolo quando esta conectado.");
-                if (encoder == value) return;
+                if (paginaCodigo == value) return;
 
-                encoder = value;
+                paginaCodigo = value;
 
                 interpreter = null;
                 interpreter = EscPosInterpreterFactory.Create(protocolo, value);
@@ -230,10 +228,24 @@ namespace OpenAC.Net.EscPos
 
             if (inicializada) return;
 
-            var cmd = new EspacoEntreLinhasCommand(interpreter) { Espaco = EspacoEntreLinhas };
-            var dados = cmd.Content;
+            using var builder = new ByteArrayBuilder();
 
-            device.Write(dados);
+            IPrintCommand cmd;
+            if (interpreter.CommandResolver.HasResolver<EspacoEntreLinhasCommand>())
+            {
+                cmd = new EspacoEntreLinhasCommand(interpreter) { Espaco = EspacoEntreLinhas };
+                builder.Append(cmd.Content);
+            }
+
+            if (interpreter.CommandResolver.HasResolver<CodePageCommand>())
+            {
+                cmd = new CodePageCommand(interpreter) { PaginaCodigo = paginaCodigo };
+                builder.Append(cmd.Content);
+            }
+
+            if (builder.Length > 0)
+                device.Write(builder.ToArray());
+
             inicializada = true;
         }
 

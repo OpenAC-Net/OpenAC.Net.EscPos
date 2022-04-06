@@ -56,6 +56,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
             Status = new EpsonStatusResolver();
             InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
 
+            CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(DefaultCommands.EscPos));
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscPos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscPos));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscPos));

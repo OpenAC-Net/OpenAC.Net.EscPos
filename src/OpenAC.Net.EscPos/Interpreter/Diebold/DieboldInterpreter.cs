@@ -61,6 +61,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
             commandos[CmdEscPos.LigaItalico] = new byte[] { CmdConst.ESC, 4 };
             commandos[CmdEscPos.DesligaItalico] = new byte[] { CmdConst.ESC, 5 };
 
+            CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(commandos));

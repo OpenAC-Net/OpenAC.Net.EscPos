@@ -61,19 +61,6 @@ namespace OpenAC.Net.EscPos.Demo
         private EscPosPrinter GetPosPrinter()
         {
             var tipo = cbbConexao.GetSelectedValue<TipoConexao>();
-            var protocolo = cbbProtocolo.GetSelectedValue<ProtocoloEscPos>();
-            var paginaCodigo = cbbEnconding.GetSelectedValue<PaginaCodigo>();
-
-            var encoding = paginaCodigo switch
-            {
-                PaginaCodigo.pc437 => Encoding.GetEncoding(437),
-                PaginaCodigo.pc850 => OpenEncoding.IBM850,
-                PaginaCodigo.pc852 => Encoding.GetEncoding("IBM852"),
-                PaginaCodigo.pc860 => OpenEncoding.IBM860,
-                PaginaCodigo.pcUTF8 => Encoding.UTF8,
-                PaginaCodigo.pc1252 => OpenEncoding.CP1252,
-                _ => throw new ArgumentOutOfRangeException()
-            };
 
             EscPosPrinter ret = tipo switch
             {
@@ -115,8 +102,8 @@ namespace OpenAC.Net.EscPos.Demo
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            ret.Protocolo = protocolo;
-            ret.Encoder = encoding;
+            ret.Protocolo = cbbProtocolo.GetSelectedValue<ProtocoloEscPos>();
+            ret.PaginaCodigo = cbbEnconding.GetSelectedValue<PaginaCodigo>();
             ret.Device.ControlePorta = chkControlePortas.Checked;
             ret.EspacoEntreLinhas = (byte)nudEspacos.Value;
             ret.LinhasEntreCupons = (byte)nudLinhas.Value;

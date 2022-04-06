@@ -55,6 +55,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
         {
             Status = new BematechStatusResolver();
 
+            CommandResolver.AddResolver<CodePageCommand, BemaCodePageResolver>(new BemaCodePageResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscBema));

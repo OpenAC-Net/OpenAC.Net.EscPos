@@ -36,7 +36,7 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Elgin
 {
-    public sealed class ElginStatusResolver : StatusResolver
+    public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
     {
         public ElginStatusResolver() :
             base(new[] { new byte[] { 5 } },

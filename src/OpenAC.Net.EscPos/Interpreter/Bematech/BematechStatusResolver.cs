@@ -36,7 +36,7 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech
 {
-    public sealed class BematechStatusResolver : StatusResolver
+    public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
     {
         public BematechStatusResolver() :
             base(new[] { new byte[] { CmdConst.GS, 248, (byte)'1' } },

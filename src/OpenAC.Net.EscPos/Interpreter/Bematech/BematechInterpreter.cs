@@ -53,7 +53,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new BematechStatusResolver();
+            Status = new BematechStatusResolver();
 
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscBema));

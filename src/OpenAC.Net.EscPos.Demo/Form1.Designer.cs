@@ -77,7 +77,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tbpCodigoBarras = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnInfo = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -344,7 +344,7 @@
             this.tbpRAW.Location = new System.Drawing.Point(4, 34);
             this.tbpRAW.Name = "tbpRAW";
             this.tbpRAW.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpRAW.Size = new System.Drawing.Size(470, 282);
+            this.tbpRAW.Size = new System.Drawing.Size(470, 262);
             this.tbpRAW.TabIndex = 2;
             this.tbpRAW.Text = "Raw";
             this.tbpRAW.UseVisualStyleBackColor = true;
@@ -375,7 +375,7 @@
             this.tbpFile.Location = new System.Drawing.Point(4, 34);
             this.tbpFile.Name = "tbpFile";
             this.tbpFile.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpFile.Size = new System.Drawing.Size(470, 282);
+            this.tbpFile.Size = new System.Drawing.Size(470, 262);
             this.tbpFile.TabIndex = 3;
             this.tbpFile.Text = "Arquivo";
             this.tbpFile.UseVisualStyleBackColor = true;
@@ -598,7 +598,7 @@
             this.tbpCodigoBarras.Location = new System.Drawing.Point(4, 34);
             this.tbpCodigoBarras.Name = "tbpCodigoBarras";
             this.tbpCodigoBarras.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpCodigoBarras.Size = new System.Drawing.Size(480, 238);
+            this.tbpCodigoBarras.Size = new System.Drawing.Size(480, 218);
             this.tbpCodigoBarras.TabIndex = 1;
             this.tbpCodigoBarras.Text = "Código de Barras";
             this.tbpCodigoBarras.UseVisualStyleBackColor = true;
@@ -614,13 +614,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Conexão";
             // 
-            // button2
+            // btnInfo
             // 
-            this.button2.Location = new System.Drawing.Point(886, 518);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(182, 60);
-            this.button2.TabIndex = 13;
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnInfo.Location = new System.Drawing.Point(886, 518);
+            this.btnInfo.Name = "btnInfo";
+            this.btnInfo.Size = new System.Drawing.Size(182, 60);
+            this.btnInfo.TabIndex = 13;
+            this.btnInfo.Text = "Info. Impressora";
+            this.btnInfo.UseVisualStyleBackColor = true;
+            this.btnInfo.Click += new System.EventHandler(this.btnInfo_Click);
             // 
             // button3
             // 
@@ -674,7 +676,7 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btnInfo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tbcConfigurações);
             this.Controls.Add(this.button1);
@@ -735,7 +737,7 @@
         private Label label4;
         private TabPage tbpRAW;
         private TabPage tbpFile;
-        private Button button2;
+        private Button btnInfo;
         private Button button3;
         private Button button4;
         private Button button5;

@@ -47,7 +47,7 @@ namespace OpenAC.Net.EscPos.Interpreter.PosStar
 
         internal PosStarInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
         }
 
         #endregion Constructors

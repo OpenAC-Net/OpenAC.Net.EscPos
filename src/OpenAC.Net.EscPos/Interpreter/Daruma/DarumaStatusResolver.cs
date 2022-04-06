@@ -36,7 +36,7 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma
 {
-    public sealed class DarumaStatusResolver : StatusResolver
+    public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
     {
         public DarumaStatusResolver() :
             base(new[] { new byte[] { CmdConst.ENQ }, new byte[] { CmdConst.GS, CmdConst.ENQ } },

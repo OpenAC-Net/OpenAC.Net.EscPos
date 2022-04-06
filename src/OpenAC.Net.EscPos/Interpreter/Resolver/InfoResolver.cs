@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="StatusResolver.cs" company="OpenAC .Net">
+// <copyright file="InfoResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,23 +30,22 @@
 // ***********************************************************************
 
 using System;
-using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver
 {
-    public abstract class StatusResolver
+    public abstract class InfoResolver<TInfo>
     {
         #region Fields
 
-        private readonly Func<byte[][], EscPosTipoStatus> processStatus;
+        private readonly Func<byte[][], TInfo> processStatus;
 
         #endregion Fields
 
         #region Constructors
 
-        protected StatusResolver(byte[][] command, Func<byte[][], EscPosTipoStatus> resolver)
+        protected InfoResolver(byte[][] commands, Func<byte[][], TInfo> resolver)
         {
-            StatusCommand = command;
+            Commands = commands;
             processStatus = resolver;
         }
 
@@ -54,9 +53,9 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
 
         #region Methods
 
-        public byte[][] StatusCommand { get; }
+        public byte[][] Commands { get; }
 
-        public EscPosTipoStatus Resolve(byte[][] dados) => processStatus(dados);
+        public TInfo Resolve(byte[][] dados) => processStatus(dados);
 
         #endregion Methods
     }

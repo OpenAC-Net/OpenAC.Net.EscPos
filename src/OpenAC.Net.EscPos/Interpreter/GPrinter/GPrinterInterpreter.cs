@@ -47,7 +47,7 @@ namespace OpenAC.Net.EscPos.Interpreter.GPrinter
 
         internal GPrinterInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
         }
 
         #endregion Constructors

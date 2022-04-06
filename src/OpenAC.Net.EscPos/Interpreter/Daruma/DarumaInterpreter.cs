@@ -51,7 +51,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma
 
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new DarumaStatusResolver();
+            Status = new DarumaStatusResolver();
             RazaoColuna.Condensada = 0.8421M;  // 48 / 57
 
             var commandos = new Dictionary<CmdEscPos, byte[]>

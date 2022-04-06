@@ -36,7 +36,7 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Epson
 {
-    public sealed class EpsonStatusResolver : StatusResolver
+    public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
     {
         public EpsonStatusResolver() :
             base(new[] { new byte[] { 16, 4, 1 }, new byte[] { 16, 4, 2 }, new byte[] { 16, 4, 4 }, },

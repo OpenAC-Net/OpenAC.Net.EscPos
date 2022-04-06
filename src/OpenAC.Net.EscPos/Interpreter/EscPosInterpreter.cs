@@ -67,8 +67,6 @@ namespace OpenAC.Net.EscPos.Interpreter
         /// </summary>
         public Encoding Enconder { get; }
 
-        public byte[][] StatusCommand => StatusResolver?.StatusCommand ?? new byte[0][];
-
         /// <summary>
         /// Cache que contem os resolvers dos comandos.
         /// </summary>
@@ -76,7 +74,9 @@ namespace OpenAC.Net.EscPos.Interpreter
 
         public RazaoColunaFonte RazaoColuna { get; } = new();
 
-        protected StatusResolver StatusResolver { get; set; }
+        public InfoResolver<EscPosTipoStatus> Status { get; protected set; }
+
+        public InfoResolver<InformacoesImpressora> InfoImpressora { get; protected set; }
 
         #endregion Properties
 
@@ -99,13 +99,6 @@ namespace OpenAC.Net.EscPos.Interpreter
             var resolver = CommandResolver.GetResolver<TCommand>();
             return resolver.Resolve(command);
         }
-
-        /// <summary>
-        /// Metodo usado para processar o status retornado pela impressora.
-        /// </summary>
-        /// <param name="dados"></param>
-        /// <returns></returns>
-        public EscPosTipoStatus ProcessarStatus(byte[][] dados) => StatusResolver?.Resolve(dados) ?? EscPosTipoStatus.ErroLeitura;
 
         /// <summary>
         /// Função para inicializar o dicionario de comandos para ser usados no interpreter.

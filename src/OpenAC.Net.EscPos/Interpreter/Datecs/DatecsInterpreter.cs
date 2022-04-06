@@ -56,7 +56,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Datecs
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
 
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.Beep] = new[] { CmdConst.BELL };

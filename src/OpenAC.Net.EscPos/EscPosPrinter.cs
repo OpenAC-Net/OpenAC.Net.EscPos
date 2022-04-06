@@ -35,6 +35,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using OpenAC.Net.Core;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.Core.Logging;
@@ -286,13 +287,15 @@ namespace OpenAC.Net.EscPos
         {
             Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
+            if (interpreter.Status == null) return EscPosTipoStatus.ErroLeitura;
+
             try
             {
                 byte[][] ret;
                 var leituras = 0;
                 do
                 {
-                    var dados = interpreter.StatusCommand;
+                    var dados = interpreter.Status.Commands;
                     if (dados.IsNullOrEmpty()) return EscPosTipoStatus.Nenhum;
 
                     ret = dados.Select(dado => device.WriteRead(dado, 10)).ToArray();
@@ -301,7 +304,7 @@ namespace OpenAC.Net.EscPos
 
                 if (!ret.Any()) return EscPosTipoStatus.ErroLeitura;
 
-                var status = interpreter.ProcessarStatus(ret);
+                var status = interpreter.Status.Resolve(ret);
                 if (!Gaveta.SinalInvertido) return status;
 
                 if (status.HasFlag(EscPosTipoStatus.GavetaAberta))
@@ -315,6 +318,31 @@ namespace OpenAC.Net.EscPos
             {
                 this.Log().Error("Erro ao ler status", ex);
                 return EscPosTipoStatus.ErroLeitura;
+            }
+        }
+
+        /// <summary>
+        /// Le as informações da impressora.
+        /// </summary>
+        /// <returns></returns>
+        public InformacoesImpressora LerInfoImpressora()
+        {
+            Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
+
+            if (interpreter.InfoImpressora == null) return InformacoesImpressora.Empty;
+
+            try
+            {
+                var dados = interpreter.InfoImpressora.Commands;
+                if (dados.IsNullOrEmpty()) return null;
+
+                var ret = dados.Select(dado => device.WriteRead(dado, 500)).ToArray();
+                return !ret.Any() ? InformacoesImpressora.Empty : interpreter.InfoImpressora.Resolve(ret);
+            }
+            catch (Exception ex)
+            {
+                this.Log().Error("Erro ao ler as informações da impressora", ex);
+                return InformacoesImpressora.Empty;
             }
         }
 

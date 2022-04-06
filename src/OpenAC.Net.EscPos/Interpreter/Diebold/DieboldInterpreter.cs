@@ -54,7 +54,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Diebold
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
 
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.DesligaExpandido] = new byte[] { CmdConst.ESC, (byte)'!', 0 };

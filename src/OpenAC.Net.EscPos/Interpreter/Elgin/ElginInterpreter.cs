@@ -50,7 +50,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
 
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new ElginStatusResolver();
+            Status = new ElginStatusResolver();
 
             // Default
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));

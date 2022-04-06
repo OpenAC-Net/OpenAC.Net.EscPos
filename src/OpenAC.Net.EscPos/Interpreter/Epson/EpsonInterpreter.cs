@@ -53,7 +53,8 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
+            InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
 
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscPos));
             CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscPos));

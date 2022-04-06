@@ -436,6 +436,14 @@ namespace OpenAC.Net.EscPos.Demo
             posprinter.Imprimir();
         }
 
+        private void btnInfo_Click(object sender, EventArgs e)
+        {
+            using var posprinter = GetPosPrinter();
+
+            posprinter.Conectar();
+            var info = posprinter.LerInfoImpressora();
+        }
+
         #endregion EventHandlers
     }
 }

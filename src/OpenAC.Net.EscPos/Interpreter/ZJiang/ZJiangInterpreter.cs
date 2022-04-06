@@ -47,7 +47,7 @@ namespace OpenAC.Net.EscPos.Interpreter.ZJiang
 
         internal ZJiangInterpreter(Encoding enconder) : base(enconder)
         {
-            StatusResolver = new EpsonStatusResolver();
+            Status = new EpsonStatusResolver();
         }
 
         #endregion Constructors

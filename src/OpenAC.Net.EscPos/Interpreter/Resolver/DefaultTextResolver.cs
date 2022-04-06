@@ -116,14 +116,14 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.LigaSublinhado))
                     builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.LigaInvertido))
-                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
-
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.LigaItalico))
                     builder.Append(Commandos[CmdEscPos.LigaItalico]);
 
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.LigaAlturaDupla))
                     builder.Append(Commandos[CmdEscPos.LigaAlturaDupla]);
+
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.LigaInvertido))
+                    builder.Append(Commandos[CmdEscPos.LigaInvertido]);
             }
 
             // Adiciona o texto, fazendo o tratamento para quebra de linha
@@ -137,14 +137,14 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.DesligaSublinhado))
                     builder.Append(Commandos[CmdEscPos.DesligaSublinhado]);
 
-                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.DesligaInvertido))
-                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
-
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.DesligaItalico))
                     builder.Append(Commandos[CmdEscPos.DesligaItalico]);
 
                 if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.DesligaAlturaDupla))
                     builder.Append(Commandos[CmdEscPos.DesligaAlturaDupla]);
+
+                if (cmd.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.DesligaInvertido))
+                    builder.Append(Commandos[CmdEscPos.DesligaInvertido]);
             }
 
             switch (cmd.Tamanho)

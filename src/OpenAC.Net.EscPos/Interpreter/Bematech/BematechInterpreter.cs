@@ -54,6 +54,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech
         protected override void IniciarInterpreter()
         {
             Status = new BematechStatusResolver();
+            InfoImpressora = new BemaInfoImpressoraResolver(Enconder);
 
             CommandResolver.AddResolver<CodePageCommand, BemaCodePageResolver>(new BemaCodePageResolver(DefaultCommands.EscBema));
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));

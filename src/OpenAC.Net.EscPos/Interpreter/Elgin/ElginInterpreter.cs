@@ -51,6 +51,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin
         protected override void IniciarInterpreter()
         {
             Status = new ElginStatusResolver();
+            InfoImpressora = new BemaInfoImpressoraResolver(Enconder);
 
             // Default
             CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscBema));

@@ -429,6 +429,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             posprinter.Conectar();
             var info = posprinter.LerInfoImpressora();
+            rtbLog.AppendText(info.ToString());
         }
 
         #endregion EventHandlers

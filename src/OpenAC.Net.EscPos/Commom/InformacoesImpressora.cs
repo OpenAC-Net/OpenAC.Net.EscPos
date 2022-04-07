@@ -29,17 +29,21 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.Linq;
+using System.Text;
+
 namespace OpenAC.Net.EscPos.Commom
 {
     public class InformacoesImpressora
     {
         #region Constructors
 
-        public InformacoesImpressora(string fabricante, string modelo, string firmware, bool guilhotina)
+        public InformacoesImpressora(string fabricante, string modelo, string firmware, string serial, bool guilhotina)
         {
             Fabricante = fabricante;
             Modelo = modelo;
             Firmware = firmware;
+            Serial = serial;
             Guilhotina = guilhotina;
         }
 
@@ -53,10 +57,21 @@ namespace OpenAC.Net.EscPos.Commom
 
         public string Firmware { get; }
 
+        public string Serial { get; }
+
         public bool Guilhotina { get; }
 
-        public static InformacoesImpressora Empty = new("", "", "", false);
+        public static InformacoesImpressora Empty = new("", "", "", "", false);
 
         #endregion Properties
+
+        public override string ToString()
+        {
+            var props = GetType().GetProperties();
+            var sb = new StringBuilder();
+            foreach (var p in props)
+                sb.AppendLine(p.Name + ": " + p.GetValue(this, null));
+            return sb.ToString();
+        }
     }
 }

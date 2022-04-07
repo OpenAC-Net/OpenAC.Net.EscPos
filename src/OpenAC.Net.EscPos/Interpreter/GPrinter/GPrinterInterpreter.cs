@@ -47,7 +47,6 @@ namespace OpenAC.Net.EscPos.Interpreter.GPrinter
 
         internal GPrinterInterpreter(Encoding enconder) : base(enconder)
         {
-            Status = new EpsonStatusResolver();
         }
 
         #endregion Constructors
@@ -57,6 +56,9 @@ namespace OpenAC.Net.EscPos.Interpreter.GPrinter
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
+            Status = new EpsonStatusResolver();
+            InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
+
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, (byte)'B', 1, 3 };
 

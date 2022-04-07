@@ -47,7 +47,6 @@ namespace OpenAC.Net.EscPos.Interpreter.ZJiang
 
         internal ZJiangInterpreter(Encoding enconder) : base(enconder)
         {
-            Status = new EpsonStatusResolver();
         }
 
         #endregion Constructors
@@ -57,6 +56,9 @@ namespace OpenAC.Net.EscPos.Interpreter.ZJiang
         /// <inheritdoc />
         protected override void IniciarInterpreter()
         {
+            Status = new EpsonStatusResolver();
+            InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
+
             var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             commandos[CmdEscPos.CorteTotal] = new byte[] { CmdConst.GS, (byte)'V', 1 };
             commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, (byte)'B', 1, 3 };

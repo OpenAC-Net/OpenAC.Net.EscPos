@@ -40,7 +40,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
     public sealed class EpsonInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
     {
         public EpsonInfoImpressoraResolver(Encoding encoding) :
-           base(new[] { new[] { CmdConst.GS, (byte)'I', (byte)'B' }, new[] { CmdConst.GS, (byte)'I', (byte)'C' }, new[] { CmdConst.GS, (byte)'I', (byte)'A' }, new[] { CmdConst.GS, (byte)'I', (byte)'2' } },
+           base(new[] { new byte[] { CmdConst.GS, 73, 66 }, new byte[] { CmdConst.GS, 73, 67 }, new byte[] { CmdConst.GS, 73, 65 }, new byte[] { CmdConst.GS, 73, 68 }, new byte[] { CmdConst.GS, 73, 50 } },
                (dados) =>
                {
                    if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
@@ -48,12 +48,13 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson
 
                    var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
 
-                   var fabricante = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]);
-                   var modelo = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]);
-                   var firmware = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]);
-                   var guilhotina = !dados[3].IsNullOrEmpty() && bitTest(dados[3][0], 1);
+                   var fabricante = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                   var modelo = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                   var firmware = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                   var serial = dados[3].IsNullOrEmpty() ? "" : encoding.GetString(dados[3]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                   var guilhotina = !dados[4].IsNullOrEmpty() && bitTest(dados[4][0], 1);
 
-                   return new InformacoesImpressora(fabricante, modelo, firmware, guilhotina);
+                   return new InformacoesImpressora(fabricante, modelo, firmware, serial, guilhotina);
                })
         { }
     }

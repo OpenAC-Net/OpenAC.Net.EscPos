@@ -34,70 +34,69 @@ using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech
+namespace OpenAC.Net.EscPos.Interpreter.Bematech;
+
+public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
 {
-    public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
-    {
-        public BematechStatusResolver() :
-            base(new[] { new byte[] { CmdConst.GS, 248, (byte)'1' } },
-                dados =>
-                {
-                    if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
-                    if (dados.Length < 1) return EscPosTipoStatus.ErroLeitura;
-                    if (dados[0].Length < 2) return EscPosTipoStatus.ErroLeitura;
+    public BematechStatusResolver() :
+        base(new[] { new byte[] { CmdConst.GS, 248, (byte)'1' } },
+            dados =>
+            {
+                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+                if (dados.Length < 1) return EscPosTipoStatus.ErroLeitura;
+                if (dados[0].Length < 2) return EscPosTipoStatus.ErroLeitura;
 
-                    var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
+                var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
 
-                    EscPosTipoStatus? status = null;
-                    var b = dados[0][0];
-                    if (bitTest(b, 2))
+                EscPosTipoStatus? status = null;
+                var b = dados[0][0];
+                if (bitTest(b, 2))
+                    status = EscPosTipoStatus.Imprimindo;
+                if (bitTest(b, 3))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.OffLine;
+                    else
+                        status = EscPosTipoStatus.OffLine;
+                if (bitTest(b, 4))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.Imprimindo;
+                    else
                         status = EscPosTipoStatus.Imprimindo;
-                    if (bitTest(b, 3))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.OffLine;
-                        else
-                            status = EscPosTipoStatus.OffLine;
-                    if (bitTest(b, 4))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.Imprimindo;
-                        else
-                            status = EscPosTipoStatus.Imprimindo;
 
-                    b = dados[0][1];
-                    if (bitTest(b, 1))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.PoucoPapel;
-                        else
-                            status = EscPosTipoStatus.PoucoPapel;
-                    if (bitTest(b, 2))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.SemPapel;
-                        else
-                            status = EscPosTipoStatus.SemPapel;
-                    if (!bitTest(b, 4))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.GavetaAberta;
-                        else
-                            status = EscPosTipoStatus.GavetaAberta;
-                    if (bitTest(b, 5))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.SemPapel;
-                        else
-                            status = EscPosTipoStatus.SemPapel;
-                    if (bitTest(b, 6))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.Erro;
-                        else
-                            status = EscPosTipoStatus.Erro;
-                    if (!bitTest(b, 7))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.TampaAberta;
-                        else
-                            status = EscPosTipoStatus.TampaAberta;
+                b = dados[0][1];
+                if (bitTest(b, 1))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.PoucoPapel;
+                    else
+                        status = EscPosTipoStatus.PoucoPapel;
+                if (bitTest(b, 2))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.SemPapel;
+                    else
+                        status = EscPosTipoStatus.SemPapel;
+                if (!bitTest(b, 4))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.GavetaAberta;
+                    else
+                        status = EscPosTipoStatus.GavetaAberta;
+                if (bitTest(b, 5))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.SemPapel;
+                    else
+                        status = EscPosTipoStatus.SemPapel;
+                if (bitTest(b, 6))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.Erro;
+                    else
+                        status = EscPosTipoStatus.Erro;
+                if (!bitTest(b, 7))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.TampaAberta;
+                    else
+                        status = EscPosTipoStatus.TampaAberta;
 
-                    return status ?? EscPosTipoStatus.Nenhum;
-                })
-        {
-        }
+                return status ?? EscPosTipoStatus.Nenhum;
+            })
+    {
     }
 }

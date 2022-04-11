@@ -35,26 +35,25 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin
+namespace OpenAC.Net.EscPos.Interpreter.Elgin;
+
+public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
-    public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
+    #region Constructors
+
+    public ElginCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public ElginCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CashDrawerCommand command)
-        {
-            var tempo = Math.Max(command.TempoON, command.TempoOFF);
-            return new[] { CmdConst.ESC, (byte)'v', (byte)'n', tempo };
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CashDrawerCommand command)
+    {
+        var tempo = Math.Max(command.TempoON, command.TempoOFF);
+        return new[] { CmdConst.ESC, (byte)'v', (byte)'n', tempo };
+    }
+
+    #endregion Methods
 }

@@ -34,23 +34,22 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Daruma
+namespace OpenAC.Net.EscPos.Interpreter.Daruma;
+
+public sealed class DarumaLogoResolver : CommandResolver<LogoCommand>
 {
-    public sealed class DarumaLogoResolver : CommandResolver<LogoCommand>
+    #region Constructors
+
+    public DarumaLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DarumaLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        /// <inheritdoc />
-        public override byte[] Resolve(LogoCommand command) => new[] { CmdConst.SYN, CmdConst.BS, CmdConst.SYN, CmdConst.TAB };
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    /// <inheritdoc />
+    public override byte[] Resolve(LogoCommand command) => new[] { CmdConst.SYN, CmdConst.BS, CmdConst.SYN, CmdConst.TAB };
+
+    #endregion Methods
 }

@@ -31,16 +31,15 @@
 
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class BeepCommand : PrintCommand<BeepCommand>
 {
-    public sealed class BeepCommand : PrintCommand<BeepCommand>
+    #region Constructors
+
+    public BeepCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public BeepCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
     }
+
+    #endregion Constructors
 }

@@ -37,47 +37,46 @@ using OpenAC.Net.EscPos.Interpreter.Bematech;
 using OpenAC.Net.EscPos.Interpreter.Epson;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Diebold
+namespace OpenAC.Net.EscPos.Interpreter.Diebold;
+
+public sealed class DieboldInterpreter : EscPosInterpreter
 {
-    public sealed class DieboldInterpreter : EscPosInterpreter
+    #region Constructors
+
+    internal DieboldInterpreter(Encoding enconder) : base(enconder)
     {
-        #region Constructors
-
-        internal DieboldInterpreter(Encoding enconder) : base(enconder)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        /// <inheritdoc />
-        protected override void IniciarInterpreter()
-        {
-            Status = new EpsonStatusResolver();
-
-            var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            commandos[CmdEscPos.DesligaExpandido] = new byte[] { CmdConst.ESC, (byte)'!', 0 };
-            commandos[CmdEscPos.LigaItalico] = new byte[] { CmdConst.ESC, 4 };
-            commandos[CmdEscPos.DesligaItalico] = new byte[] { CmdConst.ESC, 5 };
-
-            CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
-            CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
-            CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
-            CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(commandos));
-            CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, commandos));
-            CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
-            CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
-            CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(commandos));
-            CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
-            CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
-            CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(commandos));
-
-            CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, commandos));
-            CommandResolver.AddResolver<LogoCommand, DieboldLogoResolver>(new DieboldLogoResolver(commandos));
-            CommandResolver.AddResolver<QrCodeCommand, DieboldQrCodeResolver>(new DieboldQrCodeResolver(commandos));
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    /// <inheritdoc />
+    protected override void IniciarInterpreter()
+    {
+        Status = new EpsonStatusResolver();
+
+        var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        commandos[CmdEscPos.DesligaExpandido] = new byte[] { CmdConst.ESC, (byte)'!', 0 };
+        commandos[CmdEscPos.LigaItalico] = new byte[] { CmdConst.ESC, 4 };
+        commandos[CmdEscPos.DesligaItalico] = new byte[] { CmdConst.ESC, 5 };
+
+        CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
+        CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
+        CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(commandos));
+        CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(commandos));
+        CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, commandos));
+        CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
+        CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
+        CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(commandos));
+        CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
+        CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
+        CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(commandos));
+
+        CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, commandos));
+        CommandResolver.AddResolver<LogoCommand, DieboldLogoResolver>(new DieboldLogoResolver(commandos));
+        CommandResolver.AddResolver<QrCodeCommand, DieboldQrCodeResolver>(new DieboldQrCodeResolver(commandos));
+    }
+
+    #endregion Methods
 }

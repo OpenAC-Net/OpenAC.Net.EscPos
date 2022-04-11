@@ -29,38 +29,37 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+internal static class CmdConst
 {
-    internal static class CmdConst
-    {
-        public static byte NUL => 0;
+    public static byte NUL => 0;
 
-        public static byte ENQ => 5;
+    public static byte ENQ => 5;
 
-        public static byte ESC => 27;
+    public static byte ESC => 27;
 
-        public static byte FS => 28;
+    public static byte FS => 28;
 
-        public static byte GS => 29;
+    public static byte GS => 29;
 
-        public static byte BS => 8;
+    public static byte BS => 8;
 
-        public static byte TAB => 9;
+    public static byte TAB => 9;
 
-        public static byte LF => 10;
+    public static byte LF => 10;
 
-        public static byte FF => 12;
+    public static byte FF => 12;
 
-        public static byte CR => 13;
+    public static byte CR => 13;
 
-        public static byte SI => 15;
+    public static byte SI => 15;
 
-        public static byte DC2 => 18;
+    public static byte DC2 => 18;
 
-        public static byte DC4 => 20;
+    public static byte DC4 => 20;
 
-        public static byte SYN => 22;
+    public static byte SYN => 22;
 
-        public static byte BELL => 7;
-    }
+    public static byte BELL => 7;
 }

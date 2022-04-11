@@ -32,26 +32,25 @@
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class CashDrawerCommand : PrintCommand<CashDrawerCommand>
 {
-    public sealed class CashDrawerCommand : PrintCommand<CashDrawerCommand>
+    #region Constructors
+
+    public CashDrawerCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public CashDrawerCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public CmdGaveta Gaveta { get; set; }
-
-        public byte TempoON { get; set; } = 50;
-
-        public byte TempoOFF { get; set; } = 200;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public CmdGaveta Gaveta { get; set; }
+
+    public byte TempoON { get; set; } = 50;
+
+    public byte TempoOFF { get; set; } = 200;
+
+    #endregion Properties
 }

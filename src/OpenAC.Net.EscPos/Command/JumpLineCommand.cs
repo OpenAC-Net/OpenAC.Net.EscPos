@@ -31,22 +31,21 @@
 
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class JumpLineCommand : PrintCommand<JumpLineCommand>
 {
-    public sealed class JumpLineCommand : PrintCommand<JumpLineCommand>
+    #region Constructors
+
+    public JumpLineCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public JumpLineCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public int Linhas { get; set; } = 1;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public int Linhas { get; set; } = 1;
+
+    #endregion Properties
 }

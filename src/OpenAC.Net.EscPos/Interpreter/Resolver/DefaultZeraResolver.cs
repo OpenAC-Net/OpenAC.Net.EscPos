@@ -33,22 +33,21 @@ using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultZeraResolver : CommandResolver<ZeraCommand>
 {
-    public sealed class DefaultZeraResolver : CommandResolver<ZeraCommand>
+    #region Constructors
+
+    public DefaultZeraResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultZeraResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : new byte[0];
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : new byte[0];
+
+    #endregion Methods
 }

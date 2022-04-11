@@ -32,22 +32,21 @@
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class CodePageCommand : PrintCommand<CodePageCommand>
 {
-    public sealed class CodePageCommand : PrintCommand<CodePageCommand>
+    #region Constructors
+
+    public CodePageCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public CodePageCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public PaginaCodigo PaginaCodigo { get; set; } = PaginaCodigo.pc850;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public PaginaCodigo PaginaCodigo { get; set; } = PaginaCodigo.pc850;
+
+    #endregion Properties
 }

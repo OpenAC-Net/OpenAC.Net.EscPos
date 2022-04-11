@@ -33,31 +33,30 @@ using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public abstract class CommandResolver<TCommand> : ICommandResolver where TCommand : class, IPrintCommand
 {
-    public abstract class CommandResolver<TCommand> : ICommandResolver where TCommand : class, IPrintCommand
+    #region Constructors
+
+    protected CommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary)
     {
-        #region Constructors
-
-        protected CommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary)
-        {
-            Commandos = dictionary;
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        protected IReadOnlyDictionary<CmdEscPos, byte[]> Commandos { get; }
-
-        #endregion Properties
-
-        #region Methods
-
-        public abstract byte[] Resolve(TCommand command);
-
-        byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
-
-        #endregion Methods
+        Commandos = dictionary;
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    protected IReadOnlyDictionary<CmdEscPos, byte[]> Commandos { get; }
+
+    #endregion Properties
+
+    #region Methods
+
+    public abstract byte[] Resolve(TCommand command);
+
+    byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
+
+    #endregion Methods
 }

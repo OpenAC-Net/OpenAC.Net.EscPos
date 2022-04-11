@@ -29,20 +29,19 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public sealed class LogoConfig
 {
-    public sealed class LogoConfig
-    {
-        #region Properties
+    #region Properties
 
-        public byte KC1 { get; set; } = 32;
+    public byte KC1 { get; set; } = 32;
 
-        public byte KC2 { get; set; } = 32;
+    public byte KC2 { get; set; } = 32;
 
-        public byte FatorX { get; set; } = 1;
+    public byte FatorX { get; set; } = 1;
 
-        public byte FatorY { get; set; } = 1;
+    public byte FatorY { get; set; } = 1;
 
-        #endregion Properties
-    }
+    #endregion Properties
 }

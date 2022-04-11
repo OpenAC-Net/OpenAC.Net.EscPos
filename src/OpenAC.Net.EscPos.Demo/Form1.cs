@@ -9,6 +9,7 @@ using OpenAC.Net.Core;
 using OpenAC.Net.Devices;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Demo.Commom;
+using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Demo
 {
@@ -356,7 +357,8 @@ namespace OpenAC.Net.EscPos.Demo
 
             posprinter.Conectar();
 
-            posprinter.ImprimirImagem(img);
+            posprinter.ImprimirImagem(img.ResizeImage(300, 300), CmdAlinhamento.Centro);
+            posprinter.PularLinhas(5);
             posprinter.CortarPapel();
             posprinter.Imprimir();
         }

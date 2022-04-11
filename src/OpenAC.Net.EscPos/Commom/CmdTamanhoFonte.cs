@@ -29,12 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdTamanhoFonte
 {
-    public enum CmdTamanhoFonte
-    {
-        Normal,
-        Expandida,
-        Condensada
-    }
+    Normal,
+    Expandida,
+    Condensada
 }

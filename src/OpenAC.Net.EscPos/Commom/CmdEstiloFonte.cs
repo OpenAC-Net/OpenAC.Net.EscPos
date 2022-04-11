@@ -31,15 +31,14 @@
 
 using System;
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+[Flags]
+public enum CmdEstiloFonte
 {
-    [Flags]
-    public enum CmdEstiloFonte
-    {
-        Negrito = 1 << 0,
-        Sublinhado = 1 << 1,
-        Invertido = 1 << 2,
-        Italico = 1 << 3,
-        AlturaDupla = 1 << 4,
-    }
+    Negrito = 1 << 0,
+    Sublinhado = 1 << 1,
+    Invertido = 1 << 2,
+    Italico = 1 << 3,
+    AlturaDupla = 1 << 4,
 }

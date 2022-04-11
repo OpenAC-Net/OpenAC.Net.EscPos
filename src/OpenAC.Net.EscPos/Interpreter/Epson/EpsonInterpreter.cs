@@ -33,45 +33,44 @@ using System.Text;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Epson
+namespace OpenAC.Net.EscPos.Interpreter.Epson;
+
+/// <summary>
+/// Classe de interpretação com comandos da Epson.
+/// </summary>
+public class EpsonInterpreter : EscPosInterpreter
 {
-    /// <summary>
-    /// Classe de interpretação com comandos da Epson.
-    /// </summary>
-    public class EpsonInterpreter : EscPosInterpreter
+    #region Constructors
+
+    internal EpsonInterpreter(Encoding enconder) : base(enconder)
     {
-        #region Constructors
-
-        internal EpsonInterpreter(Encoding enconder) : base(enconder)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        /// <inheritdoc />
-        protected override void IniciarInterpreter()
-        {
-            Status = new EpsonStatusResolver();
-            InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
-
-            CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscPos));
-            CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, DefaultCommands.EscPos));
-            CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<BarcodeCommand, DefaultBarcodeResolver>(new DefaultBarcodeResolver(Enconder, DefaultCommands.EscPos));
-            CommandResolver.AddResolver<LogoCommand, DefaultLogoResolver>(new DefaultLogoResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<QrCodeCommand, DefaultQrCodeResolver>(new DefaultQrCodeResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscPos));
-            CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(DefaultCommands.EscPos));
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    /// <inheritdoc />
+    protected override void IniciarInterpreter()
+    {
+        Status = new EpsonStatusResolver();
+        InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
+
+        CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, DefaultCommands.EscPos));
+        CommandResolver.AddResolver<ZeraCommand, DefaultZeraResolver>(new DefaultZeraResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<EspacoEntreLinhasCommand, DefaultEspacoEntreLinhasResolver>(new DefaultEspacoEntreLinhasResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, DefaultCommands.EscPos));
+        CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<BarcodeCommand, DefaultBarcodeResolver>(new DefaultBarcodeResolver(Enconder, DefaultCommands.EscPos));
+        CommandResolver.AddResolver<LogoCommand, DefaultLogoResolver>(new DefaultLogoResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<QrCodeCommand, DefaultQrCodeResolver>(new DefaultQrCodeResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscPos));
+        CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(DefaultCommands.EscPos));
+    }
+
+    #endregion Methods
 }

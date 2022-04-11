@@ -32,46 +32,45 @@
 using System.Linq;
 using System.Text;
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public class InformacoesImpressora
 {
-    public class InformacoesImpressora
+    #region Constructors
+
+    public InformacoesImpressora(string fabricante, string modelo, string firmware, string serial, bool guilhotina)
     {
-        #region Constructors
+        Fabricante = fabricante;
+        Modelo = modelo;
+        Firmware = firmware;
+        Serial = serial;
+        Guilhotina = guilhotina;
+    }
 
-        public InformacoesImpressora(string fabricante, string modelo, string firmware, string serial, bool guilhotina)
-        {
-            Fabricante = fabricante;
-            Modelo = modelo;
-            Firmware = firmware;
-            Serial = serial;
-            Guilhotina = guilhotina;
-        }
+    #endregion Constructors
 
-        #endregion Constructors
+    #region Properties
 
-        #region Properties
+    public string Fabricante { get; }
 
-        public string Fabricante { get; }
+    public string Modelo { get; }
 
-        public string Modelo { get; }
+    public string Firmware { get; }
 
-        public string Firmware { get; }
+    public string Serial { get; }
 
-        public string Serial { get; }
+    public bool Guilhotina { get; }
 
-        public bool Guilhotina { get; }
+    public static InformacoesImpressora Empty = new("", "", "", "", false);
 
-        public static InformacoesImpressora Empty = new("", "", "", "", false);
+    #endregion Properties
 
-        #endregion Properties
-
-        public override string ToString()
-        {
-            var props = GetType().GetProperties();
-            var sb = new StringBuilder();
-            foreach (var p in props)
-                sb.AppendLine(p.Name + ": " + p.GetValue(this, null));
-            return sb.ToString();
-        }
+    public override string ToString()
+    {
+        var props = GetType().GetProperties();
+        var sb = new StringBuilder();
+        foreach (var p in props)
+            sb.AppendLine(p.Name + ": " + p.GetValue(this, null));
+        return sb.ToString();
     }
 }

@@ -29,13 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdBarcodeText
 {
-    public enum CmdBarcodeText
-    {
-        SemTexto,
-        Acima,
-        Abaixo,
-        Ambos
-    }
+    SemTexto,
+    Acima,
+    Abaixo,
+    Ambos
 }

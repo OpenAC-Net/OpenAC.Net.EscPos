@@ -31,26 +31,25 @@
 
 using System;
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public sealed class QrCodeConfig
 {
-    public sealed class QrCodeConfig
-    {
-        #region Fields
+    #region Fields
 
-        private byte tamanho = 4;
-        private byte tipo = 2;
-        private byte errorLevel = 0;
+    private byte tamanho = 4;
+    private byte tipo = 2;
+    private byte errorLevel = 0;
 
-        #endregion Fields
+    #endregion Fields
 
-        #region Properties
+    #region Properties
 
-        public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;
+    public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;
 
-        public QrCodeModSize Tamanho { get; set; } = QrCodeModSize.Normal;
+    public QrCodeModSize Tamanho { get; set; } = QrCodeModSize.Normal;
 
-        public QrCodeErrorLevel ErrorLevel { get; set; } = QrCodeErrorLevel.LevelL;
+    public QrCodeErrorLevel ErrorLevel { get; set; } = QrCodeErrorLevel.LevelL;
 
-        #endregion Properties
-    }
+    #endregion Properties
 }

@@ -31,27 +31,26 @@
 
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+/// <summary>
+/// Exemplo de comando customizado, que gera linhas duplas ou simples, do tamanho solicitado.
+/// </summary>
+public sealed class PrintLineCommand : PrintCommand<PrintLineCommand>
 {
-    /// <summary>
-    /// Exemplo de comando customizado, que gera linhas duplas ou simples, do tamanho solicitado.
-    /// </summary>
-    public sealed class PrintLineCommand : PrintCommand<PrintLineCommand>
+    #region Constructors
+
+    public PrintLineCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public PrintLineCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public int Tamanho { get; set; } = 48;
-
-        public bool Dupla { get; set; } = false;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public int Tamanho { get; set; } = 48;
+
+    public bool Dupla { get; set; } = false;
+
+    #endregion Properties
 }

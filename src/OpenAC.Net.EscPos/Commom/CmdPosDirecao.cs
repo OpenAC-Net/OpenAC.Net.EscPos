@@ -29,13 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdPosDirecao : byte
 {
-    public enum CmdPosDirecao : byte
-    {
-        EsquerdaParaDireita = 0,
-        BaixoParaTopo = 1,
-        DireitaParaEsquerda = 2,
-        TopoParaBaixo = 3,
-    }
+    EsquerdaParaDireita = 0,
+    BaixoParaTopo = 1,
+    DireitaParaEsquerda = 2,
+    TopoParaBaixo = 3,
 }

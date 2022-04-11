@@ -36,48 +36,47 @@ using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
 {
-    public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
+    #region Constructors
+
+    public DefaultLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(LogoCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
-                !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
-
-            // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
-
-            // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
-            // Equipamentos(não Epson), mas que usam EscPosEpson...
-            // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
-            // KeyCode1:= 1..255; KeyCode2:= 0
-
-            var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
-
-            if (command.KC2 != 0)
-                return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
-
-            var keyCode = keyCodeUnico(command.KC1);
-            byte m = 0;
-            if (command.FatorX > 1)
-                m += 1;
-
-            if (command.FatorY > 1)
-                m += 2;
-
-            return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(LogoCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
+            !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
+
+        // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
+
+        // Nota: O Comando novo da Epson "GS + '(L'", não é compatível em alguns
+        // Equipamentos(não Epson), mas que usam EscPosEpson...
+        // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
+        // KeyCode1:= 1..255; KeyCode2:= 0
+
+        var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
+
+        if (command.KC2 != 0)
+            return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
+
+        var keyCode = keyCodeUnico(command.KC1);
+        byte m = 0;
+        if (command.FatorX > 1)
+            m += 1;
+
+        if (command.FatorY > 1)
+            m += 2;
+
+        return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
+    }
+
+    #endregion Methods
 }

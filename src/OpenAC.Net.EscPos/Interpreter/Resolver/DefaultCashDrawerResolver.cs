@@ -35,27 +35,26 @@ using System.Linq;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
-    public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerCommand>
+    #region Constructors
+
+    public DefaultCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CashDrawerCommand command)
-        {
-            return Commandos.ContainsKey(CmdEscPos.Gaveta)
-                ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
-                : new byte[0];
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CashDrawerCommand command)
+    {
+        return Commandos.ContainsKey(CmdEscPos.Gaveta)
+            ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
+            : new byte[0];
+    }
+
+    #endregion Methods
 }

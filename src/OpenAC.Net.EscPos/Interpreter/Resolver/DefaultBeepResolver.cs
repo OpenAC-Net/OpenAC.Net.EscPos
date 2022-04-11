@@ -34,22 +34,21 @@ using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultBeepResolver : CommandResolver<BeepCommand>
 {
-    public sealed class DefaultBeepResolver : CommandResolver<BeepCommand>
+    #region Constructors
+
+    public DefaultBeepResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultBeepResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(BeepCommand command) => !Commandos.ContainsKey(CmdEscPos.Beep) ? new byte[0] : Commandos[CmdEscPos.Beep];
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(BeepCommand command) => !Commandos.ContainsKey(CmdEscPos.Beep) ? new byte[0] : Commandos[CmdEscPos.Beep];
+
+    #endregion Methods
 }

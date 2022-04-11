@@ -35,30 +35,29 @@ using System.Linq;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEntreLinhasCommand>
 {
-    public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEntreLinhasCommand>
+    #region Constructors
+
+    public DefaultEspacoEntreLinhasResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultEspacoEntreLinhasResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(EspacoEntreLinhasCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return new byte[0];
-
-            var espacos = Math.Max((byte)0, command.Espaco);
-            if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
-
-            return !Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas) ? new byte[0] : Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(EspacoEntreLinhasCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return new byte[0];
+
+        var espacos = Math.Max((byte)0, command.Espaco);
+        if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
+
+        return !Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas) ? new byte[0] : Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
+    }
+
+    #endregion Methods
 }

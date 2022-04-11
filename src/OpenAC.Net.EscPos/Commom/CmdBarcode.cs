@@ -29,21 +29,20 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdBarcode
 {
-    public enum CmdBarcode
-    {
-        UPCA,
-        UPCE,
-        EAN13,
-        EAN8,
-        CODE39,
-        Inter2of5,
-        CodaBar,
-        CODE93,
-        CODE128,
-        CODE128a,
-        CODE128b,
-        CODE128c,
-    }
+    UPCA,
+    UPCE,
+    EAN13,
+    EAN8,
+    CODE39,
+    Inter2of5,
+    CodaBar,
+    CODE93,
+    CODE128,
+    CODE128a,
+    CODE128b,
+    CODE128c,
 }

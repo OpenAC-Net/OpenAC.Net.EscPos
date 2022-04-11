@@ -34,25 +34,24 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Diebold
+namespace OpenAC.Net.EscPos.Interpreter.Diebold;
+
+public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
 {
-    public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
+    #region Constructors
+
+    public DieboldLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DieboldLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(LogoCommand command)
-        {
-            return new byte[] { };
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(LogoCommand command)
+    {
+        return new byte[] { };
+    }
+
+    #endregion Methods
 }

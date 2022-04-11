@@ -31,28 +31,27 @@
 
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class LogoCommand : PrintCommand<LogoCommand>
 {
-    public sealed class LogoCommand : PrintCommand<LogoCommand>
+    #region Constructors
+
+    public LogoCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public LogoCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public byte KC1 { get; set; }
-
-        public byte KC2 { get; set; }
-
-        public byte FatorX { get; set; }
-
-        public byte FatorY { get; set; }
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public byte KC1 { get; set; }
+
+    public byte KC2 { get; set; }
+
+    public byte FatorX { get; set; }
+
+    public byte FatorY { get; set; }
+
+    #endregion Properties
 }

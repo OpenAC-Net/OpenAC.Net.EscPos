@@ -32,40 +32,39 @@
 using System;
 using OpenAC.Net.Devices;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos;
+
+/// <summary>
+/// Classe para impressão EscPos.
+/// </summary>
+/// <typeparam name="TConfig"></typeparam>
+public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDeviceConfig
 {
+    #region Constructors
+
     /// <summary>
-    /// Classe para impressão EscPos.
+    ///
     /// </summary>
-    /// <typeparam name="TConfig"></typeparam>
-    public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDeviceConfig
+    public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
     {
-        #region Constructors
-
-        /// <summary>
-        ///
-        /// </summary>
-        public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
-        {
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="device"></param>
-        public EscPosPrinter(TConfig device) : base(device)
-        {
-        }
-
-        #endregion Constructors
-
-        #region properties
-
-        /// <summary>
-        /// Configuações de comunicação com a impressora.
-        /// </summary>
-        public new TConfig Device => (TConfig)base.Device;
-
-        #endregion properties
     }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="device"></param>
+    public EscPosPrinter(TConfig device) : base(device)
+    {
+    }
+
+    #endregion Constructors
+
+    #region properties
+
+    /// <summary>
+    /// Configuações de comunicação com a impressora.
+    /// </summary>
+    public new TConfig Device => (TConfig)base.Device;
+
+    #endregion properties
 }

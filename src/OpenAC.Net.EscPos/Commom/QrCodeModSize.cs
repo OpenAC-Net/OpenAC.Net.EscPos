@@ -29,14 +29,13 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum QrCodeModSize : byte
 {
-    public enum QrCodeModSize : byte
-    {
-        Minusculo = 2,
-        Pequeno = 3,
-        Normal = 4,
-        Grande = 5,
-        ExtraGrande = 6,
-    }
+    Minusculo = 2,
+    Pequeno = 3,
+    Normal = 4,
+    Grande = 5,
+    ExtraGrande = 6,
 }

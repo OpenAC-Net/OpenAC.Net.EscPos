@@ -29,18 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public sealed class GavetaConfig
 {
-    public sealed class GavetaConfig
-    {
-        #region Properties
+    #region Properties
 
-        public bool SinalInvertido { get; set; }
+    public bool SinalInvertido { get; set; }
 
-        public byte TempoON { get; set; } = 50;
+    public byte TempoON { get; set; } = 50;
 
-        public byte TempoOFF { get; set; } = 200;
+    public byte TempoOFF { get; set; } = 200;
 
-        #endregion Properties
-    }
+    #endregion Properties
 }

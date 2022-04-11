@@ -37,38 +37,37 @@ using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Diebold
+namespace OpenAC.Net.EscPos.Interpreter.Diebold;
+
+public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
 {
-    public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
+    #region Constructors
+
+    public DieboldQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DieboldQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(QrCodeCommand command)
-        {
-            var num = command.Code.Length + 3;
-            var pL = (byte)(num % 256);
-            var pH = (byte)(num / 256);
-
-            var initial = Commandos[CmdEscPos.QrCodeInitial];
-            using var builder = new ByteArrayBuilder();
-            builder.Append(initial, new byte[] { 3, 0, (byte)'1', (byte)'B' });
-            builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)0 : (byte)1); // 0 - A esquerda, 1 - Centralizar
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo); // Error Level
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
-            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
-            builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(QrCodeCommand command)
+    {
+        var num = command.Code.Length + 3;
+        var pL = (byte)(num % 256);
+        var pH = (byte)(num / 256);
+
+        var initial = Commandos[CmdEscPos.QrCodeInitial];
+        using var builder = new ByteArrayBuilder();
+        builder.Append(initial, new byte[] { 3, 0, (byte)'1', (byte)'B' });
+        builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)0 : (byte)1); // 0 - A esquerda, 1 - Centralizar
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo); // Error Level
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
+        builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
+        builder.Append(Encoding.UTF8.GetBytes(command.Code));
+        builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

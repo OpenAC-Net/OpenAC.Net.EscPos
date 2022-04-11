@@ -35,32 +35,31 @@ using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
 {
-    public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
+    #region Constructors
+
+    public DefaultJumpLineResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultJumpLineResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(JumpLineCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
-
-            var linhas = Math.Max(1, command.Linhas);
-            using var builder = new ByteArrayBuilder();
-            for (var i = 0; i < linhas; i++)
-                builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(JumpLineCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
+
+        var linhas = Math.Max(1, command.Linhas);
+        using var builder = new ByteArrayBuilder();
+        for (var i = 0; i < linhas; i++)
+            builder.Append(Commandos[CmdEscPos.PuloDeLinha]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

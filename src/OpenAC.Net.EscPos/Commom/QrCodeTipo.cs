@@ -29,12 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum QrCodeTipo : byte
 {
-    public enum QrCodeTipo : byte
-    {
-        Model1 = 49,
-        Model2 = 50,
-        Micro = 51
-    }
+    Model1 = 49,
+    Model2 = 50,
+    Micro = 51
 }

@@ -34,22 +34,21 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Daruma
+namespace OpenAC.Net.EscPos.Interpreter.Daruma;
+
+public sealed class DarumaCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
-    public sealed class DarumaCashDrawerResolver : CommandResolver<CashDrawerCommand>
+    #region Constructors
+
+    public DarumaCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DarumaCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CashDrawerCommand command) => new[] { CmdConst.ESC, (byte)'p' };
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CashDrawerCommand command) => new[] { CmdConst.ESC, (byte)'p' };
+
+    #endregion Methods
 }

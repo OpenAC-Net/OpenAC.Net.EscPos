@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ZeraCommand.cs" company="OpenAC .Net">
+// <copyright file="DarumaInfoImpressoraResolver.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,17 +29,28 @@
 // <summary></summary>
 // ***********************************************************************
 
-using OpenAC.Net.EscPos.Interpreter;
+using System;
+using System.Text;
+using OpenAC.Net.Core.Extensions;
+using OpenAC.Net.EscPos.Commom;
+using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Command;
+namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
-public sealed class ZeraCommand : PrintCommand<ZeraCommand>
+public sealed class DarumaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
-    #region Constructors
+    public DarumaInfoImpressoraResolver(Encoding encoding) :
+        base(new[] { new byte[] { CmdConst.ESC, 195 }, new byte[] { CmdConst.ESC, 199 }, new byte[] { CmdConst.ESC, 229 } },
+            (dados) =>
+            {
+                if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
+                if (dados.Length < 3) return InformacoesImpressora.Empty;
 
-    public ZeraCommand(EscPosInterpreter interpreter) : base(interpreter)
-    {
-    }
+                var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                var firmware = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                var guilhotina = dados[2].IsNullOrEmpty() && encoding.GetString(dados[2]).Substring(8, 1) == "1";
 
-    #endregion Constructors
+                return new InformacoesImpressora("Daruma", modelo, firmware, "", guilhotina);
+            })
+    { }
 }

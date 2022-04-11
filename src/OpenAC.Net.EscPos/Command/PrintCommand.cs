@@ -32,28 +32,27 @@
 using OpenAC.Net.Core.Logging;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCommand : PrintCommand<TCommand>
 {
-    public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCommand : PrintCommand<TCommand>
+    #region Constructors
+
+    protected PrintCommand(EscPosInterpreter interpreter)
     {
-        #region Constructors
-
-        protected PrintCommand(EscPosInterpreter interpreter)
-        {
-            Interpreter = interpreter;
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Conteudo em bytes do comando
-        /// </summary>
-        public byte[] Content => Interpreter.ProcessCommand(this as TCommand);
-
-        protected EscPosInterpreter Interpreter { get; }
-
-        #endregion Properties
+        Interpreter = interpreter;
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    /// <summary>
+    /// Conteudo em bytes do comando
+    /// </summary>
+    public byte[] Content => Interpreter.ProcessCommand(this as TCommand);
+
+    protected EscPosInterpreter Interpreter { get; }
+
+    #endregion Properties
 }

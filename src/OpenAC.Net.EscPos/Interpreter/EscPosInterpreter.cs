@@ -37,74 +37,73 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter
+namespace OpenAC.Net.EscPos.Interpreter;
+
+/// <summary>
+/// Classe base para geração de comandos EscPos.
+/// </summary>
+public abstract class EscPosInterpreter : IOpenLog
 {
+    #region Constructors
+
     /// <summary>
-    /// Classe base para geração de comandos EscPos.
+    ///
     /// </summary>
-    public abstract class EscPosInterpreter : IOpenLog
+    /// <param name="enconder"></param>
+    protected EscPosInterpreter(Encoding enconder)
     {
-        #region Constructors
+        Guard.Against<ArgumentNullException>(enconder == null, $"{nameof(enconder)} não pode ser nulo.");
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="enconder"></param>
-        protected EscPosInterpreter(Encoding enconder)
-        {
-            Guard.Against<ArgumentNullException>(enconder == null, $"{nameof(enconder)} não pode ser nulo.");
-
-            Enconder = enconder;
-            IniciarInterpreter();
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Encoding utilizado nos textos para envio a impressora.
-        /// </summary>
-        public Encoding Enconder { get; }
-
-        /// <summary>
-        /// Cache que contem os resolvers dos comandos.
-        /// </summary>
-        public ResolverCache CommandResolver { get; } = new();
-
-        public RazaoColunaFonte RazaoColuna { get; } = new();
-
-        public InfoResolver<EscPosTipoStatus> Status { get; protected set; }
-
-        public InfoResolver<InformacoesImpressora> InfoImpressora { get; protected set; }
-
-        #endregion Properties
-
-        #region Methods
-
-        /// <summary>
-        /// Processa o comando e retornar os bytes correspondente.
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public byte[] ProcessCommand<TCommand>(TCommand command) where TCommand : PrintCommand<TCommand>
-        {
-            if (!CommandResolver.HasResolver<TCommand>())
-            {
-                this.Log().Debug($"[{GetType().Name}] - [{nameof(TCommand)}]: comando não implementado.");
-                return new byte[0];
-            }
-
-            var resolver = CommandResolver.GetResolver<TCommand>();
-            return resolver.Resolve(command);
-        }
-
-        /// <summary>
-        /// Função para inicializar o dicionario de comandos para ser usados no interpreter.
-        /// </summary>
-        protected abstract void IniciarInterpreter();
-
-        #endregion Methods
+        Enconder = enconder;
+        IniciarInterpreter();
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    /// <summary>
+    /// Encoding utilizado nos textos para envio a impressora.
+    /// </summary>
+    public Encoding Enconder { get; }
+
+    /// <summary>
+    /// Cache que contem os resolvers dos comandos.
+    /// </summary>
+    public ResolverCache CommandResolver { get; } = new();
+
+    public RazaoColunaFonte RazaoColuna { get; } = new();
+
+    public InfoResolver<EscPosTipoStatus> Status { get; protected set; }
+
+    public InfoResolver<InformacoesImpressora> InfoImpressora { get; protected set; }
+
+    #endregion Properties
+
+    #region Methods
+
+    /// <summary>
+    /// Processa o comando e retornar os bytes correspondente.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public byte[] ProcessCommand<TCommand>(TCommand command) where TCommand : PrintCommand<TCommand>
+    {
+        if (!CommandResolver.HasResolver<TCommand>())
+        {
+            this.Log().Debug($"[{GetType().Name}] - [{nameof(TCommand)}]: comando não implementado.");
+            return new byte[0];
+        }
+
+        var resolver = CommandResolver.GetResolver<TCommand>();
+        return resolver.Resolve(command);
+    }
+
+    /// <summary>
+    /// Função para inicializar o dicionario de comandos para ser usados no interpreter.
+    /// </summary>
+    protected abstract void IniciarInterpreter();
+
+    #endregion Methods
 }

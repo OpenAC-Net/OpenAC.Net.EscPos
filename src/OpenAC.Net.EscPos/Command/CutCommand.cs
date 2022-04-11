@@ -31,22 +31,21 @@
 
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class CutCommand : PrintCommand<CutCommand>
 {
-    public sealed class CutCommand : PrintCommand<CutCommand>
+    #region Constructors
+
+    public CutCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public CutCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public bool Parcial { get; set; } = false;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public bool Parcial { get; set; } = false;
+
+    #endregion Properties
 }

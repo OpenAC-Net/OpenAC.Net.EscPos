@@ -29,12 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdAlinhamento
 {
-    public enum CmdAlinhamento
-    {
-        Esquerda,
-        Centro,
-        Direita
-    }
+    Esquerda,
+    Centro,
+    Direita
 }

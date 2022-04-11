@@ -35,37 +35,36 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech
+namespace OpenAC.Net.EscPos.Interpreter.Bematech;
+
+public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
 {
-    public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
+    #region Constructors
+
+    public BemaLogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public BemaLogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(LogoCommand command)
-        {
-            int keyCode;
-            if (command.KC2 == 0)
-                keyCode = command.KC1 is >= 48 and <= 57 ? ((char)command.KC1).ToInt32() : command.KC1;
-            else
-                keyCode = new string(new[] { (char)command.KC1, (char)command.KC2 }).ToInt32();
-
-            var m = 0;
-            if (command.FatorX > 1)
-                m += 1;
-            if (command.FatorY > 1)
-                m += 2;
-
-            return new[] { CmdConst.FS, (byte)'p', (byte)keyCode, (byte)m };
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(LogoCommand command)
+    {
+        int keyCode;
+        if (command.KC2 == 0)
+            keyCode = command.KC1 is >= 48 and <= 57 ? ((char)command.KC1).ToInt32() : command.KC1;
+        else
+            keyCode = new string(new[] { (char)command.KC1, (char)command.KC2 }).ToInt32();
+
+        var m = 0;
+        if (command.FatorX > 1)
+            m += 1;
+        if (command.FatorY > 1)
+            m += 2;
+
+        return new[] { CmdConst.FS, (byte)'p', (byte)keyCode, (byte)m };
+    }
+
+    #endregion Methods
 }

@@ -29,10 +29,9 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public interface IPrintCommand
 {
-    public interface IPrintCommand
-    {
-        byte[] Content { get; }
-    }
+    byte[] Content { get; }
 }

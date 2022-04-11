@@ -37,41 +37,40 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech
+namespace OpenAC.Net.EscPos.Interpreter.Bematech;
+
+public sealed class BemaCodePageResolver : CommandResolver<CodePageCommand>
 {
-    public sealed class BemaCodePageResolver : CommandResolver<CodePageCommand>
+    #region Constructors
+
+    public BemaCodePageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
-        #region Constructors
-
-        public BemaCodePageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CodePageCommand command)
-        {
-            if (command.PaginaCodigo.IsIn(PaginaCodigo.pc852, PaginaCodigo.pc1252)) return new byte[0];
-
-            using var builder = new ByteArrayBuilder();
-
-            var codePage = command.PaginaCodigo switch
-            {
-                PaginaCodigo.pc437 => new byte[] { 3 },
-                PaginaCodigo.pc850 => new byte[] { 2 },
-                PaginaCodigo.pc860 => new byte[] { 4 },
-                PaginaCodigo.pcUTF8 => new byte[] { 8 },
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            builder.Append(new byte[] { CmdConst.ESC, 116 });
-            builder.Append(codePage);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CodePageCommand command)
+    {
+        if (command.PaginaCodigo.IsIn(PaginaCodigo.pc852, PaginaCodigo.pc1252)) return new byte[0];
+
+        using var builder = new ByteArrayBuilder();
+
+        var codePage = command.PaginaCodigo switch
+        {
+            PaginaCodigo.pc437 => new byte[] { 3 },
+            PaginaCodigo.pc850 => new byte[] { 2 },
+            PaginaCodigo.pc860 => new byte[] { 4 },
+            PaginaCodigo.pcUTF8 => new byte[] { 8 },
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        builder.Append(new byte[] { CmdConst.ESC, 116 });
+        builder.Append(codePage);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

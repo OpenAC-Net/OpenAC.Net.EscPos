@@ -29,11 +29,10 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdGaveta : byte
 {
-    public enum CmdGaveta : byte
-    {
-        GavetaUm = 1,
-        GavetaDois = 2
-    }
+    GavetaUm = 1,
+    GavetaDois = 2
 }

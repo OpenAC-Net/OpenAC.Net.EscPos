@@ -4,29 +4,28 @@ using System.Text;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultPrintLineResolver : CommandResolver<PrintLineCommand>
 {
-    public sealed class DefaultPrintLineResolver : CommandResolver<PrintLineCommand>
+    #region Constructors
+
+    public DefaultPrintLineResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
+        Enconder = enconder;
+    }
 
-        public DefaultPrintLineResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-            Enconder = enconder;
-        }
+    #endregion Constructors
 
-        #endregion Constructors
+    #region Properties
 
-        #region Properties
+    public Encoding Enconder { get; }
 
-        public Encoding Enconder { get; }
+    #endregion Properties
 
-        #endregion Properties
-
-        public override byte[] Resolve(PrintLineCommand command)
-        {
-            return Enconder.GetBytes(new string(command.Dupla ? '=' : '-', command.Tamanho))
-                .Concat(Commandos[CmdEscPos.PuloDeLinha]).ToArray();
-        }
+    public override byte[] Resolve(PrintLineCommand command)
+    {
+        return Enconder.GetBytes(new string(command.Dupla ? '=' : '-', command.Tamanho))
+            .Concat(Commandos[CmdEscPos.PuloDeLinha]).ToArray();
     }
 }

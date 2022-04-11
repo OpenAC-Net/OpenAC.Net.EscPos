@@ -32,32 +32,31 @@
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class BarcodeCommand : PrintCommand<BarcodeCommand>
 {
-    public sealed class BarcodeCommand : PrintCommand<BarcodeCommand>
+    #region Constructors
+
+    public BarcodeCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public BarcodeCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public CmdBarcode Tipo { get; set; }
-
-        public string Code { get; set; } = "";
-
-        public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public int Altura { get; set; } = 0;
-
-        public int Largura { get; set; } = 0;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public CmdBarcode Tipo { get; set; }
+
+    public string Code { get; set; } = "";
+
+    public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
+
+    public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+
+    public int Altura { get; set; } = 0;
+
+    public int Largura { get; set; } = 0;
+
+    #endregion Properties
 }

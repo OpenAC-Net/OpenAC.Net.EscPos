@@ -29,18 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum ProtocoloEscPos
 {
-    public enum ProtocoloEscPos
-    {
-        EscPos,
-        EscBema,
-        EscDaruma,
-        EscElgin,
-        EscDiebold,
-        EscGPrinter,
-        EscDatecs,
-        EscZJiang,
-        EscPosStar
-    }
+    EscPos,
+    EscBema,
+    EscDaruma,
+    EscElgin,
+    EscDiebold,
+    EscGPrinter,
+    EscDatecs,
+    EscZJiang,
+    EscPosStar
 }

@@ -29,13 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum QrCodeErrorLevel : byte
 {
-    public enum QrCodeErrorLevel : byte
-    {
-        LevelL = 48,
-        LevelM = 49,
-        LevelQ = 50,
-        LevelH = 51
-    }
+    LevelL = 48,
+    LevelM = 49,
+    LevelQ = 50,
+    LevelH = 51
 }

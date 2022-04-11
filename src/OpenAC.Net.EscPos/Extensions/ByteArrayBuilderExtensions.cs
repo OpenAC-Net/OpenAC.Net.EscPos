@@ -32,32 +32,31 @@
 using System.Collections.Generic;
 using OpenAC.Net.Devices.Commom;
 
-namespace OpenAC.Net.EscPos.Extensions
+namespace OpenAC.Net.EscPos.Extensions;
+
+internal static class ByteArrayBuilderExtensions
 {
-    internal static class ByteArrayBuilderExtensions
+    public static bool Append(this ByteArrayBuilder list, params object[] items)
     {
-        public static bool Append(this ByteArrayBuilder list, params object[] items)
+        var ignoredItems = false;
+        foreach (var item in items)
         {
-            var ignoredItems = false;
-            foreach (var item in items)
+            switch (item)
             {
-                switch (item)
-                {
-                    case byte itemT:
-                        list.Append(itemT);
-                        break;
+                case byte itemT:
+                    list.Append(itemT);
+                    break;
 
-                    case IEnumerable<byte> arrayT:
-                        list.Append(arrayT);
-                        break;
+                case IEnumerable<byte> arrayT:
+                    list.Append(arrayT);
+                    break;
 
-                    default:
-                        ignoredItems = true;
-                        break;
-                }
+                default:
+                    ignoredItems = true;
+                    break;
             }
-
-            return !ignoredItems;
         }
+
+        return !ignoredItems;
     }
 }

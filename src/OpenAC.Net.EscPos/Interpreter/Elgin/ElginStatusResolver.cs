@@ -34,51 +34,50 @@ using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin
+namespace OpenAC.Net.EscPos.Interpreter.Elgin;
+
+public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
 {
-    public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
+    public ElginStatusResolver() :
+        base(new[] { new byte[] { 5 } },
+            dados =>
+            {
+                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+
+                EscPosTipoStatus? status = null;
+
+                var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
+
+                var b = dados[0][0];
+                if (!bitTest(b, 0))
+                    status = EscPosTipoStatus.OffLine;
+
+                if (bitTest(b, 1))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.SemPapel;
+                    else
+                        status = EscPosTipoStatus.SemPapel;
+
+                if (bitTest(b, 2))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.GavetaAberta;
+                    else
+                        status = EscPosTipoStatus.GavetaAberta;
+
+                if (bitTest(b, 3))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.TampaAberta;
+                    else
+                        status = EscPosTipoStatus.TampaAberta;
+
+                if (bitTest(b, 4))
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.PoucoPapel;
+                    else
+                        status = EscPosTipoStatus.PoucoPapel;
+
+                return status ?? EscPosTipoStatus.Nenhum;
+            })
     {
-        public ElginStatusResolver() :
-            base(new[] { new byte[] { 5 } },
-                dados =>
-                {
-                    if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
-
-                    EscPosTipoStatus? status = null;
-
-                    var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
-
-                    var b = dados[0][0];
-                    if (!bitTest(b, 0))
-                        status = EscPosTipoStatus.OffLine;
-
-                    if (bitTest(b, 1))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.SemPapel;
-                        else
-                            status = EscPosTipoStatus.SemPapel;
-
-                    if (bitTest(b, 2))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.GavetaAberta;
-                        else
-                            status = EscPosTipoStatus.GavetaAberta;
-
-                    if (bitTest(b, 3))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.TampaAberta;
-                        else
-                            status = EscPosTipoStatus.TampaAberta;
-
-                    if (bitTest(b, 4))
-                        if (status.HasValue)
-                            status |= EscPosTipoStatus.PoucoPapel;
-                        else
-                            status = EscPosTipoStatus.PoucoPapel;
-
-                    return status ?? EscPosTipoStatus.Nenhum;
-                })
-        {
-        }
     }
 }

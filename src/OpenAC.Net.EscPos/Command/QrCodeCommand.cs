@@ -33,30 +33,29 @@ using System;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class QrCodeCommand : PrintCommand<QrCodeCommand>
 {
-    public sealed class QrCodeCommand : PrintCommand<QrCodeCommand>
+    #region Constructors
+
+    public QrCodeCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public QrCodeCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Code { get; set; } = "";
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public QrCodeTipo Tipo { get; set; }
-
-        public QrCodeModSize LarguraModulo { get; set; } = QrCodeModSize.Normal;
-
-        public QrCodeErrorLevel ErrorLevel { get; set; }
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public string Code { get; set; } = "";
+
+    public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+
+    public QrCodeTipo Tipo { get; set; }
+
+    public QrCodeModSize LarguraModulo { get; set; } = QrCodeModSize.Normal;
+
+    public QrCodeErrorLevel ErrorLevel { get; set; }
+
+    #endregion Properties
 }

@@ -32,30 +32,29 @@
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class TextCommand : PrintCommand<TextCommand>
 {
-    public sealed class TextCommand : PrintCommand<TextCommand>
+    #region Constructors
+
+    public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public string Texto { get; set; }
-
-        public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
-
-        public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public CmdEstiloFonte? Estilo { get; set; } = null;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public string Texto { get; set; }
+
+    public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
+
+    public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+
+    public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+
+    public CmdEstiloFonte? Estilo { get; set; } = null;
+
+    #endregion Properties
 }

@@ -29,15 +29,14 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum PaginaCodigo
 {
-    public enum PaginaCodigo
-    {
-        pc437,
-        pc850,
-        pc852,
-        pc860,
-        pcUTF8,
-        pc1252
-    }
+    pc437,
+    pc850,
+    pc852,
+    pc860,
+    pcUTF8,
+    pc1252
 }

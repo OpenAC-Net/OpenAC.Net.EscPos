@@ -37,64 +37,63 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultQrCodeResolver : CommandResolver<QrCodeCommand>
 {
-    public sealed class DefaultQrCodeResolver : CommandResolver<QrCodeCommand>
+    #region Constructors
+
+    public DefaultQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(QrCodeCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
-
-            using var builder = new ByteArrayBuilder();
-
-            switch (command.Alinhamento)
-            {
-                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-                    break;
-
-                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
-                    break;
-
-                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            var num = command.Code.Length + 3;
-            var pL = (byte)(num % 256);
-            var pH = (byte)(num / 256);
-
-            var initial = Commandos[CmdEscPos.QrCodeInitial];
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeModel], (byte)command.Tipo, (byte)0);
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo);
-            builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
-            builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
-            // Precisa ser UTF8 mesmo para imprimir correto.
-            builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
-
-            // Volta alinhamento para Esquerda.
-            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(QrCodeCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
+
+        using var builder = new ByteArrayBuilder();
+
+        switch (command.Alinhamento)
+        {
+            case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                break;
+
+            case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                break;
+
+            case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        var num = command.Code.Length + 3;
+        var pL = (byte)(num % 256);
+        var pH = (byte)(num / 256);
+
+        var initial = Commandos[CmdEscPos.QrCodeInitial];
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeModel], (byte)command.Tipo, (byte)0);
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo);
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
+        builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
+        // Precisa ser UTF8 mesmo para imprimir correto.
+        builder.Append(Encoding.UTF8.GetBytes(command.Code));
+        builder.Append(initial, Commandos[CmdEscPos.QrCodePrint]);
+
+        // Volta alinhamento para Esquerda.
+        if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
+            builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

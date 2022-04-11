@@ -36,60 +36,59 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaCommand>
 {
-    public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaCommand>
+    #region Constructors
+
+    public DefaultModoPaginaResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultModoPaginaResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(ModoPaginaCommand command)
-        {
-            using var builder = new ByteArrayBuilder();
-
-            builder.Append(Commandos[CmdEscPos.LigaModoPagina]);
-
-            foreach (var regiao in command.Regioes)
-            {
-                builder.Append(new[] { CmdConst.ESC, (byte)'T', (byte)regiao.Direcao });
-
-                var espacos = Math.Max((byte)0, regiao.EspacoEntreLinhas);
-                if (espacos == 0)
-                    builder.Append(Commandos[CmdEscPos.EspacoEntreLinhasPadrao]);
-                else
-                    builder.Append(Commandos[CmdEscPos.EspacoEntreLinhas], espacos);
-
-                builder.Append(new[] { CmdConst.ESC, (byte)'W' });
-
-                builder.Append((byte)(regiao.Esquerda % 256));
-                builder.Append((byte)(regiao.Esquerda / 256));
-
-                builder.Append((byte)(regiao.Topo % 256));
-                builder.Append((byte)(regiao.Topo / 256));
-
-                builder.Append((byte)(regiao.Largura % 256));
-                builder.Append((byte)(regiao.Largura / 256));
-
-                builder.Append((byte)(regiao.Altura % 256));
-                builder.Append((byte)(regiao.Altura / 256));
-
-                foreach (var cmd in regiao.Commands)
-                    builder.Append(cmd.Content);
-            }
-
-            builder.Append(Commandos[CmdEscPos.ImprimePagina]);
-            builder.Append(Commandos[CmdEscPos.DesligaModoPagina]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(ModoPaginaCommand command)
+    {
+        using var builder = new ByteArrayBuilder();
+
+        builder.Append(Commandos[CmdEscPos.LigaModoPagina]);
+
+        foreach (var regiao in command.Regioes)
+        {
+            builder.Append(new[] { CmdConst.ESC, (byte)'T', (byte)regiao.Direcao });
+
+            var espacos = Math.Max((byte)0, regiao.EspacoEntreLinhas);
+            if (espacos == 0)
+                builder.Append(Commandos[CmdEscPos.EspacoEntreLinhasPadrao]);
+            else
+                builder.Append(Commandos[CmdEscPos.EspacoEntreLinhas], espacos);
+
+            builder.Append(new[] { CmdConst.ESC, (byte)'W' });
+
+            builder.Append((byte)(regiao.Esquerda % 256));
+            builder.Append((byte)(regiao.Esquerda / 256));
+
+            builder.Append((byte)(regiao.Topo % 256));
+            builder.Append((byte)(regiao.Topo / 256));
+
+            builder.Append((byte)(regiao.Largura % 256));
+            builder.Append((byte)(regiao.Largura / 256));
+
+            builder.Append((byte)(regiao.Altura % 256));
+            builder.Append((byte)(regiao.Altura / 256));
+
+            foreach (var cmd in regiao.Commands)
+                builder.Append(cmd.Content);
+        }
+
+        builder.Append(Commandos[CmdEscPos.ImprimePagina]);
+        builder.Append(Commandos[CmdEscPos.DesligaModoPagina]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

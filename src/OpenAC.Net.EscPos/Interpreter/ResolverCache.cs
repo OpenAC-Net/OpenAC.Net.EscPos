@@ -35,53 +35,52 @@ using OpenAC.Net.Core;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter
+namespace OpenAC.Net.EscPos.Interpreter;
+
+public sealed class ResolverCache
 {
-    public sealed class ResolverCache
+    #region Fields
+
+    private readonly Dictionary<Type, ICommandResolver> resolverCache;
+
+    #endregion Fields
+
+    #region Constructors
+
+    public ResolverCache()
     {
-        #region Fields
-
-        private readonly Dictionary<Type, ICommandResolver> resolverCache;
-
-        #endregion Fields
-
-        #region Constructors
-
-        public ResolverCache()
-        {
-            resolverCache = new Dictionary<Type, ICommandResolver>();
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public bool HasResolver<TCommand>() where TCommand : PrintCommand<TCommand>
-        {
-            return resolverCache.ContainsKey(typeof(TCommand));
-        }
-
-        public void AddResolver<TCommand, TResolver>(TResolver resolver)
-            where TCommand : PrintCommand<TCommand>
-            where TResolver : CommandResolver<TCommand>
-        {
-            if (HasResolver<TCommand>()) throw new OpenException("Resolver já cadastrado para este comando.");
-
-            resolverCache.Add(typeof(TCommand), resolver);
-        }
-
-        public void RemoveResolver<TCommand>() where TCommand : PrintCommand<TCommand>
-        {
-            if (!HasResolver<TCommand>()) throw new ResolverException("Resolver não cadastrado para este comando.");
-
-            resolverCache.Remove(typeof(TCommand));
-        }
-
-        public ICommandResolver GetResolver<TCommand>() where TCommand : PrintCommand<TCommand>
-        {
-            return resolverCache[typeof(TCommand)];
-        }
-
-        #endregion Methods
+        resolverCache = new Dictionary<Type, ICommandResolver>();
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public bool HasResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+    {
+        return resolverCache.ContainsKey(typeof(TCommand));
+    }
+
+    public void AddResolver<TCommand, TResolver>(TResolver resolver)
+        where TCommand : PrintCommand<TCommand>
+        where TResolver : CommandResolver<TCommand>
+    {
+        if (HasResolver<TCommand>()) throw new OpenException("Resolver já cadastrado para este comando.");
+
+        resolverCache.Add(typeof(TCommand), resolver);
+    }
+
+    public void RemoveResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+    {
+        if (!HasResolver<TCommand>()) throw new ResolverException("Resolver não cadastrado para este comando.");
+
+        resolverCache.Remove(typeof(TCommand));
+    }
+
+    public ICommandResolver GetResolver<TCommand>() where TCommand : PrintCommand<TCommand>
+    {
+        return resolverCache[typeof(TCommand)];
+    }
+
+    #endregion Methods
 }

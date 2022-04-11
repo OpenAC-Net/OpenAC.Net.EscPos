@@ -31,10 +31,9 @@
 
 using OpenAC.Net.EscPos.Command;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public interface ICommandResolver
 {
-    public interface ICommandResolver
-    {
-        byte[] Resolve(IPrintCommand command);
-    }
+    byte[] Resolve(IPrintCommand command);
 }

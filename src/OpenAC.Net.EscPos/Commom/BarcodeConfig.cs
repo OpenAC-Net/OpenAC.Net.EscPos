@@ -29,18 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public sealed class BarcodeConfig
 {
-    public sealed class BarcodeConfig
-    {
-        #region Properties
+    #region Properties
 
-        public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
+    public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
 
-        public int Altura { get; set; } = 0;
+    public int Altura { get; set; } = 0;
 
-        public int Largura { get; set; } = 0;
+    public int Largura { get; set; } = 0;
 
-        #endregion Properties
-    }
+    #endregion Properties
 }

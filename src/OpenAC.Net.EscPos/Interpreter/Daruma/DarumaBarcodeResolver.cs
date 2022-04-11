@@ -37,119 +37,118 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Daruma
+namespace OpenAC.Net.EscPos.Interpreter.Daruma;
+
+public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
 {
-    public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
+    #region Constructors
+
+    public DarumaBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
-        #region Constructors
-
-        public DarumaBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
-        {
-            Enconder = enconder;
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public Encoding Enconder { get; }
-
-        #endregion Properties
-
-        #region Methods
-
-        public override byte[] Resolve(BarcodeCommand command)
-        {
-            using var builder = new ByteArrayBuilder();
-
-            switch (command.Alinhamento)
-            {
-                case CmdAlinhamento.Esquerda:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-                    break;
-
-                case CmdAlinhamento.Centro:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
-                    break;
-
-                case CmdAlinhamento.Direita:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            // Formando o codigo de barras
-            byte[] barCode;
-            switch (command.Tipo)
-            {
-                case CmdBarcode.UPCA:
-                    barCode = new byte[] { 8 };
-                    break;
-
-                case CmdBarcode.EAN13:
-                    barCode = new byte[] { 1 };
-                    break;
-
-                case CmdBarcode.EAN8:
-                    barCode = new byte[] { 2 };
-                    break;
-
-                case CmdBarcode.CODE39:
-                    barCode = new byte[] { 6 };
-                    break;
-
-                case CmdBarcode.Inter2of5:
-                    barCode = new byte[] { 4 };
-                    break;
-
-                case CmdBarcode.CodaBar:
-                    barCode = new byte[] { 9 };
-                    break;
-
-                case CmdBarcode.CODE93:
-                    barCode = new byte[] { 7 };
-                    break;
-
-                case CmdBarcode.CODE128b:
-                case CmdBarcode.CODE128:
-                case CmdBarcode.CODE128a:
-                case CmdBarcode.CODE128c:
-                    barCode = new byte[] { 5 };
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            var largura = command.Largura == 0 ? (byte)2 : Math.Max(Math.Min((byte)command.Largura, (byte)5), (byte)2);
-            var altura = command.Altura == 0 ? (byte)50 : Math.Max(Math.Min((byte)command.Altura, (byte)200), (byte)50);
-
-            var showCode = command.Exibir switch
-            {
-                CmdBarcodeText.SemTexto => new byte[] { 0 },
-                CmdBarcodeText.Acima => new byte[] { 0 },
-                CmdBarcodeText.Abaixo => new byte[] { 1 },
-                CmdBarcodeText.Ambos => new byte[] { 0 },
-                _ => new byte[0]
-            };
-
-            builder.Append(new[] { CmdConst.ESC, (byte)'b' });
-            builder.Append(barCode);
-            builder.Append(largura);
-            builder.Append(altura);
-            builder.Append(showCode);
-            builder.Append(Enconder.GetBytes(command.Code));
-            builder.Append(CmdConst.NUL);
-
-            // Volta alinhamento para Esquerda.
-            if (command.Alinhamento != CmdAlinhamento.Esquerda)
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
+        Enconder = enconder;
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public Encoding Enconder { get; }
+
+    #endregion Properties
+
+    #region Methods
+
+    public override byte[] Resolve(BarcodeCommand command)
+    {
+        using var builder = new ByteArrayBuilder();
+
+        switch (command.Alinhamento)
+        {
+            case CmdAlinhamento.Esquerda:
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                break;
+
+            case CmdAlinhamento.Centro:
+                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                break;
+
+            case CmdAlinhamento.Direita:
+                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        // Formando o codigo de barras
+        byte[] barCode;
+        switch (command.Tipo)
+        {
+            case CmdBarcode.UPCA:
+                barCode = new byte[] { 8 };
+                break;
+
+            case CmdBarcode.EAN13:
+                barCode = new byte[] { 1 };
+                break;
+
+            case CmdBarcode.EAN8:
+                barCode = new byte[] { 2 };
+                break;
+
+            case CmdBarcode.CODE39:
+                barCode = new byte[] { 6 };
+                break;
+
+            case CmdBarcode.Inter2of5:
+                barCode = new byte[] { 4 };
+                break;
+
+            case CmdBarcode.CodaBar:
+                barCode = new byte[] { 9 };
+                break;
+
+            case CmdBarcode.CODE93:
+                barCode = new byte[] { 7 };
+                break;
+
+            case CmdBarcode.CODE128b:
+            case CmdBarcode.CODE128:
+            case CmdBarcode.CODE128a:
+            case CmdBarcode.CODE128c:
+                barCode = new byte[] { 5 };
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        var largura = command.Largura == 0 ? (byte)2 : Math.Max(Math.Min((byte)command.Largura, (byte)5), (byte)2);
+        var altura = command.Altura == 0 ? (byte)50 : Math.Max(Math.Min((byte)command.Altura, (byte)200), (byte)50);
+
+        var showCode = command.Exibir switch
+        {
+            CmdBarcodeText.SemTexto => new byte[] { 0 },
+            CmdBarcodeText.Acima => new byte[] { 0 },
+            CmdBarcodeText.Abaixo => new byte[] { 1 },
+            CmdBarcodeText.Ambos => new byte[] { 0 },
+            _ => new byte[0]
+        };
+
+        builder.Append(new[] { CmdConst.ESC, (byte)'b' });
+        builder.Append(barCode);
+        builder.Append(largura);
+        builder.Append(altura);
+        builder.Append(showCode);
+        builder.Append(Enconder.GetBytes(command.Code));
+        builder.Append(CmdConst.NUL);
+
+        // Volta alinhamento para Esquerda.
+        if (command.Alinhamento != CmdAlinhamento.Esquerda)
+            builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

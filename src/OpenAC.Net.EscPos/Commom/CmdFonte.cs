@@ -29,12 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Commom
+namespace OpenAC.Net.EscPos.Commom;
+
+public enum CmdFonte
 {
-    public enum CmdFonte
-    {
-        Normal,
-        FonteA,
-        FonteB
-    }
+    Normal,
+    FonteA,
+    FonteB
 }

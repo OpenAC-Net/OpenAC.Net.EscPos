@@ -32,22 +32,21 @@
 using System;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class EspacoEntreLinhasCommand : PrintCommand<EspacoEntreLinhasCommand>
 {
-    public sealed class EspacoEntreLinhasCommand : PrintCommand<EspacoEntreLinhasCommand>
+    #region Constructors
+
+    public EspacoEntreLinhasCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public EspacoEntreLinhasCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public byte Espaco { get; set; } = 0;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public byte Espaco { get; set; } = 0;
+
+    #endregion Properties
 }

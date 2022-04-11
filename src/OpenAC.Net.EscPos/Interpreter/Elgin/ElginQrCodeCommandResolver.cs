@@ -38,102 +38,101 @@ using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin
+namespace OpenAC.Net.EscPos.Interpreter.Elgin;
+
+public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
 {
-    public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
+    #region Constructors
+
+    public ElginQrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public ElginQrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(QrCodeCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
-
-            using var builder = new ByteArrayBuilder();
-
-            switch (command.Alinhamento)
-            {
-                case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-                    break;
-
-                case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
-                    break;
-
-                case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
-                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-            byte tipo;
-            switch (command.Tipo)
-            {
-                case QrCodeTipo.Model1:
-                    tipo = 1;
-                    break;
-
-                case QrCodeTipo.Micro:
-                case QrCodeTipo.Model2:
-                    tipo = 2;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            byte error;
-            switch (command.ErrorLevel)
-            {
-                case QrCodeErrorLevel.LevelL:
-                    error = (byte)'L';
-                    break;
-
-                case QrCodeErrorLevel.LevelM:
-                    error = (byte)'M';
-                    break;
-
-                case QrCodeErrorLevel.LevelQ:
-                    error = (byte)'Q';
-                    break;
-
-                case QrCodeErrorLevel.LevelH:
-                    error = (byte)'H';
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            builder.Append(new byte[] { CmdConst.GS, (byte)'o', 0 });  // Set parameters of QRCODE barcode
-            builder.Append((byte)command.LarguraModulo); // Basic element width
-            builder.Append(0); // Language mode: 0:Chinese 1:Japanese
-            builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-            builder.Append(new[] { CmdConst.GS, (byte)'k' }); // Bar Code
-            builder.Append(11); // Type = QRCode. Number of Characters: 4-928
-            builder.Append(error);
-            builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual
-            builder.Append(Encoding.UTF8.GetBytes(command.Code));
-            builder.Append(0);
-
-            // Volta alinhamento para Esquerda.
-            if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(QrCodeCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
+
+        using var builder = new ByteArrayBuilder();
+
+        switch (command.Alinhamento)
+        {
+            case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                break;
+
+            case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
+                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                break;
+
+            case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
+                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        // Symbol type: 1:Original type 2:Enhanced type(Recommended)
+        byte tipo;
+        switch (command.Tipo)
+        {
+            case QrCodeTipo.Model1:
+                tipo = 1;
+                break;
+
+            case QrCodeTipo.Micro:
+            case QrCodeTipo.Model2:
+                tipo = 2;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        byte error;
+        switch (command.ErrorLevel)
+        {
+            case QrCodeErrorLevel.LevelL:
+                error = (byte)'L';
+                break;
+
+            case QrCodeErrorLevel.LevelM:
+                error = (byte)'M';
+                break;
+
+            case QrCodeErrorLevel.LevelQ:
+                error = (byte)'Q';
+                break;
+
+            case QrCodeErrorLevel.LevelH:
+                error = (byte)'H';
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        builder.Append(new byte[] { CmdConst.GS, (byte)'o', 0 });  // Set parameters of QRCODE barcode
+        builder.Append((byte)command.LarguraModulo); // Basic element width
+        builder.Append(0); // Language mode: 0:Chinese 1:Japanese
+        builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
+        builder.Append(new[] { CmdConst.GS, (byte)'k' }); // Bar Code
+        builder.Append(11); // Type = QRCode. Number of Characters: 4-928
+        builder.Append(error);
+        builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual
+        builder.Append(Encoding.UTF8.GetBytes(command.Code));
+        builder.Append(0);
+
+        // Volta alinhamento para Esquerda.
+        if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
+            builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

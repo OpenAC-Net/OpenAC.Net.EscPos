@@ -31,32 +31,31 @@
 
 using System;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public abstract class InfoResolver<TInfo>
 {
-    public abstract class InfoResolver<TInfo>
+    #region Fields
+
+    private readonly Func<byte[][], TInfo> processStatus;
+
+    #endregion Fields
+
+    #region Constructors
+
+    protected InfoResolver(byte[][] commands, Func<byte[][], TInfo> resolver)
     {
-        #region Fields
-
-        private readonly Func<byte[][], TInfo> processStatus;
-
-        #endregion Fields
-
-        #region Constructors
-
-        protected InfoResolver(byte[][] commands, Func<byte[][], TInfo> resolver)
-        {
-            Commands = commands;
-            processStatus = resolver;
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public byte[][] Commands { get; }
-
-        public TInfo Resolve(byte[][] dados) => processStatus(dados);
-
-        #endregion Methods
+        Commands = commands;
+        processStatus = resolver;
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public byte[][] Commands { get; }
+
+    public TInfo Resolve(byte[][] dados) => processStatus(dados);
+
+    #endregion Methods
 }

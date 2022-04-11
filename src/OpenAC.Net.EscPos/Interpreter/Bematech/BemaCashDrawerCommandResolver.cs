@@ -35,32 +35,31 @@ using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech
+namespace OpenAC.Net.EscPos.Interpreter.Bematech;
+
+public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
 {
-    public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
+    #region Constructors
+
+    public BemaCashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public BemaCashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CashDrawerCommand command)
-        {
-            var tempo = Math.Max(command.TempoON, command.TempoOFF);
-            switch (command.Gaveta)
-            {
-                case CmdGaveta.GavetaUm: return new byte[] { CmdConst.ESC, 128, tempo };
-                case CmdGaveta.GavetaDois: return new byte[] { CmdConst.ESC, (byte)'v', tempo };
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CashDrawerCommand command)
+    {
+        var tempo = Math.Max(command.TempoON, command.TempoOFF);
+        switch (command.Gaveta)
+        {
+            case CmdGaveta.GavetaUm: return new byte[] { CmdConst.ESC, 128, tempo };
+            case CmdGaveta.GavetaDois: return new byte[] { CmdConst.ESC, (byte)'v', tempo };
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    #endregion Methods
 }

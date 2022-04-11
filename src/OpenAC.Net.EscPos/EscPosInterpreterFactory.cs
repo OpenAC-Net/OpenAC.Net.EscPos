@@ -44,47 +44,46 @@ using OpenAC.Net.EscPos.Interpreter.GPrinter;
 using OpenAC.Net.EscPos.Interpreter.PosStar;
 using OpenAC.Net.EscPos.Interpreter.ZJiang;
 
-namespace OpenAC.Net.EscPos
+namespace OpenAC.Net.EscPos;
+
+/// <summary>
+///
+/// </summary>
+public static class EscPosInterpreterFactory
 {
     /// <summary>
     ///
     /// </summary>
-    public static class EscPosInterpreterFactory
+    /// <param name="protocolo"></param>
+    /// <param name="paginaCodigo"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static EscPosInterpreter Create(ProtocoloEscPos protocolo, PaginaCodigo paginaCodigo)
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="protocolo"></param>
-        /// <param name="paginaCodigo"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static EscPosInterpreter Create(ProtocoloEscPos protocolo, PaginaCodigo paginaCodigo)
+        var enconder = paginaCodigo switch
         {
-            var enconder = paginaCodigo switch
-            {
-                PaginaCodigo.pc437 => Encoding.GetEncoding(437),
-                PaginaCodigo.pc850 => OpenEncoding.IBM850,
-                PaginaCodigo.pc852 => Encoding.GetEncoding("IBM852"),
-                PaginaCodigo.pc860 => OpenEncoding.IBM860,
-                PaginaCodigo.pcUTF8 => Encoding.UTF8,
-                PaginaCodigo.pc1252 => OpenEncoding.CP1252,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            PaginaCodigo.pc437 => Encoding.GetEncoding(437),
+            PaginaCodigo.pc850 => OpenEncoding.IBM850,
+            PaginaCodigo.pc852 => Encoding.GetEncoding("IBM852"),
+            PaginaCodigo.pc860 => OpenEncoding.IBM860,
+            PaginaCodigo.pcUTF8 => Encoding.UTF8,
+            PaginaCodigo.pc1252 => OpenEncoding.CP1252,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-            switch (protocolo)
-            {
-                case ProtocoloEscPos.EscPos: return new EpsonInterpreter(enconder);
-                case ProtocoloEscPos.EscBema: return new BematechInterpreter(enconder);
-                case ProtocoloEscPos.EscDaruma: return new DarumaInterpreter(enconder);
-                case ProtocoloEscPos.EscElgin: return new ElginInterpreter(enconder);
-                case ProtocoloEscPos.EscDiebold: return new DieboldInterpreter(enconder);
-                case ProtocoloEscPos.EscGPrinter: return new GPrinterInterpreter(enconder);
-                case ProtocoloEscPos.EscDatecs: return new DatecsInterpreter(enconder);
-                case ProtocoloEscPos.EscZJiang: return new ZJiangInterpreter(enconder);
-                case ProtocoloEscPos.EscPosStar: return new PosStarInterpreter(enconder);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-            }
+        switch (protocolo)
+        {
+            case ProtocoloEscPos.EscPos: return new EpsonInterpreter(enconder);
+            case ProtocoloEscPos.EscBema: return new BematechInterpreter(enconder);
+            case ProtocoloEscPos.EscDaruma: return new DarumaInterpreter(enconder);
+            case ProtocoloEscPos.EscElgin: return new ElginInterpreter(enconder);
+            case ProtocoloEscPos.EscDiebold: return new DieboldInterpreter(enconder);
+            case ProtocoloEscPos.EscGPrinter: return new GPrinterInterpreter(enconder);
+            case ProtocoloEscPos.EscDatecs: return new DatecsInterpreter(enconder);
+            case ProtocoloEscPos.EscZJiang: return new ZJiangInterpreter(enconder);
+            case ProtocoloEscPos.EscPosStar: return new PosStarInterpreter(enconder);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
         }
     }
 }

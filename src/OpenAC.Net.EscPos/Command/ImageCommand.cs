@@ -33,26 +33,25 @@ using System.Drawing;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Command
+namespace OpenAC.Net.EscPos.Command;
+
+public sealed class ImageCommand : PrintCommand<ImageCommand>
 {
-    public sealed class ImageCommand : PrintCommand<ImageCommand>
+    #region Constructors
+
+    public ImageCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        #region Constructors
-
-        public ImageCommand(EscPosInterpreter interpreter) : base(interpreter)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
-
-        public Image Imagem { get; set; }
-
-        public bool IsHiDPI { get; set; } = false;
-
-        #endregion Properties
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+
+    public Image Imagem { get; set; }
+
+    public bool IsHiDPI { get; set; } = false;
+
+    #endregion Properties
 }

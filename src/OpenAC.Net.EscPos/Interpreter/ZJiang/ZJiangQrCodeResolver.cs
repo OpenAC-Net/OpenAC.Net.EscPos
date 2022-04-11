@@ -38,78 +38,77 @@ using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.ZJiang
+namespace OpenAC.Net.EscPos.Interpreter.ZJiang;
+
+public sealed class ZJiangQrCodeResolver : CommandResolver<QrCodeCommand>
 {
-    public sealed class ZJiangQrCodeResolver : CommandResolver<QrCodeCommand>
+    #region Constructors
+
+    public ZJiangQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public ZJiangQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(QrCodeCommand command)
-        {
-            using var builder = new ByteArrayBuilder();
-
-            switch (command.Alinhamento)
-            {
-                case CmdAlinhamento.Esquerda:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-                    break;
-
-                case CmdAlinhamento.Centro:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
-                    break;
-
-                case CmdAlinhamento.Direita:
-                    builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            byte largura = command.LarguraModulo switch
-            {
-                QrCodeModSize.Minusculo => 2,
-                QrCodeModSize.Pequeno => 3,
-                QrCodeModSize.Normal => 4,
-                QrCodeModSize.Grande => 5,
-                QrCodeModSize.ExtraGrande => 6,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            byte erro = command.ErrorLevel switch
-            {
-                QrCodeErrorLevel.LevelL => (byte)'L',
-                QrCodeErrorLevel.LevelM => (byte)'M',
-                QrCodeErrorLevel.LevelQ => (byte)'Q',
-                QrCodeErrorLevel.LevelH => (byte)'H',
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            var num = command.Code.Length;
-            var pL = (byte)(num % 256);
-            var pH = (byte)(num / 256);
-
-            builder.Append(new byte[] { CmdConst.ESC, (byte)'Z', 0 });
-            builder.Append(erro);
-            builder.Append(largura);
-            builder.Append(new[] { pL, pH });
-            builder.Append(Encoding.UTF8.GetBytes(command.Code));
-
-            // Volta alinhamento para Esquerda.
-            if (command.Alinhamento != CmdAlinhamento.Esquerda)
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
-
-            return builder.ToArray();
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(QrCodeCommand command)
+    {
+        using var builder = new ByteArrayBuilder();
+
+        switch (command.Alinhamento)
+        {
+            case CmdAlinhamento.Esquerda:
+                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+                break;
+
+            case CmdAlinhamento.Centro:
+                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+                break;
+
+            case CmdAlinhamento.Direita:
+                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        byte largura = command.LarguraModulo switch
+        {
+            QrCodeModSize.Minusculo => 2,
+            QrCodeModSize.Pequeno => 3,
+            QrCodeModSize.Normal => 4,
+            QrCodeModSize.Grande => 5,
+            QrCodeModSize.ExtraGrande => 6,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        byte erro = command.ErrorLevel switch
+        {
+            QrCodeErrorLevel.LevelL => (byte)'L',
+            QrCodeErrorLevel.LevelM => (byte)'M',
+            QrCodeErrorLevel.LevelQ => (byte)'Q',
+            QrCodeErrorLevel.LevelH => (byte)'H',
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var num = command.Code.Length;
+        var pL = (byte)(num % 256);
+        var pH = (byte)(num / 256);
+
+        builder.Append(new byte[] { CmdConst.ESC, (byte)'Z', 0 });
+        builder.Append(erro);
+        builder.Append(largura);
+        builder.Append(new[] { pL, pH });
+        builder.Append(Encoding.UTF8.GetBytes(command.Code));
+
+        // Volta alinhamento para Esquerda.
+        if (command.Alinhamento != CmdAlinhamento.Esquerda)
+            builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+
+        return builder.ToArray();
+    }
+
+    #endregion Methods
 }

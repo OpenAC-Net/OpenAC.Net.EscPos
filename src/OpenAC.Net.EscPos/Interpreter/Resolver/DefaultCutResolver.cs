@@ -34,28 +34,27 @@ using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 
-namespace OpenAC.Net.EscPos.Interpreter.Resolver
+namespace OpenAC.Net.EscPos.Interpreter.Resolver;
+
+public sealed class DefaultCutResolver : CommandResolver<CutCommand>
 {
-    public sealed class DefaultCutResolver : CommandResolver<CutCommand>
+    #region Constructors
+
+    public DefaultCutResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
-        #region Constructors
-
-        public DefaultCutResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public override byte[] Resolve(CutCommand command)
-        {
-            if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return new byte[0];
-            if (!Commandos.ContainsKey(CmdEscPos.CorteTotal)) return new byte[0];
-
-            return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : Commandos[CmdEscPos.CorteTotal];
-        }
-
-        #endregion Methods
     }
+
+    #endregion Constructors
+
+    #region Methods
+
+    public override byte[] Resolve(CutCommand command)
+    {
+        if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.CorteTotal)) return new byte[0];
+
+        return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : Commandos[CmdEscPos.CorteTotal];
+    }
+
+    #endregion Methods
 }

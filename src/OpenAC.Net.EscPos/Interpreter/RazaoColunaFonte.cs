@@ -29,12 +29,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace OpenAC.Net.EscPos.Interpreter
-{
-    public sealed class RazaoColunaFonte
-    {
-        public decimal Condensada { get; set; } = 0.75M;
+namespace OpenAC.Net.EscPos.Interpreter;
 
-        public decimal Expandida { get; set; } = 2M;
-    }
+public sealed class RazaoColunaFonte
+{
+    public decimal Condensada { get; set; } = 0.75M;
+
+    public decimal Expandida { get; set; } = 2M;
 }

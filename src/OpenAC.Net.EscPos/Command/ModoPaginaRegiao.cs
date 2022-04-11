@@ -356,13 +356,16 @@ public sealed class ModoPaginaRegiao : IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        var cmd = new ImageCommand(interpreter)
+        commands.Add(new EspacoEntreLinhasCommand(interpreter) { Espaco = 16 });
+
+        commands.Add(new ImageCommand(interpreter)
         {
             Imagem = imagem,
-            IsHiDPI = isHdpi
-        };
+            IsHiDPI = isHdpi,
+            Alinhamento = aAlinhamento
+        });
 
-        commands.Add(cmd);
+        commands.Add(new EspacoEntreLinhasCommand(interpreter) { Espaco = EspacoEntreLinhas });
     }
 
     #endregion Methods

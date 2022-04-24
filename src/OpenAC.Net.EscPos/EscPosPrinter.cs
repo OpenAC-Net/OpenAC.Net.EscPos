@@ -362,7 +362,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// Adiciona o comando de pular linhas ao buffer.
     /// </summary>
     /// <param name="aLinhas"></param>
-    public void PularLinhas(int aLinhas)
+    public void PularLinhas(byte aLinhas = 0)
     {
         this.Log().Debug("PularLinhas");
 
@@ -370,7 +370,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
 
         var cmd = new JumpLineCommand(interpreter)
         {
-            Linhas = aLinhas <= 0 ? LinhasEntreCupons : aLinhas
+            Linhas = aLinhas < 1 ? LinhasEntreCupons : aLinhas
         };
 
         commands.Add(cmd);
@@ -381,7 +381,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// </summary>
     /// <param name="tamanho"></param>
     /// <param name="dupla"></param>
-    public void ImprimirLinha(int tamanho, bool dupla = false)
+    public void ImprimirLinha(bool dupla = false)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -389,7 +389,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
 
         var cmd = new PrintLineCommand(interpreter)
         {
-            Tamanho = tamanho
+            Tamanho = Colunas,
+            Dupla = dupla
         };
 
         commands.Add(cmd);
@@ -461,7 +462,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     public void ImprimirTexto(string aTexto)
@@ -470,7 +471,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="aAlinhamento"></param>
@@ -480,7 +481,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="tamanho"></param>
@@ -491,7 +492,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="tamanho"></param>
@@ -501,7 +502,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="tamanho"></param>
@@ -512,7 +513,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="aEstilo"></param>
@@ -522,7 +523,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="aAlinhamento"></param>
@@ -533,7 +534,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="tamanho"></param>
@@ -545,7 +546,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionao o comando de impressão de texto ao buffer.
+    /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
     /// <param name="aTexto"></param>
     /// <param name="fonte"></param>
@@ -567,6 +568,73 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
             Estilo = aEstilo
         };
 
+        commands.Add(cmd);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="tamanho"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, tamanho, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdFonte fonte, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(fonte, CmdTamanhoFonte.Normal, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="tamanho"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdFonte fonte, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
+
+        var cmd = new TextSliceCommand(interpreter)
+        {
+            Fonte = fonte,
+            Tamanho = tamanho,
+            Alinhamento = aAlinhamento,
+        };
+
+        foreach (var slice in slices)
+            cmd.AddSlice(slice);
         commands.Add(cmd);
     }
 
@@ -683,7 +751,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// Inicia o modo pagina em impressoras compativeis.
     /// </summary>
     /// <returns></returns>
-    public ModoPaginaCommand IniciarModoPagina()
+    public IModoPagina IniciarModoPagina()
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
@@ -692,10 +760,10 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         var cmd = new ModoPaginaCommand(interpreter)
         {
             EspacoEntreLinhas = EspacoEntreLinhas,
+            Colunas = Colunas,
             QrCode = QrCode,
-            Gaveta = Gaveta,
             CodigoBarras = CodigoBarras,
-            Logo = Logo
+            Logo = Logo,
         };
         commands.Add(cmd);
         return cmd;

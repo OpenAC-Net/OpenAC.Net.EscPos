@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ElginStatusResolver.cs" company="OpenAC .Net">
+// <copyright file="TextSlice.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -30,52 +30,27 @@
 // ***********************************************************************
 
 using System;
-using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter.Resolver;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin;
+namespace OpenAC.Net.EscPos.Command;
 
-public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
+public sealed class TextSlice
 {
-    public ElginStatusResolver() :
-        base(new[] { new byte[] { 5 } },
-            dados =>
-            {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+    #region Constructors
 
-                EscPosTipoStatus? status = null;
-
-                var b = dados[0][0];
-                if (b.IsBitOff(0))
-                    status = EscPosTipoStatus.OffLine;
-
-                if (b.IsBitOn(1))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.SemPapel;
-                    else
-                        status = EscPosTipoStatus.SemPapel;
-
-                if (b.IsBitOn(2))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.GavetaAberta;
-                    else
-                        status = EscPosTipoStatus.GavetaAberta;
-
-                if (b.IsBitOn(3))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.TampaAberta;
-                    else
-                        status = EscPosTipoStatus.TampaAberta;
-
-                if (b.IsBitOn(4))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.PoucoPapel;
-                    else
-                        status = EscPosTipoStatus.PoucoPapel;
-
-                return status ?? EscPosTipoStatus.Nenhum;
-            })
+    public TextSlice(string aTexto, CmdEstiloFonte? estilo = null)
     {
+        Texto = aTexto.Replace(Environment.NewLine, string.Empty);
+        Estilo = estilo;
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public string Texto { get; set; }
+
+    public CmdEstiloFonte? Estilo { get; set; }
+
+    #endregion Properties
 }

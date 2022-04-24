@@ -29,17 +29,18 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
-public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
+public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPagina
 {
     #region Fields
 
-    protected List<ModoPaginaRegiao> regioes;
+    private readonly List<ModoPaginaRegiao> regioes;
 
     #endregion Fields
 
@@ -59,15 +60,41 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
     /// </summary>
     public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
 
+    IReadOnlyList<IRegiaoPagina> IModoPagina.Regioes => regioes;
+
     /// <summary>
     /// Define/Obtém o espaço entre as linhas da impressão.
     /// </summary>
     public byte EspacoEntreLinhas { get; set; } = 0;
 
     /// <summary>
-    /// Define/Obtém as configurações padrão da gaveta.
+    /// Define/Obtém a quantidade de coluna quando a fonte é normal.
     /// </summary>
-    public GavetaConfig Gaveta { get; set; } = new();
+    public int Colunas { get; set; } = 48;
+
+    /// <summary>
+    /// Retorna a quantidade de colunas quando a fonte é expandida.
+    /// </summary>
+    public int ColunasExpandida
+    {
+        get
+        {
+            if (Interpreter == null) return 0;
+            return (int)Math.Truncate(Colunas / Interpreter.RazaoColuna.Expandida);
+        }
+    }
+
+    /// <summary>
+    /// Retorna a quantidade de colunas quando a fonte é concensada.
+    /// </summary>
+    public int ColunasCondensada
+    {
+        get
+        {
+            if (Interpreter == null) return 0;
+            return (int)Math.Truncate(Colunas / Interpreter.RazaoColuna.Condensada);
+        }
+    }
 
     /// <summary>
     /// Define/Obtém as configurações padrão do codigo de barras.
@@ -88,7 +115,7 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
 
     #region Methods
 
-    public ModoPaginaRegiao NovaRegiao(int esqueda, int topo, int largura, int altura)
+    public IRegiaoPagina NovaRegiao(int esqueda, int topo, int largura, int altura)
     {
         var regiao = new ModoPaginaRegiao(this, Interpreter)
         {
@@ -102,7 +129,7 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>
         return regiao;
     }
 
-    public void RemoverRegiao(ModoPaginaRegiao regiao) => regioes.Remove(regiao);
+    public void RemoverRegiao(IRegiaoPagina regiao) => regioes.Remove(regiao as ModoPaginaRegiao);
 
     #endregion Methods
 }

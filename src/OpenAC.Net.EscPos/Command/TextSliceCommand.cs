@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="ElginStatusResolver.cs" company="OpenAC .Net">
+// <copyright file="TextSliceCommand.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,53 +29,44 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using OpenAC.Net.Core.Extensions;
+using System.Collections.Generic;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter.Resolver;
+using OpenAC.Net.EscPos.Interpreter;
 
-namespace OpenAC.Net.EscPos.Interpreter.Elgin;
+namespace OpenAC.Net.EscPos.Command;
 
-public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
+public sealed class TextSliceCommand : PrintCommand<TextSliceCommand>
 {
-    public ElginStatusResolver() :
-        base(new[] { new byte[] { 5 } },
-            dados =>
-            {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+    #region Fields
 
-                EscPosTipoStatus? status = null;
+    private readonly List<TextSlice> slices;
 
-                var b = dados[0][0];
-                if (b.IsBitOff(0))
-                    status = EscPosTipoStatus.OffLine;
+    #endregion Fields
 
-                if (b.IsBitOn(1))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.SemPapel;
-                    else
-                        status = EscPosTipoStatus.SemPapel;
+    #region Constructors
 
-                if (b.IsBitOn(2))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.GavetaAberta;
-                    else
-                        status = EscPosTipoStatus.GavetaAberta;
-
-                if (b.IsBitOn(3))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.TampaAberta;
-                    else
-                        status = EscPosTipoStatus.TampaAberta;
-
-                if (b.IsBitOn(4))
-                    if (status.HasValue)
-                        status |= EscPosTipoStatus.PoucoPapel;
-                    else
-                        status = EscPosTipoStatus.PoucoPapel;
-
-                return status ?? EscPosTipoStatus.Nenhum;
-            })
+    public TextSliceCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
+        slices = new List<TextSlice>();
     }
+
+    #endregion Constructors
+
+    #region Properties
+
+    public IReadOnlyCollection<TextSlice> Slices => slices.AsReadOnly();
+
+    public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
+
+    public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
+
+    public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
+
+    #endregion Properties
+
+    #region Methods
+
+    public void AddSlice(TextSlice slice) => slices.Add(slice);
+
+    #endregion Methods
 }

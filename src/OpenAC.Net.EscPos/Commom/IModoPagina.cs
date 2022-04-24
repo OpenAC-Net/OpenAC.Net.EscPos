@@ -6,7 +6,7 @@
 // Last Modified By : Rafael Dias
 // Last Modified On : 17-03-2022
 // ***********************************************************************
-// <copyright file="BemaInfoImpressoraResolver.cs" company="OpenAC .Net">
+// <copyright file="IModoPagina.cs" company="OpenAC .Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2021 Projeto OpenAC .Net
 //
@@ -29,30 +29,41 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Text;
-using OpenAC.Net.Core.Extensions;
-using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Interpreter.Resolver;
+using System.Collections.Generic;
 
-namespace OpenAC.Net.EscPos.Interpreter.Bematech;
+namespace OpenAC.Net.EscPos.Commom;
 
-public sealed class BemaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
+public interface IModoPagina
 {
-    public BemaInfoImpressoraResolver(Encoding encoding) :
-        base(new[] { new byte[] { CmdConst.GS, 249, 39, 0 }, new byte[] { CmdConst.GS, 249, 39, 3 }, new byte[] { CmdConst.GS, 249, 1 }, new byte[] { CmdConst.GS, 249, 39, 49 } },
-            (dados) =>
-            {
-                if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
-                if (dados.Length < 4) return InformacoesImpressora.Empty;
+    #region Properties
 
-                var fabricante = string.Empty;
-                var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var firmware = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var serial = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var guilhotina = !dados[3].IsNullOrEmpty() && dados[3].Length >= 3 && dados[3][2].IsBitOn(2);
+    /// <summary>
+    /// Comandos para serem impressos dentro do modo pagina.
+    /// </summary>
+    IReadOnlyList<IRegiaoPagina> Regioes { get; }
 
-                return new InformacoesImpressora(fabricante, modelo, firmware, serial, guilhotina);
-            })
-    { }
+    /// <summary>
+    /// Define/Obtém o espaço entre as linhas da impressão.
+    /// </summary>
+    byte EspacoEntreLinhas { get; set; }
+
+    /// <summary>
+    /// Define/Obtém as configurações padrão do codigo de barras.
+    /// </summary>
+    BarcodeConfig CodigoBarras { get; }
+
+    /// <summary>
+    /// Define/Obtém as configurações padrão para impressão do QrCode.
+    /// </summary>
+    QrCodeConfig QrCode { get; }
+
+    #endregion Properties
+
+    #region Methods
+
+    IRegiaoPagina NovaRegiao(int esqueda, int topo, int largura, int altura);
+
+    void RemoverRegiao(IRegiaoPagina regiao);
+
+    #endregion Methods
 }

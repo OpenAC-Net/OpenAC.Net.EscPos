@@ -11,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.7.15" />
     <PackageReference Include="NLog.Windows.Forms" Version="4.5.0" />
-    <PackageReference Include="OpenAC.Net.Devices" Version="1.5.0-preview.4" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="OpenAC.Net.Devices" Version="1.5.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

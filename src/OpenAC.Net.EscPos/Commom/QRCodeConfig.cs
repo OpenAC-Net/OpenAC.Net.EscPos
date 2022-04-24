@@ -35,14 +35,6 @@ namespace OpenAC.Net.EscPos.Commom;
 
 public sealed class QrCodeConfig
 {
-    #region Fields
-
-    private byte tamanho = 4;
-    private byte tipo = 2;
-    private byte errorLevel = 0;
-
-    #endregion Fields
-
     #region Properties
 
     public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;

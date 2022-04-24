@@ -47,26 +47,24 @@ public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
 
                 EscPosTipoStatus? status = null;
 
-                var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
-
                 var ret = dados[0];
                 if (ret.Length > 0)
                 {
                     var b = ret[0];
-                    if (!bitTest(b, 2))
+                    if (!b.IsBitOff(2))
                         status = EscPosTipoStatus.GavetaAberta;
 
-                    if (bitTest(b, 3))
+                    if (b.IsBitOn(3))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.OffLine;
                         else
                             status = EscPosTipoStatus.OffLine;
-                    if (bitTest(b, 5))
+                    if (b.IsBitOn(5))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.Erro;
                         else
                             status = EscPosTipoStatus.Erro;
-                    if (bitTest(b, 6))
+                    if (b.IsBitOn(6))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.Imprimindo;
                         else
@@ -77,22 +75,22 @@ public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
                 if (ret.Length > 0)
                 {
                     var b = ret[0];
-                    if (bitTest(b, 2))
+                    if (b.IsBitOn(2))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.TampaAberta;
                         else
                             status = EscPosTipoStatus.TampaAberta;
-                    if (bitTest(b, 3))
+                    if (b.IsBitOn(3))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.Imprimindo;
                         else
                             status = EscPosTipoStatus.Imprimindo;
-                    if (bitTest(b, 5))
+                    if (b.IsBitOn(5))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.SemPapel;
                         else
                             status = EscPosTipoStatus.SemPapel;
-                    if (bitTest(b, 6))
+                    if (b.IsBitOn(6))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.Erro;
                         else
@@ -103,13 +101,13 @@ public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
                 if (ret.Length > 0)
                 {
                     var b = ret[0];
-                    if (bitTest(b, 2) && bitTest(b, 3))
+                    if (b.IsBitOn(2) && b.IsBitOn(3))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.PoucoPapel;
                         else
                             status = EscPosTipoStatus.PoucoPapel;
 
-                    if (bitTest(b, 5) && bitTest(b, 6))
+                    if (b.IsBitOn(5) && b.IsBitOn(6))
                         if (status.HasValue)
                             status |= EscPosTipoStatus.SemPapel;
                         else

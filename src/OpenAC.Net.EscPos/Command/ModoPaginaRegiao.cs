@@ -39,7 +39,7 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
-public sealed class ModoPaginaRegiao : IOpenLog
+public sealed class ModoPaginaRegiao : IOpenLog, IRegiaoPagina
 {
     #region Fields
 
@@ -107,29 +107,11 @@ public sealed class ModoPaginaRegiao : IOpenLog
     /// </summary>
     /// <param name="tamanho"></param>
     /// <param name="dupla"></param>
-    public void ImprimirLinha(int tamanho, bool dupla = false)
+    public void ImprimirLinha(bool dupla = false)
     {
         var cmd = new PrintLineCommand(interpreter)
         {
-            Tamanho = tamanho
-        };
-
-        commands.Add(cmd);
-    }
-
-    /// <summary>
-    /// Adiciona o comando de abrir gaveta ao buffer de impressão da região.
-    /// </summary>
-    /// <param name="aGaveta"></param>
-    public void AbrirGaveta(CmdGaveta aGaveta = CmdGaveta.GavetaUm)
-    {
-        this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name} {(byte)aGaveta}");
-
-        var cmd = new CashDrawerCommand(interpreter)
-        {
-            Gaveta = aGaveta,
-            TempoON = parent.Gaveta.TempoON,
-            TempoOFF = parent.Gaveta.TempoOFF
+            Tamanho = parent.Colunas
         };
 
         commands.Add(cmd);
@@ -259,9 +241,74 @@ public sealed class ModoPaginaRegiao : IOpenLog
             Fonte = fonte,
             Tamanho = tamanho,
             Alinhamento = aAlinhamento,
-            Estilo = aEstilo
+            Estilo = aEstilo,
         };
 
+        commands.Add(cmd);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="tamanho"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(CmdFonte.Normal, tamanho, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdFonte fonte, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        ImprimirTexto(fonte, CmdTamanhoFonte.Normal, aAlinhamento, slices);
+    }
+
+    /// <summary>
+    /// Adiciona o comando de impressão de texto ao buffer.
+    /// </summary>
+    /// <param name="fonte"></param>
+    /// <param name="tamanho"></param>
+    /// <param name="aAlinhamento"></param>
+    /// <param name="slices"></param>
+    public void ImprimirTexto(CmdFonte fonte, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
+    {
+        this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+        var cmd = new TextSliceCommand(interpreter)
+        {
+            Fonte = fonte,
+            Tamanho = tamanho,
+            Alinhamento = aAlinhamento,
+        };
+
+        foreach (var slice in slices)
+            cmd.AddSlice(slice);
         commands.Add(cmd);
     }
 

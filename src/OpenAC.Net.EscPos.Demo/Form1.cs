@@ -5,11 +5,11 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Windows.Forms;
-using OpenAC.Net.Core;
+using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.Devices;
+using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Demo.Commom;
-using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Demo
 {
@@ -242,22 +242,25 @@ namespace OpenAC.Net.EscPos.Demo
             posprinter.ImprimirTexto("¡…Õ”⁄·ÈÌÛ˙Á«„ı√’ Í¿‡", CmdAlinhamento.Centro);
             posprinter.ImprimirTexto("TESTE NORMAL ESQUERDA", CmdAlinhamento.Esquerda);
             posprinter.ImprimirTexto("TESTE NORMAL DIREITA", CmdAlinhamento.Direita);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirTexto("TESTE EXPANDIDO", CmdFonte.Normal, CmdTamanhoFonte.Expandida, CmdAlinhamento.Esquerda, null);
             posprinter.ImprimirTexto("TESTE CONDENSADO", CmdFonte.Normal, CmdTamanhoFonte.Condensada, CmdAlinhamento.Esquerda, null);
             posprinter.ImprimirTexto("TESTE NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirTexto("TESTE DUPLO EXPANDIDO", CmdFonte.Normal, CmdTamanhoFonte.Expandida, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
             posprinter.ImprimirTexto("TESTE DUPLO CONDESADO", CmdFonte.Normal, CmdTamanhoFonte.Condensada, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
             posprinter.ImprimirTexto("TESTE DUPLO NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.AlturaDupla);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirTexto("TESTE NEGRITO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Negrito);
             posprinter.ImprimirTexto("TESTE ITALICO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Italico);
             posprinter.ImprimirTexto("TESTE SUBLINHADO", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, CmdEstiloFonte.Sublinhado);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirTexto("TESTE FONTE NORMAL", CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
             posprinter.ImprimirTexto("TESTE FONTE A", CmdFonte.FonteA, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
             posprinter.ImprimirTexto("TESTE FONTE B", CmdFonte.FonteB, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
+            posprinter.ImprimirLinha();
+
+            posprinter.ImprimirTexto(new TextSlice("Teste Texto: ", CmdEstiloFonte.Negrito), new TextSlice("Funcionou"));
 
             posprinter.CortarPapel();
             posprinter.Imprimir();
@@ -272,11 +275,11 @@ namespace OpenAC.Net.EscPos.Demo
             posprinter.Conectar();
 
             posprinter.ImprimirBarcode("ABCDE12345", CmdBarcode.CODE39, CmdAlinhamento.Centro, CmdBarcodeText.Acima);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirBarcode("1234567890", CmdBarcode.Inter2of5, CmdAlinhamento.Centro, CmdBarcodeText.Ambos);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirBarcode("$-=+ABC123abc", CmdBarcode.CODE128, CmdAlinhamento.Centro, CmdBarcodeText.Abaixo);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirBarcode("3515071111111111111159", CmdBarcode.CODE128c, CmdAlinhamento.Centro, CmdBarcodeText.Abaixo);
 
             posprinter.CortarPapel();
@@ -298,15 +301,15 @@ namespace OpenAC.Net.EscPos.Demo
             // QrCode NFCe
             posprinter.ImprimirTexto("Exemplo QrCode NFCe.", CmdEstiloFonte.Negrito);
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Minusculo, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Pequeno, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Normal, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Grande, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.ExtraGrande, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
 
             posprinter.PularLinhas(2);
 
@@ -318,13 +321,13 @@ namespace OpenAC.Net.EscPos.Demo
 
             posprinter.ImprimirTexto("Exemplo QrCode SAT.", CmdEstiloFonte.Negrito);
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Minusculo, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Pequeno, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Normal, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.Grande, aAlinhamento: CmdAlinhamento.Centro);
-            posprinter.ImprimirLinha(48);
+            posprinter.ImprimirLinha();
             posprinter.ImprimirQrCode(qrCode, tamanho: QrCodeModSize.ExtraGrande, aAlinhamento: CmdAlinhamento.Centro);
 
             posprinter.CortarPapel();

@@ -26,10 +26,7 @@ public static class Helpers
         ofd.Filter = filters;
         ofd.Title = title;
 
-        if (ofd.ShowDialog().Equals(DialogResult.Cancel))
-            return null;
-
-        return ofd.FileNames;
+        return ofd.ShowDialog().Equals(DialogResult.Cancel) ? Array.Empty<string>() : ofd.FileNames;
     }
 
     public static string SelectFolder()

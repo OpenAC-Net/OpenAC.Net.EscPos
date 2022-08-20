@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.7.15" />
-    <PackageReference Include="NLog.Windows.Forms" Version="4.5.0" />
-    <PackageReference Include="OpenAC.Net.Devices" Version="1.5.0" />
+    <PackageReference Include="NLog" Version="5.0.2" />
+    <PackageReference Include="NLog.Windows.Forms" Version="4.6.0" />
+    <PackageReference Include="OpenAC.Net.Devices" Version="1.5.0.1" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 

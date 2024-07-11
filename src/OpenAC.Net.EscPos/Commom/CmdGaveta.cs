@@ -33,6 +33,6 @@ namespace OpenAC.Net.EscPos.Commom;
 
 public enum CmdGaveta : byte
 {
-    GavetaUm = 1,
-    GavetaDois = 2
+    GavetaUm = 0,
+    GavetaDois = 1
 }

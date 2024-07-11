@@ -41,5 +41,6 @@ public enum ProtocoloEscPos
     EscGPrinter,
     EscDatecs,
     EscZJiang,
-    EscPosStar
+    EscPosStar,
+    EscSunmi
 }

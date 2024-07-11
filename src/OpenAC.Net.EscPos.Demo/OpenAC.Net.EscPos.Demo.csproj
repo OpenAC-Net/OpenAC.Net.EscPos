@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.0.2" />
-    <PackageReference Include="NLog.Windows.Forms" Version="4.6.0" />
+    <PackageReference Include="NLog" Version="5.3.2" />
+    <PackageReference Include="NLog.Windows.Forms" Version="5.2.3" />
     <PackageReference Include="OpenAC.Net.Devices" Version="1.5.0.1" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

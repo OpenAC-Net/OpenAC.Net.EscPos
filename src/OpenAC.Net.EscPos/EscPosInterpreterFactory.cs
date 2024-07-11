@@ -71,19 +71,18 @@ public static class EscPosInterpreterFactory
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        switch (protocolo)
+        return protocolo switch
         {
-            case ProtocoloEscPos.EscPos: return new EpsonInterpreter(enconder);
-            case ProtocoloEscPos.EscBema: return new BematechInterpreter(enconder);
-            case ProtocoloEscPos.EscDaruma: return new DarumaInterpreter(enconder);
-            case ProtocoloEscPos.EscElgin: return new ElginInterpreter(enconder);
-            case ProtocoloEscPos.EscDiebold: return new DieboldInterpreter(enconder);
-            case ProtocoloEscPos.EscGPrinter: return new GPrinterInterpreter(enconder);
-            case ProtocoloEscPos.EscDatecs: return new DatecsInterpreter(enconder);
-            case ProtocoloEscPos.EscZJiang: return new ZJiangInterpreter(enconder);
-            case ProtocoloEscPos.EscPosStar: return new PosStarInterpreter(enconder);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null);
-        }
+            ProtocoloEscPos.EscPos => new EpsonInterpreter(enconder),
+            ProtocoloEscPos.EscBema => new BematechInterpreter(enconder),
+            ProtocoloEscPos.EscDaruma => new DarumaInterpreter(enconder),
+            ProtocoloEscPos.EscElgin => new ElginInterpreter(enconder),
+            ProtocoloEscPos.EscDiebold => new DieboldInterpreter(enconder),
+            ProtocoloEscPos.EscGPrinter => new GPrinterInterpreter(enconder),
+            ProtocoloEscPos.EscDatecs => new DatecsInterpreter(enconder),
+            ProtocoloEscPos.EscZJiang => new ZJiangInterpreter(enconder),
+            ProtocoloEscPos.EscPosStar => new PosStarInterpreter(enconder),
+            _ => throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null)
+        };
     }
 }

@@ -51,9 +51,9 @@ public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerComman
 
     public override byte[] Resolve(CashDrawerCommand command)
     {
-        return Commandos.ContainsKey(CmdEscPos.Gaveta)
-            ? Commandos[CmdEscPos.Gaveta].Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
-            : new byte[0];
+        return Commandos.TryGetValue(CmdEscPos.Gaveta, out var commando)
+            ? commando.Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
+            : [];
     }
 
     #endregion Methods

@@ -56,7 +56,7 @@ public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEnt
         var espacos = Math.Max((byte)0, command.Espaco);
         if (espacos == 0) return Commandos[CmdEscPos.EspacoEntreLinhasPadrao];
 
-        return !Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhas) ? new byte[0] : Commandos[CmdEscPos.EspacoEntreLinhas].Concat(new[] { espacos }).ToArray();
+        return !Commandos.TryGetValue(CmdEscPos.EspacoEntreLinhas, out var commando) ? new byte[0] : commando.Concat(new[] { espacos }).ToArray();
     }
 
     #endregion Methods

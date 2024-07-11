@@ -113,20 +113,20 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
         {
             if (slice.Estilo.HasValue)
             {
-                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(CmdEscPos.LigaNegrito))
-                    builder.Append(Commandos[CmdEscPos.LigaNegrito]);
+                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.TryGetValue(CmdEscPos.LigaNegrito, out var commando))
+                    builder.Append(commando);
 
-                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.LigaSublinhado))
-                    builder.Append(Commandos[CmdEscPos.LigaSublinhado]);
+                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.TryGetValue(CmdEscPos.LigaSublinhado, out var commando1))
+                    builder.Append(commando1);
 
-                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.LigaItalico))
-                    builder.Append(Commandos[CmdEscPos.LigaItalico]);
+                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.TryGetValue(CmdEscPos.LigaItalico, out var commando2))
+                    builder.Append(commando2);
 
-                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.LigaAlturaDupla))
-                    builder.Append(Commandos[CmdEscPos.LigaAlturaDupla]);
+                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.TryGetValue(CmdEscPos.LigaAlturaDupla, out var commando3))
+                    builder.Append(commando3);
 
-                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.LigaInvertido))
-                    builder.Append(Commandos[CmdEscPos.LigaInvertido]);
+                if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.TryGetValue(CmdEscPos.LigaInvertido, out var commando4))
+                    builder.Append(commando4);
             }
 
             // Adiciona o texto, fazendo o tratamento para quebra de linha
@@ -134,20 +134,20 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
 
             if (!slice.Estilo.HasValue) continue;
 
-            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.ContainsKey(CmdEscPos.DesligaNegrito))
-                builder.Append(Commandos[CmdEscPos.DesligaNegrito]);
+            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Negrito) && Commandos.TryGetValue(CmdEscPos.DesligaNegrito, out var commando5))
+                builder.Append(commando5);
 
-            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.ContainsKey(CmdEscPos.DesligaSublinhado))
-                builder.Append(Commandos[CmdEscPos.DesligaSublinhado]);
+            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Sublinhado) && Commandos.TryGetValue(CmdEscPos.DesligaSublinhado, out var commando6))
+                builder.Append(commando6);
 
-            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.ContainsKey(CmdEscPos.DesligaItalico))
-                builder.Append(Commandos[CmdEscPos.DesligaItalico]);
+            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Italico) && Commandos.TryGetValue(CmdEscPos.DesligaItalico, out var commando7))
+                builder.Append(commando7);
 
-            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.ContainsKey(CmdEscPos.DesligaAlturaDupla))
-                builder.Append(Commandos[CmdEscPos.DesligaAlturaDupla]);
+            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.AlturaDupla) && Commandos.TryGetValue(CmdEscPos.DesligaAlturaDupla, out var commando8))
+                builder.Append(commando8);
 
-            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.ContainsKey(CmdEscPos.DesligaInvertido))
-                builder.Append(Commandos[CmdEscPos.DesligaInvertido]);
+            if (slice.Estilo.Value.HasFlag(CmdEstiloFonte.Invertido) && Commandos.TryGetValue(CmdEscPos.DesligaInvertido, out var commando9))
+                builder.Append(commando9);
         }
 
         switch (cmd.Tamanho)

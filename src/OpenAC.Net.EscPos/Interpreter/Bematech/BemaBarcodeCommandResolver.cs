@@ -145,8 +145,8 @@ public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
         if (Commandos.ContainsKey(CmdEscPos.BarcodeWidth))
             builder.Append(Commandos[CmdEscPos.BarcodeHeight], largura);
 
-        if (Commandos.ContainsKey(CmdEscPos.BarcodeHeight))
-            builder.Append(Commandos[CmdEscPos.BarcodeHeight], altura);
+        if (Commandos.TryGetValue(CmdEscPos.BarcodeHeight, out var commando))
+            builder.Append(commando, altura);
 
         if (!showCode.IsNullOrEmpty())
             builder.Append(showCode);

@@ -27,10 +27,10 @@ namespace OpenAC.Net.EscPos.Demo
         {
             InitializeComponent();
 
-            // .Net 5 e 6 n„o tem todos os CodePages.
-            // Ent„o tem que instalar o pacote System.Text.Encoding.CodePages.
+            // .Net 5 e 6 n√£o tem todos os CodePages.
+            // Ent√£o tem que instalar o pacote System.Text.Encoding.CodePages.
             // Adiciona esta linha ao programa antes de usar o EscPos.
-            // Isso so precisa ser feito 1 vez ent„o faÁa na inializaÁ„o do seu programa.
+            // Isso so precisa ser feito 1 vez ent√£o fa√ßa na inializa√ß√£o do seu programa.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             tbcDeviceConfig.HideTabHeaders();
 
@@ -239,7 +239,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             posprinter.Conectar();
 
-            posprinter.ImprimirTexto("¡…Õ”⁄·ÈÌÛ˙Á«„ı√’ Í¿‡", CmdAlinhamento.Centro);
+            posprinter.ImprimirTexto("√Å√â√ç√ì√ö√°√©√≠√≥√∫√ß√á√£√µ√É√ï√ä√™√Ä√†", CmdAlinhamento.Centro);
             posprinter.ImprimirTexto("TESTE NORMAL ESQUERDA", CmdAlinhamento.Esquerda);
             posprinter.ImprimirTexto("TESTE NORMAL DIREITA", CmdAlinhamento.Direita);
             posprinter.ImprimirLinha();
@@ -377,7 +377,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             var modoPagina = posprinter.IniciarModoPagina();
 
-            //Regi„o 1
+            //Regi√£o 1
             var regiao = modoPagina.NovaRegiao(0, 0, 257, 740);
             regiao.Direcao = CmdPosDirecao.EsquerdaParaDireita;
             regiao.EspacoEntreLinhas = 25;
@@ -388,7 +388,7 @@ namespace OpenAC.Net.EscPos.Demo
             regiao.ImprimirBarcode("1234567890", CmdBarcode.Inter2of5, CmdBarcodeText.SemTexto);
             regiao.ImprimirQrCode("https://github.com/OpenAC-Net/OpenAC.Net.EscPos", CmdAlinhamento.Centro);
 
-            //Regi„o 2
+            //Regi√£o 2
             regiao = modoPagina.NovaRegiao(210, 0, 400, 500);
             regiao.Direcao = CmdPosDirecao.TopoParaBaixo;
             regiao.EspacoEntreLinhas = 25;
@@ -402,7 +402,7 @@ namespace OpenAC.Net.EscPos.Demo
 
             modoPagina = posprinter.IniciarModoPagina();
 
-            //Regi„o 3
+            //Regi√£o 3
             regiao = modoPagina.NovaRegiao(0, 0, 257, 740);
             regiao.Direcao = CmdPosDirecao.BaixoParaTopo;
             regiao.EspacoEntreLinhas = 25;
@@ -413,7 +413,7 @@ namespace OpenAC.Net.EscPos.Demo
             regiao.ImprimirBarcode("1234567890", CmdBarcode.Inter2of5, CmdAlinhamento.Esquerda, CmdBarcodeText.SemTexto, 2, 40);
             regiao.ImprimirQrCode("https://github.com/OpenAC-Net/OpenAC.Net.EscPos", CmdAlinhamento.Centro);
 
-            //Regi„o 4
+            //Regi√£o 4
             regiao = modoPagina.NovaRegiao(210, 0, 400, 500);
             regiao.Direcao = CmdPosDirecao.DireitaParaEsquerda;
             regiao.EspacoEntreLinhas = 25;

@@ -47,7 +47,7 @@ public sealed class TextSliceCommand : PrintCommand<TextSliceCommand>
 
     public TextSliceCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        slices = new List<TextSlice>();
+        slices = [];
     }
 
     #endregion Constructors

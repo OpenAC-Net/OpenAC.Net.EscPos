@@ -53,7 +53,7 @@ public sealed class DefaultQrCodeResolver : CommandResolver<QrCodeCommand>
 
     public override byte[] Resolve(QrCodeCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return [];
 
         using var builder = new ByteArrayBuilder();
 

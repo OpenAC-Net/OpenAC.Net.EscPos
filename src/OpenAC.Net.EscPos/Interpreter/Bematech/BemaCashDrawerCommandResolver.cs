@@ -54,8 +54,8 @@ public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCo
         var tempo = Math.Max(command.TempoON, command.TempoOFF);
         switch (command.Gaveta)
         {
-            case CmdGaveta.GavetaUm: return new byte[] { CmdConst.ESC, 128, tempo };
-            case CmdGaveta.GavetaDois: return new byte[] { CmdConst.ESC, (byte)'v', tempo };
+            case CmdGaveta.GavetaUm: return [CmdConst.ESC, 128, tempo];
+            case CmdGaveta.GavetaDois: return [CmdConst.ESC, (byte)'v', tempo];
             default:
                 throw new ArgumentOutOfRangeException();
         }

@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace OpenAC.Net.EscPos.Demo
 {
     internal static class Program

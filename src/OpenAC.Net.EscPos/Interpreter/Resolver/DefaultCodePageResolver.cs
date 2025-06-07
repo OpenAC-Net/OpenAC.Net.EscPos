@@ -51,7 +51,7 @@ public sealed class DefaultCodePageResolver : CommandResolver<CodePageCommand>
 
     public override byte[] Resolve(CodePageCommand command)
     {
-        if (command.PaginaCodigo == PaginaCodigo.pcUTF8) return new byte[0];
+        if (command.PaginaCodigo == PaginaCodigo.pcUTF8) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -65,7 +65,7 @@ public sealed class DefaultCodePageResolver : CommandResolver<CodePageCommand>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        builder.Append(new byte[] { CmdConst.ESC, 116 });
+        builder.Append([CmdConst.ESC, 116]);
         builder.Append(codePage);
 
         return builder.ToArray();

@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Text;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
@@ -40,7 +39,9 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 public sealed class BemaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
     public BemaInfoImpressoraResolver(Encoding encoding) :
-        base(new[] { new byte[] { CmdConst.GS, 249, 39, 0 }, new byte[] { CmdConst.GS, 249, 39, 3 }, new byte[] { CmdConst.GS, 249, 1 }, new byte[] { CmdConst.GS, 249, 39, 49 } },
+        base([
+                [CmdConst.GS, 249, 39, 0], [CmdConst.GS, 249, 39, 3], [CmdConst.GS, 249, 1], [CmdConst.GS, 249, 39, 49]
+            ],
             (dados) =>
             {
                 if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;

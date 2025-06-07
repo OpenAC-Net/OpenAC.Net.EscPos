@@ -74,9 +74,9 @@ public abstract class EscPosInterpreter : IOpenLog
 
     public RazaoColunaFonte RazaoColuna { get; } = new();
 
-    public InfoResolver<EscPosTipoStatus> Status { get; protected set; }
+    public InfoResolver<EscPosTipoStatus>? Status { get; protected set; }
 
-    public InfoResolver<InformacoesImpressora> InfoImpressora { get; protected set; }
+    public InfoResolver<InformacoesImpressora>? InfoImpressora { get; protected set; }
 
     #endregion Properties
 
@@ -93,7 +93,7 @@ public abstract class EscPosInterpreter : IOpenLog
         if (!CommandResolver.HasResolver<TCommand>())
         {
             this.Log().Debug($"[{GetType().Name}] - [{nameof(TCommand)}]: comando não implementado.");
-            return new byte[0];
+            return [];
         }
 
         var resolver = CommandResolver.GetResolver<TCommand>();

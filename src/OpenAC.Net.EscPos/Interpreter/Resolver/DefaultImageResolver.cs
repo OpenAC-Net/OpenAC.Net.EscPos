@@ -53,7 +53,7 @@ public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
 
     public override byte[] Resolve(ImageCommand command)
     {
-        if (command.Imagem == null) return new byte[0];
+        if (command.Imagem == null) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -78,14 +78,14 @@ public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
         var bmp = new Bitmap(command.Imagem);
 
         // ESC * m nL nH d1…dk   Select bitmap mode
-        byte[] escBmp = { 27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256) };
+        byte[] escBmp = [27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256)];
 
         var slices = bmp.SliceImage(command.IsHiDPI);
         foreach (var slice in slices)
         {
             builder.Append(escBmp);
             builder.Append(slice);
-            builder.Append(new byte[] { 0xA });
+            builder.Append([0xA]);
         }
 
         // Volta alinhamento para Esquerda.

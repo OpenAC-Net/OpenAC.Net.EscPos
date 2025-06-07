@@ -51,7 +51,7 @@ public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
 
     public override byte[] Resolve(JumpLineCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return [];
 
         var linhas = Math.Max(1, command.Linhas);
         using var builder = new ByteArrayBuilder();

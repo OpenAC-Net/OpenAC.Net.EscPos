@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Drawing;
 using OpenAC.Net.EscPos.Command;
 

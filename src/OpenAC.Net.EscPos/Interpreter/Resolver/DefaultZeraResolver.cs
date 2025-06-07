@@ -47,7 +47,7 @@ public sealed class DefaultZeraResolver : CommandResolver<ZeraCommand>
 
     #region Methods
 
-    public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : new byte[0];
+    public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : [];
 
     #endregion Methods
 }

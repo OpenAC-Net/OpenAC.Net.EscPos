@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
@@ -48,7 +47,7 @@ public sealed class DefaultBeepResolver : CommandResolver<BeepCommand>
 
     #region Methods
 
-    public override byte[] Resolve(BeepCommand command) => !Commandos.ContainsKey(CmdEscPos.Beep) ? new byte[0] : Commandos[CmdEscPos.Beep];
+    public override byte[] Resolve(BeepCommand command) => !Commandos.ContainsKey(CmdEscPos.Beep) ? [] : Commandos[CmdEscPos.Beep];
 
     #endregion Methods
 }

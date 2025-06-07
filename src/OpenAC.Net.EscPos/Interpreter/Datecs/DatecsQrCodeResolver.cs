@@ -96,12 +96,12 @@ public sealed class DatecsQrCodeResolver : CommandResolver<QrCodeCommand>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        builder.Append(new byte[] { CmdConst.GS, (byte)'S', 0 });
-        builder.Append(new[] { CmdConst.GS, (byte)'Q' });
+        builder.Append([CmdConst.GS, (byte)'S', 0]);
+        builder.Append([CmdConst.GS, (byte)'Q']);
         builder.Append(6);
         builder.Append(largura);
         builder.Append(erro);
-        builder.Append(new[] { pL, pH });
+        builder.Append([pL, pH]);
         builder.Append(Encoding.UTF8.GetBytes(command.Code));
 
         // Volta alinhamento para Esquerda.

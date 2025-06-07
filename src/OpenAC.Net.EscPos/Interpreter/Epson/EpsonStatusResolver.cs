@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
@@ -39,7 +38,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson;
 public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
 {
     public EpsonStatusResolver() :
-        base(new[] { new byte[] { 16, 4, 1 }, new byte[] { 16, 4, 2 }, new byte[] { 16, 4, 4 }, },
+        base([[16, 4, 1], [16, 4, 2], [16, 4, 4]],
             (dados) =>
             {
                 if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;

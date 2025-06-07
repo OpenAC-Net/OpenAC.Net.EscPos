@@ -35,7 +35,6 @@ using System.Text;
 using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
-using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.ZJiang;
@@ -97,10 +96,10 @@ public sealed class ZJiangQrCodeResolver : CommandResolver<QrCodeCommand>
         var pL = (byte)(num % 256);
         var pH = (byte)(num / 256);
 
-        builder.Append(new byte[] { CmdConst.ESC, (byte)'Z', 0 });
+        builder.Append([CmdConst.ESC, (byte)'Z', 0]);
         builder.Append(erro);
         builder.Append(largura);
-        builder.Append(new[] { pL, pH });
+        builder.Append([pL, pH]);
         builder.Append(Encoding.UTF8.GetBytes(command.Code));
 
         // Volta alinhamento para Esquerda.

@@ -59,7 +59,7 @@ public class DatecsInterpreter : EscPosInterpreter
         Status = new EpsonStatusResolver();
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        commandos[CmdEscPos.Beep] = new[] { CmdConst.BELL };
+        commandos[CmdEscPos.Beep] = [CmdConst.BELL];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

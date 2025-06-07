@@ -58,37 +58,37 @@ public sealed class DarumaInterpreter : EscPosInterpreter
         var commandos = new Dictionary<CmdEscPos, byte[]>
         {
             // Diversos
-            {CmdEscPos.Zera, new[] {CmdConst.ESC, (byte) '@'}},
-            {CmdEscPos.Beep, new[] {CmdConst.BELL}},
-            {CmdEscPos.EspacoEntreLinhasPadrao, new[] {CmdConst.ESC, (byte)'2'}},
-            {CmdEscPos.EspacoEntreLinhas, new[] {CmdConst.ESC, (byte)'3'}},
-            {CmdEscPos.PuloDeLinha, new[] {CmdConst.LF}},
+            {CmdEscPos.Zera, [CmdConst.ESC, (byte) '@'] },
+            {CmdEscPos.Beep, [CmdConst.BELL] },
+            {CmdEscPos.EspacoEntreLinhasPadrao, [CmdConst.ESC, (byte)'2'] },
+            {CmdEscPos.EspacoEntreLinhas, [CmdConst.ESC, (byte)'3'] },
+            {CmdEscPos.PuloDeLinha, [CmdConst.LF] },
 
             // Alinhamento
-            {CmdEscPos.AlinhadoEsquerda, new byte[] {CmdConst.ESC, (byte) 'j', 0}},
-            {CmdEscPos.AlinhadoCentro, new byte[] {CmdConst.ESC, (byte) 'j', 1}},
-            {CmdEscPos.AlinhadoDireita, new byte[] {CmdConst.ESC, (byte) 'j', 2}},
+            {CmdEscPos.AlinhadoEsquerda, [CmdConst.ESC, (byte) 'j', 0] },
+            {CmdEscPos.AlinhadoCentro, [CmdConst.ESC, (byte) 'j', 1] },
+            {CmdEscPos.AlinhadoDireita, [CmdConst.ESC, (byte) 'j', 2] },
 
             // Fonte
-            {CmdEscPos.FonteNormal, new byte[] {CmdConst.ESC, (byte) '!', 0, CmdConst.DC2}},
-            {CmdEscPos.FonteA, new[] {CmdConst.DC4}},
-            {CmdEscPos.FonteB, new[] {CmdConst.ESC, CmdConst.SI}},
-            {CmdEscPos.LigaExpandido, new byte[] {CmdConst.ESC, (byte)'W', 1}},
-            {CmdEscPos.DesligaExpandido, new byte[] {CmdConst.ESC, (byte)'W', 0}},
-            {CmdEscPos.LigaCondensado, new[] {CmdConst.ESC, CmdConst.SI}},
-            {CmdEscPos.DesligaCondensado, new[] { CmdConst.ESC, CmdConst.DC2, CmdConst.DC4}},
-            {CmdEscPos.LigaNegrito, new byte[] {CmdConst.ESC, (byte) 'E'}},
-            {CmdEscPos.DesligaNegrito, new byte[] {CmdConst.ESC, (byte) 'F'}},
-            {CmdEscPos.LigaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 1}},
-            {CmdEscPos.DesligaSublinhado, new byte[] {CmdConst.ESC, (byte) '-', 0}},
-            {CmdEscPos.LigaItalico, new byte[] {CmdConst.ESC, (byte)'4', 1}},
-            {CmdEscPos.DesligaItalico, new byte[] {CmdConst.ESC, (byte)'4', 0}},
-            {CmdEscPos.LigaAlturaDupla, new byte[] {CmdConst.ESC, (byte)'w', 1}},
-            {CmdEscPos.DesligaAlturaDupla, new byte[] {CmdConst.ESC, (byte)'w', 0}},
+            {CmdEscPos.FonteNormal, [CmdConst.ESC, (byte) '!', 0, CmdConst.DC2] },
+            {CmdEscPos.FonteA, [CmdConst.DC4] },
+            {CmdEscPos.FonteB, [CmdConst.ESC, CmdConst.SI] },
+            {CmdEscPos.LigaExpandido, [CmdConst.ESC, (byte)'W', 1] },
+            {CmdEscPos.DesligaExpandido, [CmdConst.ESC, (byte)'W', 0] },
+            {CmdEscPos.LigaCondensado, [CmdConst.ESC, CmdConst.SI] },
+            {CmdEscPos.DesligaCondensado, [CmdConst.ESC, CmdConst.DC2, CmdConst.DC4] },
+            {CmdEscPos.LigaNegrito, [CmdConst.ESC, (byte) 'E'] },
+            {CmdEscPos.DesligaNegrito, [CmdConst.ESC, (byte) 'F'] },
+            {CmdEscPos.LigaSublinhado, [CmdConst.ESC, (byte) '-', 1] },
+            {CmdEscPos.DesligaSublinhado, [CmdConst.ESC, (byte) '-', 0] },
+            {CmdEscPos.LigaItalico, [CmdConst.ESC, (byte)'4', 1] },
+            {CmdEscPos.DesligaItalico, [CmdConst.ESC, (byte)'4', 0] },
+            {CmdEscPos.LigaAlturaDupla, [CmdConst.ESC, (byte)'w', 1] },
+            {CmdEscPos.DesligaAlturaDupla, [CmdConst.ESC, (byte)'w', 0] },
 
             //Corte
-            {CmdEscPos.CorteTotal, new[] {CmdConst.ESC, (byte) 'm'}},
-            {CmdEscPos.CorteParcial, new[] {CmdConst.ESC, (byte) 'm'}}
+            {CmdEscPos.CorteTotal, [CmdConst.ESC, (byte) 'm'] },
+            {CmdEscPos.CorteParcial, [CmdConst.ESC, (byte) 'm'] }
         };
 
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
@@ -50,8 +49,8 @@ public sealed class DefaultCutResolver : CommandResolver<CutCommand>
 
     public override byte[] Resolve(CutCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return new byte[0];
-        if (!Commandos.TryGetValue(CmdEscPos.CorteTotal, out var commando)) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return [];
+        if (!Commandos.TryGetValue(CmdEscPos.CorteTotal, out var commando)) return [];
 
         return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : commando;
     }

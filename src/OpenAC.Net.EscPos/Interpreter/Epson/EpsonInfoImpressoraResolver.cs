@@ -40,7 +40,10 @@ namespace OpenAC.Net.EscPos.Interpreter.Epson;
 public sealed class EpsonInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
     public EpsonInfoImpressoraResolver(Encoding encoding) :
-        base(new[] { new byte[] { CmdConst.GS, 73, 66 }, new byte[] { CmdConst.GS, 73, 67 }, new byte[] { CmdConst.GS, 73, 65 }, new byte[] { CmdConst.GS, 73, 68 }, new byte[] { CmdConst.GS, 73, 50 } },
+        base([
+                [CmdConst.GS, 73, 66], [CmdConst.GS, 73, 67], [CmdConst.GS, 73, 65], [CmdConst.GS, 73, 68], [CmdConst.GS, 73, 50
+                ]
+            ],
             (dados) =>
             {
                 if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;

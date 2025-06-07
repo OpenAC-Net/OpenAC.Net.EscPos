@@ -55,7 +55,7 @@ public sealed class ModoPaginaRegiao : IOpenLog, IRegiaoPagina
     {
         this.parent = parent;
         this.interpreter = interpreter;
-        commands = new List<IPrintCommand>();
+        commands = [];
     }
 
     #endregion Constructors

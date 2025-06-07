@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
@@ -39,7 +38,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
 {
     public DarumaStatusResolver() :
-        base(new[] { new byte[] { CmdConst.ENQ }, new byte[] { CmdConst.GS, CmdConst.ENQ } },
+        base([[CmdConst.ENQ], [CmdConst.GS, CmdConst.ENQ]],
             dados =>
             {
                 if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;

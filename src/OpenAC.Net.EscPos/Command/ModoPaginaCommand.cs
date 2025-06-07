@@ -48,7 +48,7 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
 
     public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
-        regioes = new List<ModoPaginaRegiao>();
+        regioes = [];
     }
 
     #endregion Constructors

@@ -52,7 +52,7 @@ public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
     public override byte[] Resolve(CashDrawerCommand command)
     {
         var tempo = Math.Max(command.TempoON, command.TempoOFF);
-        return new[] { CmdConst.ESC, (byte)'v', (byte)'n', tempo };
+        return [CmdConst.ESC, (byte)'v', (byte)'n', tempo];
     }
 
     #endregion Methods

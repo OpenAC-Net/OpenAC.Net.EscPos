@@ -48,7 +48,7 @@ public sealed class DarumaCashDrawerResolver : CommandResolver<CashDrawerCommand
 
     #region Methods
 
-    public override byte[] Resolve(CashDrawerCommand command) => new[] { CmdConst.ESC, (byte)'p' };
+    public override byte[] Resolve(CashDrawerCommand command) => [CmdConst.ESC, (byte)'p'];
 
     #endregion Methods
 }

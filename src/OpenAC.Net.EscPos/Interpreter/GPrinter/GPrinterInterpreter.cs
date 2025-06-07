@@ -60,7 +60,7 @@ public class GPrinterInterpreter : EscPosInterpreter
         InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, (byte)'B', 1, 3 };
+        commandos[CmdEscPos.Beep] = [CmdConst.ESC, (byte)'B', 1, 3];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

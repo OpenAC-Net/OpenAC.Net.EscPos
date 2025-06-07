@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenAC.Net.EscPos.Command;
@@ -52,7 +51,7 @@ public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerComman
     public override byte[] Resolve(CashDrawerCommand command)
     {
         return Commandos.TryGetValue(CmdEscPos.Gaveta, out var commando)
-            ? commando.Concat(new[] { (byte)command.Gaveta, command.TempoON, command.TempoOFF }).ToArray()
+            ? commando.Concat([(byte)command.Gaveta, command.TempoON, command.TempoOFF]).ToArray()
             : [];
     }
 

@@ -49,7 +49,7 @@ public sealed class DarumaLogoResolver : CommandResolver<LogoCommand>
     #region Methods
 
     /// <inheritdoc />
-    public override byte[] Resolve(LogoCommand command) => new[] { CmdConst.SYN, CmdConst.BS, CmdConst.SYN, CmdConst.TAB };
+    public override byte[] Resolve(LogoCommand command) => [CmdConst.SYN, CmdConst.BS, CmdConst.SYN, CmdConst.TAB];
 
     #endregion Methods
 }

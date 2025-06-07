@@ -53,7 +53,7 @@ public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
     public override byte[] Resolve(LogoCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&
-            !Commandos.ContainsKey(CmdEscPos.LogoOld)) return new byte[0];
+            !Commandos.ContainsKey(CmdEscPos.LogoOld)) return [];
 
         // Verificando se informou o KeyCode compatível com o comando Novo ou Antigo.
 
@@ -65,7 +65,7 @@ public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
         var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
 
         if (command.KC2 != 0)
-            return Commandos[CmdEscPos.LogoNew].Concat(new[] { command.KC1, command.KC2, command.FatorX, command.FatorY }).ToArray();
+            return Commandos[CmdEscPos.LogoNew].Concat([command.KC1, command.KC2, command.FatorX, command.FatorY]).ToArray();
 
         var keyCode = keyCodeUnico(command.KC1);
         byte m = 0;
@@ -75,7 +75,7 @@ public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
         if (command.FatorY > 1)
             m += 2;
 
-        return Commandos[CmdEscPos.LogoOld].Concat(new[] { keyCode, m }).ToArray();
+        return Commandos[CmdEscPos.LogoOld].Concat([keyCode, m]).ToArray();
     }
 
     #endregion Methods

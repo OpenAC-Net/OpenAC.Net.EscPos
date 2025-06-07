@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
@@ -39,7 +38,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Elgin;
 public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
 {
     public ElginStatusResolver() :
-        base(new[] { new byte[] { 5 } },
+        base([[5]],
             dados =>
             {
                 if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;

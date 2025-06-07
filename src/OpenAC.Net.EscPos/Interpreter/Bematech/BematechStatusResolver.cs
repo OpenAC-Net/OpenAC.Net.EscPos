@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
@@ -39,7 +38,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
 {
     public BematechStatusResolver() :
-        base(new[] { new byte[] { CmdConst.GS, 248, (byte)'1' } },
+        base([[CmdConst.GS, 248, (byte)'1']],
             dados =>
             {
                 if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;

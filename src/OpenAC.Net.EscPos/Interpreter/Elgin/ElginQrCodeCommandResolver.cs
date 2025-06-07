@@ -54,7 +54,7 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
 
     public override byte[] Resolve(QrCodeCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -116,11 +116,11 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
                 throw new ArgumentOutOfRangeException();
         }
 
-        builder.Append(new byte[] { CmdConst.GS, (byte)'o', 0 });  // Set parameters of QRCODE barcode
+        builder.Append([CmdConst.GS, (byte)'o', 0]);  // Set parameters of QRCODE barcode
         builder.Append((byte)command.LarguraModulo); // Basic element width
         builder.Append(0); // Language mode: 0:Chinese 1:Japanese
         builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-        builder.Append(new[] { CmdConst.GS, (byte)'k' }); // Bar Code
+        builder.Append([CmdConst.GS, (byte)'k']); // Bar Code
         builder.Append(11); // Type = QRCode. Number of Characters: 4-928
         builder.Append(error);
         builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual

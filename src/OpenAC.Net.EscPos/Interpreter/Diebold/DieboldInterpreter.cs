@@ -57,9 +57,9 @@ public sealed class DieboldInterpreter : EscPosInterpreter
         Status = new EpsonStatusResolver();
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        commandos[CmdEscPos.DesligaExpandido] = new byte[] { CmdConst.ESC, (byte)'!', 0 };
-        commandos[CmdEscPos.LigaItalico] = new byte[] { CmdConst.ESC, 4 };
-        commandos[CmdEscPos.DesligaItalico] = new byte[] { CmdConst.ESC, 5 };
+        commandos[CmdEscPos.DesligaExpandido] = [CmdConst.ESC, (byte)'!', 0];
+        commandos[CmdEscPos.LigaItalico] = [CmdConst.ESC, 4];
+        commandos[CmdEscPos.DesligaItalico] = [CmdConst.ESC, 5];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

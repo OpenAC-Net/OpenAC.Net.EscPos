@@ -62,7 +62,7 @@ public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
 
     public override byte[] Resolve(BarcodeCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.IniciarBarcode)) return new byte[0];
+        if (!Commandos.ContainsKey(CmdEscPos.IniciarBarcode)) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -139,7 +139,7 @@ public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
             CmdBarcodeText.Acima when Commandos.ContainsKey(CmdEscPos.BarcodeTextAbove) => Commandos[CmdEscPos.BarcodeTextAbove],
             CmdBarcodeText.Abaixo when Commandos.ContainsKey(CmdEscPos.BarcodeTextBelow) => Commandos[CmdEscPos.BarcodeTextBelow],
             CmdBarcodeText.Ambos when Commandos.ContainsKey(CmdEscPos.BarcodeTextBoth) => Commandos[CmdEscPos.BarcodeTextBoth],
-            _ => new byte[0]
+            _ => []
         };
 
         if (Commandos.ContainsKey(CmdEscPos.BarcodeWidth))

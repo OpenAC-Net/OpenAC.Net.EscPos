@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Linq;
 using System.Text;
 
 namespace OpenAC.Net.EscPos.Commom;

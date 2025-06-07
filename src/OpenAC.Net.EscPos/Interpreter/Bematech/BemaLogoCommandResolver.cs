@@ -55,7 +55,7 @@ public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
         if (command.KC2 == 0)
             keyCode = command.KC1 is >= 48 and <= 57 ? ((char)command.KC1).ToInt32() : command.KC1;
         else
-            keyCode = new string(new[] { (char)command.KC1, (char)command.KC2 }).ToInt32();
+            keyCode = new string([(char)command.KC1, (char)command.KC2]).ToInt32();
 
         var m = 0;
         if (command.FatorX > 1)
@@ -63,7 +63,7 @@ public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
         if (command.FatorY > 1)
             m += 2;
 
-        return new[] { CmdConst.FS, (byte)'p', (byte)keyCode, (byte)m };
+        return [CmdConst.FS, (byte)'p', (byte)keyCode, (byte)m];
     }
 
     #endregion Methods

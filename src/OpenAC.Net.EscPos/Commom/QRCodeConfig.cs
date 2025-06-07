@@ -29,8 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-
 namespace OpenAC.Net.EscPos.Commom;
 
 public sealed class QrCodeConfig

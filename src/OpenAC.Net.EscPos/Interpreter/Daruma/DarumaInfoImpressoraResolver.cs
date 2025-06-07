@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
 using System.Text;
 using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Commom;
@@ -40,7 +39,7 @@ namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 public sealed class DarumaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
     public DarumaInfoImpressoraResolver(Encoding encoding) :
-        base(new[] { new byte[] { CmdConst.ESC, 195 }, new byte[] { CmdConst.ESC, 199 }, new byte[] { CmdConst.ESC, 229 } },
+        base([[CmdConst.ESC, 195], [CmdConst.ESC, 199], [CmdConst.ESC, 229]],
             (dados) =>
             {
                 if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;

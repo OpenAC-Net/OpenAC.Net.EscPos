@@ -50,7 +50,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     #region Fields
 
     private readonly List<IPrintCommand> commands;
-    private OpenDeviceStream device;
+    private OpenDeviceStream? device;
     private EscPosInterpreter interpreter;
     private ProtocoloEscPos protocolo;
     private bool inicializada;
@@ -60,13 +60,13 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
 
     #region Constructors
 
-    protected EscPosPrinter(IDeviceConfig device)
+    protected EscPosPrinter(IDeviceConfig? device)
     {
         Guard.Against<ArgumentNullException>(device == null, "As configurações de device não pode ser nulas.");
 
         Device = device;
 
-        commands = new List<IPrintCommand>();
+        commands = [];
 
         paginaCodigo = PaginaCodigo.pc850;
         protocolo = ProtocoloEscPos.EscPos;
@@ -215,8 +215,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         device?.Close();
         device?.Dispose();
         device = null;
-        interpreter = null;
-
         inicializada = false;
     }
 
@@ -337,7 +335,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// Le as informações da impressora.
     /// </summary>
     /// <returns></returns>
-    public InformacoesImpressora LerInfoImpressora()
+    public InformacoesImpressora? LerInfoImpressora()
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
@@ -593,7 +591,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="fonte"></param>
     /// <param name="tamanho"></param>
     /// <param name="aAlinhamento"></param>
     /// <param name="slices"></param>

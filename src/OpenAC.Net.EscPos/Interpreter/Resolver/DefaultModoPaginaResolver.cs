@@ -58,7 +58,7 @@ public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaComman
 
         foreach (var regiao in command.Regioes)
         {
-            builder.Append(new[] { CmdConst.ESC, (byte)'T', (byte)regiao.Direcao });
+            builder.Append([CmdConst.ESC, (byte)'T', (byte)regiao.Direcao]);
 
             var espacos = Math.Max((byte)0, regiao.EspacoEntreLinhas);
             if (espacos == 0)
@@ -66,7 +66,7 @@ public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaComman
             else
                 builder.Append(Commandos[CmdEscPos.EspacoEntreLinhas], espacos);
 
-            builder.Append(new[] { CmdConst.ESC, (byte)'W' });
+            builder.Append([CmdConst.ESC, (byte)'W']);
 
             builder.Append((byte)(regiao.Esquerda % 256));
             builder.Append((byte)(regiao.Esquerda / 256));

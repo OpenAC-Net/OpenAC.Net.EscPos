@@ -54,7 +54,7 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
 
     public override byte[] Resolve(ImageCommand command)
     {
-        if (command.Imagem == null) return new byte[0];
+        if (command.Imagem == null) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -80,7 +80,7 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
         var data = new[] { (byte)'\x00', (byte)'\x00', (byte)'\x00' };
 
         // ESC * m nL nH d1…dk   Select bitmap mode
-        byte[] escBmp = { 27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256) };
+        byte[] escBmp = [27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256)];
 
         var slices = bmp.SliceImage(command.IsHiDPI);
         foreach (var slice in slices)

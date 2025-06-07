@@ -50,7 +50,7 @@ public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
 
     public override byte[] Resolve(LogoCommand command)
     {
-        return new byte[] { };
+        return [];
     }
 
     #endregion Methods

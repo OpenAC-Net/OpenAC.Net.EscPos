@@ -61,7 +61,7 @@ public class PosStarInterpreter : EscPosInterpreter
         InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        commandos[CmdEscPos.Beep] = new byte[] { CmdConst.ESC, CmdConst.GS, CmdConst.BELL, 1, 2, 5 };
+        commandos[CmdEscPos.Beep] = [CmdConst.ESC, CmdConst.GS, CmdConst.BELL, 1, 2, 5];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

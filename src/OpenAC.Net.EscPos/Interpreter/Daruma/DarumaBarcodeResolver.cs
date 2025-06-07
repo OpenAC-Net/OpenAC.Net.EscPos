@@ -85,38 +85,38 @@ public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
         switch (command.Tipo)
         {
             case CmdBarcode.UPCA:
-                barCode = new byte[] { 8 };
+                barCode = [8];
                 break;
 
             case CmdBarcode.EAN13:
-                barCode = new byte[] { 1 };
+                barCode = [1];
                 break;
 
             case CmdBarcode.EAN8:
-                barCode = new byte[] { 2 };
+                barCode = [2];
                 break;
 
             case CmdBarcode.CODE39:
-                barCode = new byte[] { 6 };
+                barCode = [6];
                 break;
 
             case CmdBarcode.Inter2of5:
-                barCode = new byte[] { 4 };
+                barCode = [4];
                 break;
 
             case CmdBarcode.CodaBar:
-                barCode = new byte[] { 9 };
+                barCode = [9];
                 break;
 
             case CmdBarcode.CODE93:
-                barCode = new byte[] { 7 };
+                barCode = [7];
                 break;
 
             case CmdBarcode.CODE128b:
             case CmdBarcode.CODE128:
             case CmdBarcode.CODE128a:
             case CmdBarcode.CODE128c:
-                barCode = new byte[] { 5 };
+                barCode = [5];
                 break;
 
             default:
@@ -135,7 +135,7 @@ public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
             _ => new byte[0]
         };
 
-        builder.Append(new[] { CmdConst.ESC, (byte)'b' });
+        builder.Append([CmdConst.ESC, (byte)'b']);
         builder.Append(barCode);
         builder.Append(largura);
         builder.Append(altura);

@@ -33,12 +33,35 @@ using System;
 
 namespace OpenAC.Net.EscPos.Commom;
 
+
+/// <summary>
+/// Define os estilos de fonte disponíveis para impressão.
+/// </summary>
 [Flags]
 public enum CmdEstiloFonte
 {
+    /// <summary>
+    /// Texto em negrito.
+    /// </summary>
     Negrito = 1 << 0,
+
+    /// <summary>
+    /// Texto sublinhado.
+    /// </summary>
     Sublinhado = 1 << 1,
+
+    /// <summary>
+    /// Texto invertido (cores invertidas).
+    /// </summary>
     Invertido = 1 << 2,
+
+    /// <summary>
+    /// Texto em itálico.
+    /// </summary>
     Italico = 1 << 3,
+
+    /// <summary>
+    /// Texto com altura dupla.
+    /// </summary>
     AlturaDupla = 1 << 4,
 }

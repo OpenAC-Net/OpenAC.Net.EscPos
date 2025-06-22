@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Diebold;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de QR Code em impressoras Diebold.
+/// </summary>
 public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DieboldQrCodeResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DieboldQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o formato ESC/POS da Diebold.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes com o comando ESC/POS.</returns>
     public override byte[] Resolve(QrCodeCommand command)
     {
         var num = command.Code.Length + 3;

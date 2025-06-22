@@ -4,8 +4,18 @@ using OpenAC.Net.Devices.Commom;
 
 namespace OpenAC.Net.EscPos.Extensions;
 
+/// <summary>
+/// Métodos de extensão para manipulação de imagens em impressoras ESC/POS.
+/// </summary>
 public static class ImageExtensions
 {
+    /// <summary>
+    /// Divide uma imagem <see cref="Bitmap"/> em fatias de 24 pixels de altura, convertendo cada fatia em um array de bytes
+    /// para impressão em impressoras térmicas ESC/POS. Pixels claros são considerados como fundo e pixels escuros como pontos a serem impressos.
+    /// </summary>
+    /// <param name="img">A imagem a ser fatiada.</param>
+    /// <param name="isHiDpi">Indica se a impressão é em alta densidade (HiDPI).</param>
+    /// <returns>Um array de arrays de bytes, cada um representando uma fatia da imagem.</returns>
     internal static byte[][] SliceImage(this Bitmap img, bool isHiDpi)
     {
         var slices = new List<byte[]>();

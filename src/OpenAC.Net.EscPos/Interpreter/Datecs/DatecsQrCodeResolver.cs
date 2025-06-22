@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Datecs;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de QR Code em impressoras Datecs.
+/// </summary>
 public sealed class DatecsQrCodeResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DatecsQrCodeResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DatecsQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class DatecsQrCodeResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o formato ESC/POS da Datecs.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes com o comando ESC/POS.</returns>
     public override byte[] Resolve(QrCodeCommand command)
     {
         using var builder = new ByteArrayBuilder();

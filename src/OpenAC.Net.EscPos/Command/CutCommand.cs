@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando de corte de papel.
+/// </summary>
 public sealed class CutCommand : PrintCommand<CutCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="CutCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS.</param>
     public CutCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -45,6 +52,9 @@ public sealed class CutCommand : PrintCommand<CutCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define se o corte será parcial.
+    /// </summary>
     public bool Parcial { get; set; } = false;
 
     #endregion Properties

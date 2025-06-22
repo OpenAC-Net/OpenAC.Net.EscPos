@@ -33,10 +33,21 @@ using System.Text;
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Representa as informações de uma impressora.
+/// </summary>
 public class InformacoesImpressora
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="InformacoesImpressora"/>.
+    /// </summary>
+    /// <param name="fabricante">Nome do fabricante da impressora.</param>
+    /// <param name="modelo">Modelo da impressora.</param>
+    /// <param name="firmware">Versão do firmware da impressora.</param>
+    /// <param name="serial">Número de série da impressora.</param>
+    /// <param name="guilhotina">Indica se a impressora possui guilhotina.</param>
     public InformacoesImpressora(string fabricante, string modelo, string firmware, string serial, bool guilhotina)
     {
         Fabricante = fabricante;
@@ -50,20 +61,44 @@ public class InformacoesImpressora
 
     #region Properties
 
+    /// <summary>
+    /// Obtém o nome do fabricante da impressora.
+    /// </summary>
     public string Fabricante { get; }
 
+    /// <summary>
+    /// Obtém o modelo da impressora.
+    /// </summary>
     public string Modelo { get; }
 
+    /// <summary>
+    /// Obtém a versão do firmware da impressora.
+    /// </summary>
     public string Firmware { get; }
 
+    /// <summary>
+    /// Obtém o número de série da impressora.
+    /// </summary>
     public string Serial { get; }
 
+    /// <summary>
+    /// Indica se a impressora possui guilhotina.
+    /// </summary>
     public bool Guilhotina { get; }
 
+    /// <summary>
+    /// Obtém uma instância vazia de <see cref="InformacoesImpressora"/>.
+    /// </summary>
     public static InformacoesImpressora Empty = new("", "", "", "", false);
 
     #endregion Properties
 
+    #region Methods
+
+    /// <summary>
+    /// Retorna uma representação em string das propriedades da impressora.
+    /// </summary>
+    /// <returns>String contendo os nomes e valores das propriedades.</returns>
     public override string ToString()
     {
         var props = GetType().GetProperties();
@@ -72,4 +107,6 @@ public class InformacoesImpressora
             sb.AppendLine(p.Name + ": " + p.GetValue(this, null));
         return sb.ToString();
     }
+
+    #endregion Methods
 }

@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de QR Code.
+/// </summary>
 public sealed class DefaultQrCodeResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultQrCodeResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class DefaultQrCodeResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o array de bytes correspondente.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes para impressão do QR Code.</returns>
     public override byte[] Resolve(QrCodeCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return [];

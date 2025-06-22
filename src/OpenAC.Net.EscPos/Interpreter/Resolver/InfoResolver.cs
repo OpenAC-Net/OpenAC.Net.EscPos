@@ -33,16 +33,28 @@ using System;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Classe base abstrata para resolver informações a partir de comandos e dados em bytes.
+/// </summary>
+/// <typeparam name="TInfo">Tipo da informação resolvida.</typeparam>
 public abstract class InfoResolver<TInfo>
 {
     #region Fields
 
+    /// <summary>
+    /// Função responsável por processar os dados e retornar a informação.
+    /// </summary>
     private readonly Func<byte[][], TInfo> processStatus;
 
     #endregion Fields
 
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="InfoResolver{TInfo}"/>.
+    /// </summary>
+    /// <param name="commands">Comandos utilizados para consulta.</param>
+    /// <param name="resolver">Função que processa os dados recebidos.</param>
     protected InfoResolver(byte[][] commands, Func<byte[][], TInfo> resolver)
     {
         Commands = commands;
@@ -53,8 +65,16 @@ public abstract class InfoResolver<TInfo>
 
     #region Methods
 
+    /// <summary>
+    /// Obtém os comandos utilizados para consulta.
+    /// </summary>
     public byte[][] Commands { get; }
 
+    /// <summary>
+    /// Processa os dados recebidos e retorna a informação resolvida.
+    /// </summary>
+    /// <param name="dados">Dados recebidos para processamento.</param>
+    /// <returns>Informação resolvida do tipo <typeparamref name="TInfo"/>.</returns>
     public TInfo Resolve(byte[][] dados) => processStatus(dados);
 
     #endregion Methods

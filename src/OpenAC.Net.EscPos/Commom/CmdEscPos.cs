@@ -31,63 +31,123 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Enumeração dos comandos ESC/POS suportados.
+/// </summary>
 public enum CmdEscPos
 {
+    /// <summary>Zera impressora.</summary>
     Zera,
+    /// <summary>Define espaço entre linhas.</summary>
     EspacoEntreLinhas,
+    /// <summary>Define espaço entre linhas padrão.</summary>
     EspacoEntreLinhasPadrao,
+    /// <summary>Ativa negrito.</summary>
     LigaNegrito,
+    /// <summary>Desativa negrito.</summary>
     DesligaNegrito,
+    /// <summary>Ativa expandido.</summary>
     LigaExpandido,
+    /// <summary>Desativa expandido.</summary>
     DesligaExpandido,
+    /// <summary>Ativa altura dupla.</summary>
     LigaAlturaDupla,
+    /// <summary>Desativa altura dupla.</summary>
     DesligaAlturaDupla,
+    /// <summary>Ativa sublinhado.</summary>
     LigaSublinhado,
+    /// <summary>Desativa sublinhado.</summary>
     DesligaSublinhado,
+    /// <summary>Ativa itálico.</summary>
     LigaItalico,
+    /// <summary>Desativa itálico.</summary>
     DesligaItalico,
+    /// <summary>Ativa condensado.</summary>
     LigaCondensado,
+    /// <summary>Desativa condensado.</summary>
     DesligaCondensado,
+    /// <summary>Ativa invertido.</summary>
     LigaInvertido,
+    /// <summary>Desativa invertido.</summary>
     DesligaInvertido,
+    /// <summary>Fonte normal.</summary>
     FonteNormal,
+    /// <summary>Fonte A.</summary>
     FonteA,
+    /// <summary>Fonte B.</summary>
     FonteB,
+    /// <summary>Alinha à esquerda.</summary>
     AlinhadoEsquerda,
+    /// <summary>Alinha à direita.</summary>
     AlinhadoDireita,
+    /// <summary>Alinha ao centro.</summary>
     AlinhadoCentro,
+    /// <summary>Emite beep.</summary>
     Beep,
+    /// <summary>Corte total do papel.</summary>
     CorteTotal,
+    /// <summary>Corte parcial do papel.</summary>
     CorteParcial,
+    /// <summary>Pula linha.</summary>
     PuloDeLinha,
+    /// <summary>Pula página.</summary>
     PuloDePagina,
+    /// <summary>Ativa modo página.</summary>
     LigaModoPagina,
+    /// <summary>Desativa modo página.</summary>
     DesligaModoPagina,
+    /// <summary>Imprime página.</summary>
     ImprimePagina,
+    /// <summary>Define página de código.</summary>
     PaginaDeCodigo,
+    /// <summary>Aciona gaveta.</summary>
     Gaveta,
+    /// <summary>Inicia barcode.</summary>
     IniciarBarcode,
+    /// <summary>Largura do barcode.</summary>
     BarcodeWidth,
+    /// <summary>Altura do barcode.</summary>
     BarcodeHeight,
+    /// <summary>Barcode sem texto.</summary>
     BarcodeNoText,
+    /// <summary>Texto acima do barcode.</summary>
     BarcodeTextAbove,
+    /// <summary>Texto abaixo do barcode.</summary>
     BarcodeTextBelow,
+    /// <summary>Texto acima e abaixo do barcode.</summary>
     BarcodeTextBoth,
+    /// <summary>Barcode UPCA.</summary>
     BarcodeUPCA,
+    /// <summary>Barcode UPCE.</summary>
     BarcodeUPCE,
+    /// <summary>Barcode EAN13.</summary>
     BarcodeEAN13,
+    /// <summary>Barcode EAN8.</summary>
     BarcodeEAN8,
+    /// <summary>Barcode CODE39.</summary>
     BarcodeCODE39,
+    /// <summary>Barcode Interleaved 2 of 5.</summary>
     BarcodeInter2of5,
+    /// <summary>Barcode CodaBar.</summary>
     BarcodeCodaBar,
+    /// <summary>Barcode CODE93.</summary>
     BarcodeCODE93,
+    /// <summary>Barcode CODE128.</summary>
     BarcodeCODE128,
+    /// <summary>Logo novo.</summary>
     LogoNew,
+    /// <summary>Logo antigo.</summary>
     LogoOld,
+    /// <summary>Inicializa QR Code.</summary>
     QrCodeInitial,
+    /// <summary>Modelo do QR Code.</summary>
     QrCodeModel,
+    /// <summary>Tamanho do QR Code.</summary>
     QrCodeSize,
+    /// <summary>Erro do QR Code.</summary>
     QrCodeError,
+    /// <summary>Armazena QR Code.</summary>
     QrCodeStore,
+    /// <summary>Imprime QR Code.</summary>
     QrCodePrint
 }

@@ -34,10 +34,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Comando para definir a página de código (Code Page) da impressora.
+/// </summary>
 public sealed class CodePageCommand : PrintCommand<CodePageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="CodePageCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS utilizado.</param>
     public CodePageCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -46,6 +53,9 @@ public sealed class CodePageCommand : PrintCommand<CodePageCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define a página de código a ser utilizada.
+    /// </summary>
     public PaginaCodigo PaginaCodigo { get; set; } = PaginaCodigo.pc850;
 
     #endregion Properties

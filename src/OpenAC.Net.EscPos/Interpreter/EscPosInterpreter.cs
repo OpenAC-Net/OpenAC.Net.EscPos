@@ -40,21 +40,21 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter;
 
 /// <summary>
-/// Classe base para geração de comandos EscPos.
+/// Classe base abstrata para geração de comandos EscPos.
 /// </summary>
 public abstract class EscPosInterpreter : IOpenLog
 {
     #region Constructors
 
     /// <summary>
-    ///
+    /// Inicializa uma nova instância da classe <see cref="EscPosInterpreter"/>.
     /// </summary>
-    /// <param name="enconder"></param>
-    protected EscPosInterpreter(Encoding enconder)
+    /// <param name="enconder">Encoding utilizado para envio de textos à impressora.</param>
+    protected EscPosInterpreter(Encoding? enconder)
     {
         Guard.Against<ArgumentNullException>(enconder == null, $"{nameof(enconder)} não pode ser nulo.");
 
-        Enconder = enconder;
+        Enconder = enconder!;
         IniciarInterpreter();
     }
 
@@ -63,19 +63,28 @@ public abstract class EscPosInterpreter : IOpenLog
     #region Properties
 
     /// <summary>
-    /// Encoding utilizado nos textos para envio a impressora.
+    /// Obtém o <see cref="Encoding"/> utilizado nos textos para envio à impressora.
     /// </summary>
     public Encoding Enconder { get; }
 
     /// <summary>
-    /// Cache que contem os resolvers dos comandos.
+    /// Obtém o cache que contém os resolvers dos comandos.
     /// </summary>
     public ResolverCache CommandResolver { get; } = new();
 
+    /// <summary>
+    /// Obtém a razão coluna/fonte utilizada.
+    /// </summary>
     public RazaoColunaFonte RazaoColuna { get; } = new();
 
+    /// <summary>
+    /// Obtém ou define o resolver de status da impressora.
+    /// </summary>
     public InfoResolver<EscPosTipoStatus>? Status { get; protected set; }
 
+    /// <summary>
+    /// Obtém ou define o resolver de informações da impressora.
+    /// </summary>
     public InfoResolver<InformacoesImpressora>? InfoImpressora { get; protected set; }
 
     #endregion Properties
@@ -83,11 +92,11 @@ public abstract class EscPosInterpreter : IOpenLog
     #region Methods
 
     /// <summary>
-    /// Processa o comando e retornar os bytes correspondente.
+    /// Processa o comando e retorna os bytes correspondentes.
     /// </summary>
-    /// <param name="command"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <typeparam name="TCommand">Tipo do comando a ser processado.</typeparam>
+    /// <param name="command">Instância do comando a ser processado.</param>
+    /// <returns>Array de bytes correspondente ao comando processado.</returns>
     public byte[] ProcessCommand<TCommand>(TCommand command) where TCommand : PrintCommand<TCommand>
     {
         if (!CommandResolver.HasResolver<TCommand>())
@@ -101,7 +110,7 @@ public abstract class EscPosInterpreter : IOpenLog
     }
 
     /// <summary>
-    /// Função para inicializar o dicionario de comandos para ser usados no interpreter.
+    /// Inicializa o dicionário de comandos a serem usados no interpreter.
     /// </summary>
     protected abstract void IniciarInterpreter();
 

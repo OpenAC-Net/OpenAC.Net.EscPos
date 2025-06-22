@@ -35,10 +35,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Comando para impressão de imagens.
+/// </summary>
 public sealed class ImageCommand : PrintCommand<ImageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ImageCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS.</param>
     public ImageCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -47,10 +54,19 @@ public sealed class ImageCommand : PrintCommand<ImageCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o alinhamento da imagem.
+    /// </summary>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
-    public Image Imagem { get; set; }
+    /// <summary>
+    /// Obtém ou define a imagem a ser impressa.
+    /// </summary>
+    public Image? Imagem { get; set; }
 
+    /// <summary>
+    /// Indica se a imagem é HiDPI.
+    /// </summary>
     public bool IsHiDPI { get; set; } = false;
 
     #endregion Properties

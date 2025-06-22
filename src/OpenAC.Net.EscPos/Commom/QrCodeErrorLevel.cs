@@ -31,10 +31,25 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Níveis de correção de erro para QR Code.
+/// </summary>
 public enum QrCodeErrorLevel : byte
 {
+    /// <summary>
+    /// Nível L (7% de recuperação de erros).
+    /// </summary>
     LevelL = 48,
+    /// <summary>
+    /// Nível M (15% de recuperação de erros).
+    /// </summary>
     LevelM = 49,
+    /// <summary>
+    /// Nível Q (25% de recuperação de erros).
+    /// </summary>
     LevelQ = 50,
+    /// <summary>
+    /// Nível H (30% de recuperação de erros).
+    /// </summary>
     LevelH = 51
 }

@@ -45,6 +45,9 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos;
 
+/// <summary>
+/// Classe base abstrata para impressoras ESC/POS, responsável por gerenciar comandos de impressão, comunicação e configuração.
+/// </summary>
 public abstract class EscPosPrinter : OpenDisposable, IOpenLog
 {
     #region Fields
@@ -60,11 +63,15 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
 
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="EscPosPrinter"/>.
+    /// </summary>
+    /// <param name="device">Configuração do dispositivo de comunicação.</param>
     protected EscPosPrinter(IDeviceConfig? device)
     {
         Guard.Against<ArgumentNullException>(device == null, "As configurações de device não pode ser nulas.");
 
-        Device = device;
+        Device = device!;
 
         commands = [];
 
@@ -218,6 +225,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         inicializada = false;
     }
 
+    /// <summary>
+    /// Inicializa a impressora com comandos básicos.
+    /// </summary>
     private void Inicializar()
     {
         this.Log().Debug("Inicializar");
@@ -276,7 +286,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionado o comando de beep no buffer.
+    /// Adiciona o comando de beep no buffer.
     /// </summary>
     public void Beep()
     {
@@ -289,10 +299,10 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Retornar o status da impressora.
+    /// Retorna o status da impressora.
     /// </summary>
-    /// <param name="tentativas"></param>
-    /// <returns></returns>
+    /// <param name="tentativas">Número de tentativas de leitura.</param>
+    /// <returns>Status da impressora.</returns>
     public EscPosTipoStatus LerStatusImpressora(int tentativas = 1)
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
@@ -332,9 +342,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Le as informações da impressora.
+    /// Lê as informações da impressora.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Informações da impressora.</returns>
     public InformacoesImpressora? LerInfoImpressora()
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
@@ -359,7 +369,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de pular linhas ao buffer.
     /// </summary>
-    /// <param name="aLinhas"></param>
+    /// <param name="aLinhas">Quantidade de linhas a pular.</param>
     public void PularLinhas(byte aLinhas = 0)
     {
         this.Log().Debug("PularLinhas");
@@ -377,8 +387,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de imprimir linha ao buffer.
     /// </summary>
-    /// <param name="tamanho"></param>
-    /// <param name="dupla"></param>
+    /// <param name="dupla">Se verdadeiro, imprime linha dupla.</param>
     public void ImprimirLinha(bool dupla = false)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -395,9 +404,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adiciona o commando de corta papel ao buffer.
+    /// Adiciona o comando de cortar papel ao buffer.
     /// </summary>
-    /// <param name="parcial"></param>
+    /// <param name="parcial">Se verdadeiro, corte parcial.</param>
     public void CortarPapel(bool parcial = false)
     {
         this.Log().Debug($"CortarPapel {(parcial ? "Parcial" : "Total")}");
@@ -418,7 +427,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de abrir gaveta ao buffer.
     /// </summary>
-    /// <param name="aGaveta"></param>
+    /// <param name="aGaveta">Gaveta a ser aberta.</param>
     public void AbrirGaveta(CmdGaveta aGaveta = CmdGaveta.GavetaUm)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name} {(byte)aGaveta}");
@@ -438,10 +447,10 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de logo ao buffer.
     /// </summary>
-    /// <param name="kc1"></param>
-    /// <param name="kc2"></param>
-    /// <param name="fatorX"></param>
-    /// <param name="fatorY"></param>
+    /// <param name="kc1">Código KC1 do logo.</param>
+    /// <param name="kc2">Código KC2 do logo.</param>
+    /// <param name="fatorX">Fator de escala X.</param>
+    /// <param name="fatorY">Fator de escala Y.</param>
     public void ImprimirLogo(byte? kc1 = null, byte? kc2 = null, byte? fatorX = null, byte? fatorY = null)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -462,7 +471,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
     public void ImprimirTexto(string aTexto)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, null);
@@ -471,8 +480,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="aAlinhamento"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
     public void ImprimirTexto(string aTexto, CmdAlinhamento aAlinhamento)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, CmdTamanhoFonte.Normal, aAlinhamento, null);
@@ -481,9 +490,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="aAlinhamento"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
     public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, aAlinhamento, null);
@@ -492,8 +501,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="tamanho"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, CmdAlinhamento.Esquerda, null);
@@ -502,9 +511,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="aEstilo"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aEstilo">Estilo da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho, CmdEstiloFonte aEstilo)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, CmdAlinhamento.Esquerda, aEstilo);
@@ -513,8 +522,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="aEstilo"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="aEstilo">Estilo da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdEstiloFonte aEstilo)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, aEstilo);
@@ -523,9 +532,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="aEstilo"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="aEstilo">Estilo da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdAlinhamento aAlinhamento, CmdEstiloFonte aEstilo)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, CmdTamanhoFonte.Normal, aAlinhamento, aEstilo);
@@ -534,10 +543,10 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="aEstilo"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="aEstilo">Estilo da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, CmdEstiloFonte aEstilo)
     {
         ImprimirTexto(aTexto, CmdFonte.Normal, tamanho, aAlinhamento, aEstilo);
@@ -546,11 +555,11 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="fonte"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="aEstilo"></param>
+    /// <param name="aTexto">Texto a ser impresso.</param>
+    /// <param name="fonte">Fonte do texto.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="aEstilo">Estilo da fonte.</param>
     public void ImprimirTexto(string aTexto, CmdFonte fonte, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, CmdEstiloFonte? aEstilo)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -572,7 +581,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="slices"></param>
+    /// <param name="slices">Fragmentos de texto formatados.</param>
     public void ImprimirTexto(params TextSlice[] slices)
     {
         ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, CmdAlinhamento.Esquerda, slices);
@@ -581,8 +590,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="slices"></param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="slices">Fragmentos de texto formatados.</param>
     public void ImprimirTexto(CmdAlinhamento aAlinhamento, params TextSlice[] slices)
     {
         ImprimirTexto(CmdFonte.Normal, CmdTamanhoFonte.Normal, aAlinhamento, slices);
@@ -591,9 +600,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="tamanho"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="slices"></param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="slices">Fragmentos de texto formatados.</param>
     public void ImprimirTexto(CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
     {
         ImprimirTexto(CmdFonte.Normal, tamanho, aAlinhamento, slices);
@@ -602,9 +611,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="fonte"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="slices"></param>
+    /// <param name="fonte">Fonte do texto.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="slices">Fragmentos de texto formatados.</param>
     public void ImprimirTexto(CmdFonte fonte, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
     {
         ImprimirTexto(fonte, CmdTamanhoFonte.Normal, aAlinhamento, slices);
@@ -613,10 +622,10 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de texto ao buffer.
     /// </summary>
-    /// <param name="fonte"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="slices"></param>
+    /// <param name="fonte">Fonte do texto.</param>
+    /// <param name="tamanho">Tamanho da fonte.</param>
+    /// <param name="aAlinhamento">Alinhamento do texto.</param>
+    /// <param name="slices">Fragmentos de texto formatados.</param>
     public void ImprimirTexto(CmdFonte fonte, CmdTamanhoFonte tamanho, CmdAlinhamento aAlinhamento, params TextSlice[] slices)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -636,35 +645,35 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adiciona o comando de impressão de codigo de barras ao buffer.
+    /// Adiciona o comando de impressão de código de barras ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="barcode"></param>
+    /// <param name="aTexto">Texto do código de barras.</param>
+    /// <param name="barcode">Tipo do código de barras.</param>
     public void ImprimirBarcode(string aTexto, CmdBarcode barcode)
     {
         ImprimirBarcode(aTexto, barcode, CmdAlinhamento.Esquerda);
     }
 
     /// <summary>
-    /// Adiciona o comando de impressão de codigo de barras ao buffer.
+    /// Adiciona o comando de impressão de código de barras ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="barcode"></param>
-    /// <param name="exibir"></param>
+    /// <param name="aTexto">Texto do código de barras.</param>
+    /// <param name="barcode">Tipo do código de barras.</param>
+    /// <param name="exibir">Exibição do texto.</param>
     public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdBarcodeText exibir)
     {
         ImprimirBarcode(aTexto, barcode, CmdAlinhamento.Esquerda, exibir);
     }
 
     /// <summary>
-    /// Adiciona o comando de impressão de codigo de barras ao buffer.
+    /// Adiciona o comando de impressão de código de barras ao buffer.
     /// </summary>
-    /// <param name="aTexto"></param>
-    /// <param name="barcode"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="exibir"></param>
-    /// <param name="altura"></param>
-    /// <param name="largura"></param>
+    /// <param name="aTexto">Texto do código de barras.</param>
+    /// <param name="barcode">Tipo do código de barras.</param>
+    /// <param name="aAlinhamento">Alinhamento do código de barras.</param>
+    /// <param name="exibir">Exibição do texto.</param>
+    /// <param name="altura">Altura do código de barras.</param>
+    /// <param name="largura">Largura do código de barras.</param>
     public void ImprimirBarcode(string aTexto, CmdBarcode barcode, CmdAlinhamento aAlinhamento, CmdBarcodeText? exibir = null, int? altura = null, int? largura = null)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -687,8 +696,8 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de QrCode ao buffer.
     /// </summary>
-    /// <param name="texto"></param>
-    /// <param name="aAlinhamento"></param>
+    /// <param name="texto">Texto do QrCode.</param>
+    /// <param name="aAlinhamento">Alinhamento do QrCode.</param>
     public void ImprimirQrCode(string texto, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
     {
         ImprimirQrCode(texto, null, 0, null, aAlinhamento);
@@ -697,11 +706,11 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando de impressão de QrCode ao buffer.
     /// </summary>
-    /// <param name="texto"></param>
-    /// <param name="tipo"></param>
-    /// <param name="tamanho"></param>
-    /// <param name="erroLevel"></param>
-    /// <param name="aAlinhamento"></param>
+    /// <param name="texto">Texto do QrCode.</param>
+    /// <param name="tipo">Tipo do QrCode.</param>
+    /// <param name="tamanho">Tamanho do módulo.</param>
+    /// <param name="erroLevel">Nível de correção de erro.</param>
+    /// <param name="aAlinhamento">Alinhamento do QrCode.</param>
     public void ImprimirQrCode(string texto, QrCodeTipo? tipo = null, QrCodeModSize? tamanho = null, QrCodeErrorLevel? erroLevel = null, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -721,11 +730,11 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Adicionado o comando para imprimir imagem ao buffer.
+    /// Adiciona o comando para imprimir imagem ao buffer.
     /// </summary>
-    /// <param name="imagem"></param>
-    /// <param name="aAlinhamento"></param>
-    /// <param name="isHdpi"></param>
+    /// <param name="imagem">Imagem a ser impressa.</param>
+    /// <param name="aAlinhamento">Alinhamento da imagem.</param>
+    /// <param name="isHdpi">Se verdadeiro, imprime em alta densidade.</param>
     public void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -745,9 +754,9 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     }
 
     /// <summary>
-    /// Inicia o modo pagina em impressoras compativeis.
+    /// Inicia o modo página em impressoras compatíveis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Interface para manipulação do modo página.</returns>
     public IModoPagina IniciarModoPagina()
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
@@ -769,7 +778,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Imprime os comandos que estão no buffer de impressão.
     /// </summary>
-    /// <param name="copias">Quantidade de copias apra impressão.</param>
+    /// <param name="copias">Quantidade de cópias para impressão.</param>
     public void Imprimir(int copias = 1)
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");

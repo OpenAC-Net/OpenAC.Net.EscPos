@@ -35,18 +35,25 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolve o status da impressora Bematech a partir dos dados retornados pelo comando de status.
+/// </summary>
 public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
 {
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="BematechStatusResolver"/>.
+    /// </summary>
     public BematechStatusResolver() :
         base([[CmdConst.GS, 248, (byte)'1']],
             dados =>
             {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
-                if (dados.Length < 1) return EscPosTipoStatus.ErroLeitura;
-                if (dados[0].Length < 2) return EscPosTipoStatus.ErroLeitura;
+                // Verifica se os dados recebidos são válidos
+                if (dados.IsNullOrEmpty() || dados.Length < 1 || dados[0].Length < 2) return EscPosTipoStatus.ErroLeitura;
 
                 EscPosTipoStatus? status = null;
                 var b = dados[0][0];
+
+                // Verifica os bits do primeiro byte de status
                 if (b.IsBitOn(2))
                     status = EscPosTipoStatus.Imprimindo;
                 if (b.IsBitOn(3))
@@ -61,6 +68,8 @@ public sealed class BematechStatusResolver : InfoResolver<EscPosTipoStatus>
                         status = EscPosTipoStatus.Imprimindo;
 
                 b = dados[0][1];
+
+                // Verifica os bits do segundo byte de status
                 if (b.IsBitOn(1))
                     if (status.HasValue)
                         status |= EscPosTipoStatus.PoucoPapel;

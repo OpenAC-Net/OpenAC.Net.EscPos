@@ -7,18 +7,28 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Sunmi;
 
+/// <summary>
+/// Interpreta comandos ESC/POS específicos para impressoras Sunmi, herdando funcionalidades da <see cref="EpsonInterpreter"/>.
+/// </summary>
 public class SunmiInterpreter : EpsonInterpreter
 {
     #region Constructors
-    
+
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="SunmiInterpreter"/> com o encoding especificado.
+    /// </summary>
+    /// <param name="enconder">Encoding a ser utilizado para conversão de texto.</param>
     internal SunmiInterpreter(Encoding enconder) : base(enconder)
     {
     }
-    
+
     #endregion Constructors
-    
+
     #region Methods
 
+    /// <summary>
+    /// Inicializa os resolvers e comandos específicos para impressoras Sunmi.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

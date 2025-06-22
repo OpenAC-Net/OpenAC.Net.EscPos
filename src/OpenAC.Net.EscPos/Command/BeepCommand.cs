@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando de beep para impressoras ESC/POS.
+/// </summary>
 public sealed class BeepCommand : PrintCommand<BeepCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="BeepCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS associado.</param>
     public BeepCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }

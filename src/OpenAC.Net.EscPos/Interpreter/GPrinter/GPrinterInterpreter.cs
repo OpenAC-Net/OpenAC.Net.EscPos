@@ -39,12 +39,16 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.GPrinter;
 
 /// <summary>
-/// Classe de interpretação com comandos da Epson.
+/// Interpreta comandos ESC/POS específicos para impressoras GPrinter.
 /// </summary>
 public class GPrinterInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="GPrinterInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
     internal GPrinterInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -54,6 +58,9 @@ public class GPrinterInterpreter : EscPosInterpreter
     #region Methods
 
     /// <inheritdoc />
+    /// <summary>
+    /// Inicializa os resolvers de comandos e status específicos da GPrinter.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

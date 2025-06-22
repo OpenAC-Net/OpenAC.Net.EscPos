@@ -34,10 +34,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando para impressão de QR Code.
+/// </summary>
 public sealed class QrCodeCommand : PrintCommand<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="QrCodeCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS.</param>
     public QrCodeCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -46,14 +53,29 @@ public sealed class QrCodeCommand : PrintCommand<QrCodeCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o conteúdo do QR Code.
+    /// </summary>
     public string Code { get; set; } = "";
 
+    /// <summary>
+    /// Obtém ou define o alinhamento do QR Code.
+    /// </summary>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
+    /// <summary>
+    /// Obtém ou define o tipo do QR Code.
+    /// </summary>
     public QrCodeTipo Tipo { get; set; }
 
+    /// <summary>
+    /// Obtém ou define a largura do módulo do QR Code.
+    /// </summary>
     public QrCodeModSize LarguraModulo { get; set; } = QrCodeModSize.Normal;
 
+    /// <summary>
+    /// Obtém ou define o nível de correção de erro do QR Code.
+    /// </summary>
     public QrCodeErrorLevel ErrorLevel { get; set; }
 
     #endregion Properties

@@ -35,16 +35,26 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa um comando de impressão que manipula fatias de texto.
+/// </summary>
 public sealed class TextSliceCommand : PrintCommand<TextSliceCommand>
 {
     #region Fields
 
+    /// <summary>
+    /// Lista de fatias de texto.
+    /// </summary>
     private readonly List<TextSlice> slices;
 
     #endregion Fields
 
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="TextSliceCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS associado.</param>
     public TextSliceCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
         slices = [];
@@ -54,18 +64,34 @@ public sealed class TextSliceCommand : PrintCommand<TextSliceCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém as fatias de texto adicionadas ao comando.
+    /// </summary>
     public IReadOnlyCollection<TextSlice> Slices => slices.AsReadOnly();
 
+    /// <summary>
+    /// Obtém ou define a fonte do texto.
+    /// </summary>
     public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
 
+    /// <summary>
+    /// Obtém ou define o tamanho da fonte.
+    /// </summary>
     public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
 
+    /// <summary>
+    /// Obtém ou define o alinhamento do texto.
+    /// </summary>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Adiciona uma fatia de texto à lista.
+    /// </summary>
+    /// <param name="slice">A fatia de texto a ser adicionada.</param>
     public void AddSlice(TextSlice slice) => slices.Add(slice);
 
     #endregion Methods

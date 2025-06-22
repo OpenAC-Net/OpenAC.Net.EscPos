@@ -31,9 +31,21 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define os tipos de fonte disponíveis para impressão.
+/// </summary>
 public enum CmdFonte
 {
+    /// <summary>
+    /// Fonte padrão da impressora.
+    /// </summary>
     Normal,
+    /// <summary>
+    /// Fonte A.
+    /// </summary>
     FonteA,
+    /// <summary>
+    /// Fonte B.
+    /// </summary>
     FonteB
 }

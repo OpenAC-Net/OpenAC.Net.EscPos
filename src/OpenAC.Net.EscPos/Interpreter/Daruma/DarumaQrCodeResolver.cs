@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de QR Code em impressoras Daruma.
+/// </summary>
 public sealed class DarumaQrCodeResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaQrCodeResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DarumaQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class DarumaQrCodeResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o formato aceito pela impressora Daruma.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes com o comando formatado.</returns>
     public override byte[] Resolve(QrCodeCommand command)
     {
         using var builder = new ByteArrayBuilder();
@@ -79,28 +91,14 @@ public sealed class DarumaQrCodeResolver : CommandResolver<QrCodeCommand>
         if (command.Code.Length < 256 || (command.Code.Length > 512 && command.LarguraModulo > QrCodeModSize.Normal))
             command.LarguraModulo = QrCodeModSize.Normal;
 
-        byte[] error;
-        switch (command.ErrorLevel)
+        byte[] error = command.ErrorLevel switch
         {
-            case QrCodeErrorLevel.LevelL:
-                error = [0];
-                break;
-
-            case QrCodeErrorLevel.LevelM:
-                error = [(byte)'M'];
-                break;
-
-            case QrCodeErrorLevel.LevelQ:
-                error = [(byte)'Q'];
-                break;
-
-            case QrCodeErrorLevel.LevelH:
-                error = [(byte)'H'];
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            QrCodeErrorLevel.LevelL => [0],
+            QrCodeErrorLevel.LevelM => [(byte)'M'],
+            QrCodeErrorLevel.LevelQ => [(byte)'Q'],
+            QrCodeErrorLevel.LevelH => [(byte)'H'],
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
         var num = command.Code.Length + 2;
         var pL = (byte)(num % 256);

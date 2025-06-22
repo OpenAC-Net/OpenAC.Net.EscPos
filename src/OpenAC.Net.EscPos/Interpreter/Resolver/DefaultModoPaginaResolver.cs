@@ -38,10 +38,17 @@ using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos para o modo página ESC/POS.
+/// </summary>
 public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultModoPaginaResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultModoPaginaResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -50,6 +57,11 @@ public sealed class DefaultModoPaginaResolver : CommandResolver<ModoPaginaComman
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="ModoPaginaCommand"/> em bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">Comando de modo página.</param>
+    /// <returns>Array de bytes correspondente ao comando.</returns>
     public override byte[] Resolve(ModoPaginaCommand command)
     {
         using var builder = new ByteArrayBuilder();

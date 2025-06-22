@@ -34,8 +34,18 @@ using OpenAC.Net.Devices.Commom;
 
 namespace OpenAC.Net.EscPos.Extensions;
 
+/// <summary>
+/// Métodos de extensão para <see cref="ByteArrayBuilder"/>.
+/// </summary>
 internal static class ByteArrayBuilderExtensions
 {
+    /// <summary>
+    /// Adiciona itens ao <see cref="ByteArrayBuilder"/>. Aceita bytes individuais ou coleções de bytes.
+    /// Retorna <c>true</c> se todos os itens foram adicionados com sucesso, <c>false</c> caso contrário.
+    /// </summary>
+    /// <param name="list">A instância de <see cref="ByteArrayBuilder"/>.</param>
+    /// <param name="items">Itens a serem adicionados (byte ou IEnumerable&lt;byte&gt;).</param>
+    /// <returns><c>true</c> se todos os itens foram adicionados; caso contrário, <c>false</c>.</returns>
     public static bool Append(this ByteArrayBuilder list, params object[] items)
     {
         var ignoredItems = false;

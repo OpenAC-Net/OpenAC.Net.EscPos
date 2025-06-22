@@ -136,9 +136,8 @@ namespace OpenAC.Net.EscPos.Demo
                 Encoding = Encoding.UTF8,
                 MaxArchiveFiles = 93,
                 ArchiveEvery = FileArchivePeriod.Day,
-                ArchiveNumbering = ArchiveNumberingMode.Date,
-                ArchiveFileName = "${basedir}/Logs/Archive/${date:format=yyyy}/${date:format=MM}/EscPos_{{#}}.log",
-                ArchiveDateFormat = "dd.MM.yyyy"
+                ArchiveSuffixFormat = "dd.MM.yyyy",
+                ArchiveFileName = "${basedir}/Logs/Archive/${date:format=yyyy}/${date:format=MM}/EscPos_{{#}}.log"
             };
 
             config.AddTarget("infoFile", infoTarget);

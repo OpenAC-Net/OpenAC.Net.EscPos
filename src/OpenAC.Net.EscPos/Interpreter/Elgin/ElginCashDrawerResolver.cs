@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Elgin;
 
+/// <summary>
+/// Resolve comandos para abertura de gaveta em impressoras Elgin.
+/// </summary>
 public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="ElginCashDrawerResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public ElginCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -49,6 +56,11 @@ public sealed class ElginCashDrawerResolver : CommandResolver<CashDrawerCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de abertura da gaveta.
+    /// </summary>
+    /// <param name="command">Comando de gaveta.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
     public override byte[] Resolve(CashDrawerCommand command)
     {
         var tempo = Math.Max(command.TempoON, command.TempoOFF);

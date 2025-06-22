@@ -41,10 +41,18 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolve comandos de impressão de código de barras para impressoras Bematech.
+/// </summary>
 public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BemaBarcodeCommandResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação a ser utilizada para o código de barras.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public BemaBarcodeCommandResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -54,12 +62,20 @@ public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação utilizada para o código de barras.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de impressão de código de barras.
+    /// </summary>
+    /// <param name="command">Comando de código de barras.</param>
+    /// <returns>Array de bytes com o comando ESC/POS.</returns>
     public override byte[] Resolve(BarcodeCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.IniciarBarcode)) return [];
@@ -84,51 +100,20 @@ public sealed class BemaBarcodeCommandResolver : CommandResolver<BarcodeCommand>
                 throw new ArgumentOutOfRangeException();
         }
 
-        // Formando o codigo de barras
-        byte[] barCode;
-        switch (command.Tipo)
+        // Formando o código de barras
+        byte[] barCode = command.Tipo switch
         {
-            case CmdBarcode.UPCA:
-                barCode = Commandos[CmdEscPos.BarcodeUPCA];
-                break;
-
-            case CmdBarcode.UPCE:
-                barCode = Commandos[CmdEscPos.BarcodeUPCE];
-                break;
-
-            case CmdBarcode.EAN13:
-                barCode = Commandos[CmdEscPos.BarcodeEAN13];
-                break;
-
-            case CmdBarcode.EAN8:
-                barCode = Commandos[CmdEscPos.BarcodeEAN8];
-                break;
-
-            case CmdBarcode.CODE39:
-                barCode = Commandos[CmdEscPos.BarcodeCODE39];
-                break;
-
-            case CmdBarcode.Inter2of5:
-                barCode = Commandos[CmdEscPos.BarcodeInter2of5];
-                break;
-
-            case CmdBarcode.CodaBar:
-                barCode = Commandos[CmdEscPos.BarcodeCodaBar];
-                break;
-
-            case CmdBarcode.CODE93:
-                barCode = Commandos[CmdEscPos.BarcodeCODE93];
-                break;
-
-            case CmdBarcode.CODE128:
-            case CmdBarcode.CODE128b:
-            case CmdBarcode.CODE128c:
-                barCode = Commandos[CmdEscPos.BarcodeCODE128];
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            CmdBarcode.UPCA => Commandos[CmdEscPos.BarcodeUPCA],
+            CmdBarcode.UPCE => Commandos[CmdEscPos.BarcodeUPCE],
+            CmdBarcode.EAN13 => Commandos[CmdEscPos.BarcodeEAN13],
+            CmdBarcode.EAN8 => Commandos[CmdEscPos.BarcodeEAN8],
+            CmdBarcode.CODE39 => Commandos[CmdEscPos.BarcodeCODE39],
+            CmdBarcode.Inter2of5 => Commandos[CmdEscPos.BarcodeInter2of5],
+            CmdBarcode.CodaBar => Commandos[CmdEscPos.BarcodeCodaBar],
+            CmdBarcode.CODE93 => Commandos[CmdEscPos.BarcodeCODE93],
+            CmdBarcode.CODE128 or CmdBarcode.CODE128b or CmdBarcode.CODE128c => Commandos[CmdEscPos.BarcodeCODE128],
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
         var largura = command.Largura == 0 ? (byte)2 : Math.Max(Math.Min((byte)command.Largura, (byte)4), (byte)1);
         var altura = command.Altura == 0 ? (byte)50 : Math.Max(Math.Min((byte)command.Altura, (byte)255), (byte)1);

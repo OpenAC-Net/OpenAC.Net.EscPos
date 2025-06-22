@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Comando para pular linhas na impressão.
+/// </summary>
 public sealed class JumpLineCommand : PrintCommand<JumpLineCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="JumpLineCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS.</param>
     public JumpLineCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -45,6 +52,9 @@ public sealed class JumpLineCommand : PrintCommand<JumpLineCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define a quantidade de linhas a serem puladas. Valor padrão: 1.
+    /// </summary>
     public int Linhas { get; set; } = 1;
 
     #endregion Properties

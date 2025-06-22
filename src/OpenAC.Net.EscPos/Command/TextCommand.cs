@@ -34,10 +34,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa um comando de impressão de texto para impressoras ESC/POS.
+/// </summary>
 public sealed class TextCommand : PrintCommand<TextCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="TextCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS associado.</param>
     public TextCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -46,14 +53,29 @@ public sealed class TextCommand : PrintCommand<TextCommand>
 
     #region Properties
 
-    public string Texto { get; set; }
+    /// <summary>
+    /// Obtém ou define o texto a ser impresso.
+    /// </summary>
+    public string? Texto { get; set; }
 
+    /// <summary>
+    /// Obtém ou define a fonte do texto.
+    /// </summary>
     public CmdFonte Fonte { get; set; } = CmdFonte.Normal;
 
+    /// <summary>
+    /// Obtém ou define o tamanho da fonte do texto.
+    /// </summary>
     public CmdTamanhoFonte Tamanho { get; set; } = CmdTamanhoFonte.Normal;
 
+    /// <summary>
+    /// Obtém ou define o alinhamento do texto.
+    /// </summary>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
+    /// <summary>
+    /// Obtém ou define o estilo da fonte do texto.
+    /// </summary>
     public CmdEstiloFonte? Estilo { get; set; } = null;
 
     #endregion Properties

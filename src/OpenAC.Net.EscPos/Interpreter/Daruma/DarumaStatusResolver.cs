@@ -35,8 +35,14 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve o status da impressora Daruma a partir dos dados recebidos.
+/// </summary>
 public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
 {
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaStatusResolver"/>.
+    /// </summary>
     public DarumaStatusResolver() :
         base([[CmdConst.ENQ], [CmdConst.GS, CmdConst.ENQ]],
             dados =>
@@ -45,6 +51,7 @@ public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
 
                 EscPosTipoStatus? status = null;
 
+                // Primeiro byte de status
                 var b = dados[0][0];
                 if (b.IsBitOn(0))
                     status = EscPosTipoStatus.Imprimindo;
@@ -73,6 +80,7 @@ public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
                     else
                         status = EscPosTipoStatus.TampaAberta;
 
+                // Segundo byte de status
                 b = dados[0][1];
                 if (b.IsBitOn(0))
                     if (status.HasValue)

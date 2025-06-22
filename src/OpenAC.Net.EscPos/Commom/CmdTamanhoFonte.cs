@@ -31,9 +31,21 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define os tamanhos de fonte disponíveis para impressão.
+/// </summary>
 public enum CmdTamanhoFonte
 {
+    /// <summary>
+    /// Fonte normal.
+    /// </summary>
     Normal,
+    /// <summary>
+    /// Fonte expandida.
+    /// </summary>
     Expandida,
+    /// <summary>
+    /// Fonte condensada.
+    /// </summary>
     Condensada
 }

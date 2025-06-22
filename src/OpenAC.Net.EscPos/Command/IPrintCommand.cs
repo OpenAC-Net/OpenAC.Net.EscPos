@@ -31,7 +31,13 @@
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Define o contrato para comandos de impressão, fornecendo o conteúdo em bytes.
+/// </summary>
 public interface IPrintCommand
 {
+    /// <summary>
+    /// Obtém o conteúdo do comando de impressão em formato de array de bytes.
+    /// </summary>
     byte[] Content { get; }
 }

@@ -31,14 +31,26 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Configuração para impressão de código de barras.
+/// </summary>
 public sealed class BarcodeConfig
 {
     #region Properties
 
+    /// <summary>
+    /// Define se o texto será exibido junto ao código de barras.
+    /// </summary>
     public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
 
+    /// <summary>
+    /// Altura do código de barras.
+    /// </summary>
     public int Altura { get; set; } = 0;
 
+    /// <summary>
+    /// Largura do código de barras.
+    /// </summary>
     public int Largura { get; set; } = 0;
 
     #endregion Properties

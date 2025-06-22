@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de impressão de imagem para ESC/POS.
+/// </summary>
 public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultImageResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultImageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de imagem para o formato de bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">Comando de imagem a ser resolvido.</param>
+    /// <returns>Array de bytes representando o comando ESC/POS.</returns>
     public override byte[] Resolve(ImageCommand command)
     {
         if (command.Imagem == null) return [];

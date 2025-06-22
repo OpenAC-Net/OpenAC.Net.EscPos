@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de página de código para impressoras ESC/POS.
+/// </summary>
 public sealed class DefaultCodePageResolver : CommandResolver<CodePageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultCodePageResolver"/>.
+    /// </summary>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public DefaultCodePageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
     }
@@ -49,6 +56,11 @@ public sealed class DefaultCodePageResolver : CommandResolver<CodePageCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de página de código para o formato de bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">O comando de página de código.</param>
+    /// <returns>Array de bytes correspondente ao comando.</returns>
     public override byte[] Resolve(CodePageCommand command)
     {
         if (command.PaginaCodigo == PaginaCodigo.pcUTF8) return [];

@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos para definir o espaçamento entre linhas na impressora.
+/// </summary>
 public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEntreLinhasCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultEspacoEntreLinhasResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultEspacoEntreLinhasResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -49,6 +56,11 @@ public sealed class DefaultEspacoEntreLinhasResolver : CommandResolver<EspacoEnt
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="EspacoEntreLinhasCommand"/> para o formato de bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">O comando de espaçamento entre linhas.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
     public override byte[] Resolve(EspacoEntreLinhasCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.EspacoEntreLinhasPadrao)) return [];

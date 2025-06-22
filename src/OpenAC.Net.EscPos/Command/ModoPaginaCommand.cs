@@ -36,16 +36,26 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando de impressão em modo página, permitindo a definição de regiões e configurações específicas.
+/// </summary>
 public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPagina
 {
     #region Fields
 
+    /// <summary>
+    /// Lista de regiões definidas para o modo página.
+    /// </summary>
     private readonly List<ModoPaginaRegiao> regioes;
 
     #endregion Fields
 
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ModoPaginaCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS associado.</param>
     public ModoPaginaCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
         regioes = [];
@@ -56,19 +66,22 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
     #region Properties
 
     /// <summary>
-    /// Comandos para serem impressos dentro do modo pagina.
+    /// Comandos para serem impressos dentro do modo página.
     /// </summary>
     public IReadOnlyList<ModoPaginaRegiao> Regioes => regioes;
 
+    /// <summary>
+    /// Regiões do modo página expostas pela interface.
+    /// </summary>
     IReadOnlyList<IRegiaoPagina> IModoPagina.Regioes => regioes;
 
     /// <summary>
-    /// Define/Obtém o espaço entre as linhas da impressão.
+    /// Define ou obtém o espaço entre as linhas da impressão.
     /// </summary>
     public byte EspacoEntreLinhas { get; set; } = 0;
 
     /// <summary>
-    /// Define/Obtém a quantidade de coluna quando a fonte é normal.
+    /// Define ou obtém a quantidade de colunas quando a fonte é normal.
     /// </summary>
     public int Colunas { get; set; } = 48;
 
@@ -85,7 +98,7 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
     }
 
     /// <summary>
-    /// Retorna a quantidade de colunas quando a fonte é concensada.
+    /// Retorna a quantidade de colunas quando a fonte é condensada.
     /// </summary>
     public int ColunasCondensada
     {
@@ -97,17 +110,17 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
     }
 
     /// <summary>
-    /// Define/Obtém as configurações padrão do codigo de barras.
+    /// Define ou obtém as configurações padrão do código de barras.
     /// </summary>
     public BarcodeConfig CodigoBarras { get; set; } = new();
 
     /// <summary>
-    /// Define/Obtém as configurações padrão para impressão do logo.
+    /// Define ou obtém as configurações padrão para impressão do logo.
     /// </summary>
     public LogoConfig Logo { get; set; } = new();
 
     /// <summary>
-    /// Define/Obtém as configurações padrão para impressão do QrCode.
+    /// Define ou obtém as configurações padrão para impressão do QrCode.
     /// </summary>
     public QrCodeConfig QrCode { get; set; } = new();
 
@@ -115,6 +128,14 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
 
     #region Methods
 
+    /// <summary>
+    /// Cria uma nova região de impressão no modo página.
+    /// </summary>
+    /// <param name="esqueda">Posição à esquerda da região.</param>
+    /// <param name="topo">Posição superior da região.</param>
+    /// <param name="largura">Largura da região.</param>
+    /// <param name="altura">Altura da região.</param>
+    /// <returns>Instância da nova região criada.</returns>
     public IRegiaoPagina NovaRegiao(int esqueda, int topo, int largura, int altura)
     {
         var regiao = new ModoPaginaRegiao(this, Interpreter)
@@ -129,6 +150,10 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
         return regiao;
     }
 
+    /// <summary>
+    /// Remove uma região de impressão do modo página.
+    /// </summary>
+    /// <param name="regiao">Região a ser removida.</param>
     public void RemoverRegiao(IRegiaoPagina regiao) => regioes.Remove(regiao as ModoPaginaRegiao);
 
     #endregion Methods

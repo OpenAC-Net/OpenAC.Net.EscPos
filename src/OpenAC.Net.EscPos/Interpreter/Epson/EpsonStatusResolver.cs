@@ -35,14 +35,19 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Epson;
 
+/// <summary>
+/// Resolve o status da impressora Epson a partir dos dados recebidos.
+/// </summary>
 public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
 {
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="EpsonStatusResolver"/>.
+    /// </summary>
     public EpsonStatusResolver() :
         base([[16, 4, 1], [16, 4, 2], [16, 4, 4]],
             (dados) =>
             {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
-                if (dados.Length < 3) return EscPosTipoStatus.ErroLeitura;
+                if (dados.IsNullOrEmpty() || dados.Length < 3) return EscPosTipoStatus.ErroLeitura;
 
                 EscPosTipoStatus? status = null;
 

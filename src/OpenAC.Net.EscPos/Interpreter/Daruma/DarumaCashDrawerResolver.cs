@@ -36,10 +36,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve comandos para abertura de gaveta no padrão Daruma.
+/// </summary>
 public sealed class DarumaCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaCashDrawerResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DarumaCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -48,6 +55,11 @@ public sealed class DarumaCashDrawerResolver : CommandResolver<CashDrawerCommand
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de abertura de gaveta para impressoras Daruma.
+    /// </summary>
+    /// <param name="command">O comando de gaveta.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC p.</returns>
     public override byte[] Resolve(CashDrawerCommand command) => [CmdConst.ESC, (byte)'p'];
 
     #endregion Methods

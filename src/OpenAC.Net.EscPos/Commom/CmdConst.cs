@@ -31,35 +31,53 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define constantes de comandos de controle ESC/POS.
+/// </summary>
 internal static class CmdConst
 {
+    /// <summary>Nulo (NUL).</summary>
     public static byte NUL => 0;
 
+    /// <summary>Enquiry (ENQ).</summary>
     public static byte ENQ => 5;
 
+    /// <summary>Escape (ESC).</summary>
     public static byte ESC => 27;
 
+    /// <summary>File Separator (FS).</summary>
     public static byte FS => 28;
 
+    /// <summary>Group Separator (GS).</summary>
     public static byte GS => 29;
 
+    /// <summary>Backspace (BS).</summary>
     public static byte BS => 8;
 
+    /// <summary>Tabulação Horizontal (TAB).</summary>
     public static byte TAB => 9;
 
+    /// <summary>Line Feed (LF).</summary>
     public static byte LF => 10;
 
+    /// <summary>Form Feed (FF).</summary>
     public static byte FF => 12;
 
+    /// <summary>Carriage Return (CR).</summary>
     public static byte CR => 13;
 
+    /// <summary>Shift In (SI).</summary>
     public static byte SI => 15;
 
+    /// <summary>Device Control 2 (DC2).</summary>
     public static byte DC2 => 18;
 
+    /// <summary>Device Control 4 (DC4).</summary>
     public static byte DC4 => 20;
 
+    /// <summary>Synchronous Idle (SYN).</summary>
     public static byte SYN => 22;
 
+    /// <summary>Bell (BELL).</summary>
     public static byte BELL => 7;
 }

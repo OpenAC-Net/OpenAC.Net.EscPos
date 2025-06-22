@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.5.0" />
+    <PackageReference Include="NLog" Version="6.0.0" />
     <PackageReference Include="NLog.Windows.Forms" Version="5.2.4" />
-    <PackageReference Include="OpenAC.Net.Devices" Version="1.6.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.5" />
+    <PackageReference Include="OpenAC.Net.Devices" Version="1.6.0.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>

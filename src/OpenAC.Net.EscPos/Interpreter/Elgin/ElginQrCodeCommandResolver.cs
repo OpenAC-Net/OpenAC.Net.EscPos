@@ -40,10 +40,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Elgin;
 
+/// <summary>
+/// Resolve comandos de impressão de QR Code para impressoras Elgin.
+/// </summary>
 public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="ElginQrCodeCommandResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public ElginQrCodeCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -52,6 +59,12 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o formato de bytes esperado pela impressora Elgin.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes com o comando formatado.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Lançada quando o alinhamento, tipo ou nível de erro é inválido.</exception>
     public override byte[] Resolve(QrCodeCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return [];
@@ -116,14 +129,14 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
                 throw new ArgumentOutOfRangeException();
         }
 
-        builder.Append([CmdConst.GS, (byte)'o', 0]);  // Set parameters of QRCODE barcode
-        builder.Append((byte)command.LarguraModulo); // Basic element width
-        builder.Append(0); // Language mode: 0:Chinese 1:Japanese
-        builder.Append(tipo); // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-        builder.Append([CmdConst.GS, (byte)'k']); // Bar Code
-        builder.Append(11); // Type = QRCode. Number of Characters: 4-928
+        builder.Append([CmdConst.GS, (byte)'o', 0]);  // Define parâmetros do QR Code
+        builder.Append((byte)command.LarguraModulo); // Largura do módulo básico
+        builder.Append(0); // Modo de idioma: 0:Chinês 1:Japonês
+        builder.Append(tipo); // Tipo do símbolo: 1:Original 2:Recomendado
+        builder.Append([CmdConst.GS, (byte)'k']); // Código de barras
+        builder.Append(11); // Tipo = QRCode. Número de caracteres: 4-928
         builder.Append(error);
-        builder.Append('A'); // Data input mode Range: A-automatic (Recommended). M-manual
+        builder.Append('A'); // Modo de entrada de dados: A-automático (Recomendado)
         builder.Append(Encoding.UTF8.GetBytes(command.Code));
         builder.Append(0);
 

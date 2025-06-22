@@ -35,10 +35,18 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Classe base abstrata para resolutores de comandos ESC/POS.
+/// </summary>
+/// <typeparam name="TCommand">Tipo do comando que implementa <see cref="IPrintCommand"/>.</typeparam>
 public abstract class CommandResolver<TCommand> : ICommandResolver where TCommand : class, IPrintCommand
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="CommandResolver{TCommand}"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     protected CommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary)
     {
         Commandos = dictionary;
@@ -48,14 +56,23 @@ public abstract class CommandResolver<TCommand> : ICommandResolver where TComman
 
     #region Properties
 
+    /// <summary>
+    /// Obtém o dicionário de comandos ESC/POS.
+    /// </summary>
     protected IReadOnlyDictionary<CmdEscPos, byte[]> Commandos { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando específico para o array de bytes correspondente.
+    /// </summary>
+    /// <param name="command">Comando a ser resolvido.</param>
+    /// <returns>Array de bytes do comando ESC/POS.</returns>
     public abstract byte[] Resolve(TCommand command);
 
+    /// <inheritdoc />
     byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
 
     #endregion Methods

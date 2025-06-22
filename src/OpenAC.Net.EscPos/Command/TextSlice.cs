@@ -34,10 +34,18 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa um segmento de texto com um estilo de fonte opcional.
+/// </summary>
 public sealed class TextSlice
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="TextSlice"/>.
+    /// </summary>
+    /// <param name="aTexto">O texto do segmento.</param>
+    /// <param name="estilo">O estilo de fonte opcional.</param>
     public TextSlice(string aTexto, CmdEstiloFonte? estilo = null)
     {
         Texto = aTexto.Replace(Environment.NewLine, string.Empty);
@@ -48,8 +56,14 @@ public sealed class TextSlice
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o texto do segmento.
+    /// </summary>
     public string Texto { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o estilo de fonte do segmento.
+    /// </summary>
     public CmdEstiloFonte? Estilo { get; set; }
 
     #endregion Properties

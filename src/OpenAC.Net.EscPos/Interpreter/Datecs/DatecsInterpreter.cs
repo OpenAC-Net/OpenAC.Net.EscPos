@@ -39,12 +39,16 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.Datecs;
 
 /// <summary>
-/// Classe de interpretação com comandos da Epson.
+/// Interpreta comandos ESC/POS específicos para impressoras Datecs.
 /// </summary>
 public class DatecsInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DatecsInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
     internal DatecsInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -53,7 +57,9 @@ public class DatecsInterpreter : EscPosInterpreter
 
     #region Methods
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Inicializa os resolvers de comandos específicos para Datecs.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

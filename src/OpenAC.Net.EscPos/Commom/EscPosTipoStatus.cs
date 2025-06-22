@@ -33,22 +33,40 @@ using System;
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Representa os tipos de status possíveis para impressoras ESC/POS.
+/// </summary>
 [Flags]
 public enum EscPosTipoStatus
 {
+    /// <summary>Nenhum status.</summary>
     Nenhum = 1 << 0,
+    /// <summary>Erro geral.</summary>
     Erro = 1 << 1,
+    /// <summary>Modo apenas escrita.</summary>
     ApenasEscrita = 1 << 2,
+    /// <summary>Pouco papel.</summary>
     PoucoPapel = 1 << 3,
+    /// <summary>Sem papel.</summary>
     SemPapel = 1 << 4,
+    /// <summary>Gaveta aberta.</summary>
     GavetaAberta = 1 << 5,
+    /// <summary>Impressora imprimindo.</summary>
     Imprimindo = 1 << 6,
+    /// <summary>Impressora offline.</summary>
     OffLine = 1 << 7,
+    /// <summary>Tampa aberta.</summary>
     TampaAberta = 1 << 8,
+    /// <summary>Erro de leitura.</summary>
     ErroLeitura = 1 << 9,
+    /// <summary>Modo slip.</summary>
     Slip = 1 << 10,
+    /// <summary>Modo MICR.</summary>
     MICR = 1 << 11,
+    /// <summary>Aguardando slip.</summary>
     AguardandoSlip = 1 << 12,
+    /// <summary>TOF (Top of Form).</summary>
     TOF = 1 << 13,
+    /// <summary>BOF (Bottom of Form).</summary>
     BOF = 1 << 14
 }

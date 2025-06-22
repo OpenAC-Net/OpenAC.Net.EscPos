@@ -31,12 +31,33 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Enumeração das páginas de código suportadas.
+/// </summary>
 public enum PaginaCodigo
 {
+    /// <summary>
+    /// Código de página 437 (Estados Unidos).
+    /// </summary>
     pc437,
+    /// <summary>
+    /// Código de página 850 (Multilíngue da Europa Ocidental).
+    /// </summary>
     pc850,
+    /// <summary>
+    /// Código de página 852 (Europa Central).
+    /// </summary>
     pc852,
+    /// <summary>
+    /// Código de página 860 (Português).
+    /// </summary>
     pc860,
+    /// <summary>
+    /// UTF-8.
+    /// </summary>
     pcUTF8,
+    /// <summary>
+    /// Código de página 1252 (Windows, Europa Ocidental).
+    /// </summary>
     pc1252
 }

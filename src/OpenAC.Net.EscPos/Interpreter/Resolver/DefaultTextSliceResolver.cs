@@ -39,10 +39,18 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de texto para impressão ESC/POS, aplicando fonte, alinhamento, tamanho e estilos.
+/// </summary>
 public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultTextSliceResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de texto a ser utilizada.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public DefaultTextSliceResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -52,12 +60,20 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação utilizada para conversão de texto.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="TextSliceCommand"/> em bytes para impressão.
+    /// </summary>
+    /// <param name="cmd">Comando de texto a ser processado.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
     public override byte[] Resolve(TextSliceCommand cmd)
     {
         using var builder = new ByteArrayBuilder();
@@ -179,10 +195,10 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
     }
 
     /// <summary>
-    /// Função para tratar a quebra de linha da string para o formato que a impressora aceita.
+    /// Trata a quebra de linha da string para o formato aceito pela impressora.
     /// </summary>
-    /// <param name="texto"></param>
-    /// <returns></returns>
+    /// <param name="texto">Texto a ser tratado.</param>
+    /// <returns>Texto tratado.</returns>
     private static string TratarString(string texto) => texto.Replace("\n\r", "\n").Replace("\r\n", "\n").Replace("\r", "");
 
     #endregion Methods

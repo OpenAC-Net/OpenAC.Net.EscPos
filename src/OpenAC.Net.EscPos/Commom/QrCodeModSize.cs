@@ -31,11 +31,29 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define os tamanhos disponíveis para o módulo do QR Code.
+/// </summary>
 public enum QrCodeModSize : byte
 {
+    /// <summary>
+    /// Tamanho minúsculo (2).
+    /// </summary>
     Minusculo = 2,
+    /// <summary>
+    /// Tamanho pequeno (3).
+    /// </summary>
     Pequeno = 3,
+    /// <summary>
+    /// Tamanho normal (4).
+    /// </summary>
     Normal = 4,
+    /// <summary>
+    /// Tamanho grande (5).
+    /// </summary>
     Grande = 5,
+    /// <summary>
+    /// Tamanho extra grande (6).
+    /// </summary>
     ExtraGrande = 6,
 }

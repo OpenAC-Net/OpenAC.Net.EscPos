@@ -36,10 +36,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos para abertura de gaveta de dinheiro usando o dicionário fornecido.
+/// </summary>
 public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultCashDrawerResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultCashDrawerResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -48,6 +55,11 @@ public sealed class DefaultCashDrawerResolver : CommandResolver<CashDrawerComman
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de abertura de gaveta de dinheiro.
+    /// </summary>
+    /// <param name="command">Comando de gaveta de dinheiro.</param>
+    /// <returns>Array de bytes do comando ESC/POS.</returns>
     public override byte[] Resolve(CashDrawerCommand command)
     {
         return Commandos.TryGetValue(CmdEscPos.Gaveta, out var commando)

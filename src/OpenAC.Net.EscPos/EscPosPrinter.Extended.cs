@@ -35,24 +35,25 @@ using OpenAC.Net.Devices;
 namespace OpenAC.Net.EscPos;
 
 /// <summary>
-/// Classe para impressão EscPos.
+/// Representa uma impressora EscPos genérica com configuração fortemente tipada.
 /// </summary>
-/// <typeparam name="TConfig"></typeparam>
+/// <typeparam name="TConfig">Tipo da configuração do dispositivo, que implementa <see cref="IDeviceConfig"/>.</typeparam>
+
 public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDeviceConfig
 {
     #region Constructors
-
+    
     /// <summary>
-    ///
+    /// Inicializa uma nova instância de <see cref="EscPosPrinter{TConfig}"/> com uma configuração padrão.
     /// </summary>
     public EscPosPrinter() : base(Activator.CreateInstance<TConfig>())
     {
     }
-
+    
     /// <summary>
-    ///
+    /// Inicializa uma nova instância de <see cref="EscPosPrinter{TConfig}"/> com a configuração informada.
     /// </summary>
-    /// <param name="device"></param>
+    /// <param name="device">Configuração do dispositivo.</param>
     public EscPosPrinter(TConfig device) : base(device)
     {
     }
@@ -62,7 +63,7 @@ public sealed class EscPosPrinter<TConfig> : EscPosPrinter where TConfig : IDevi
     #region properties
 
     /// <summary>
-    /// Configuações de comunicação com a impressora.
+    /// Obtém a configuração do dispositivo fortemente tipada.
     /// </summary>
     public new TConfig Device => (TConfig)base.Device;
 

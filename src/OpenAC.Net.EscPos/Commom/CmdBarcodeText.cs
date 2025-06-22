@@ -31,10 +31,25 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define as opções de exibição do texto em códigos de barras.
+/// </summary>
 public enum CmdBarcodeText
 {
+    /// <summary>
+    /// Não exibe texto.
+    /// </summary>
     SemTexto,
+    /// <summary>
+    /// Exibe o texto acima do código de barras.
+    /// </summary>
     Acima,
+    /// <summary>
+    /// Exibe o texto abaixo do código de barras.
+    /// </summary>
     Abaixo,
+    /// <summary>
+    /// Exibe o texto acima e abaixo do código de barras.
+    /// </summary>
     Ambos
 }

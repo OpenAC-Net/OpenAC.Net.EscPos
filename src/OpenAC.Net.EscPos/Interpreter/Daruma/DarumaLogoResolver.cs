@@ -36,10 +36,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve comandos de impressão de logotipo para impressoras Daruma.
+/// </summary>
 public sealed class DarumaLogoResolver : CommandResolver<LogoCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaLogoResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DarumaLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -48,7 +55,11 @@ public sealed class DarumaLogoResolver : CommandResolver<LogoCommand>
 
     #region Methods
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Resolve o comando de logotipo para a sequência de bytes específica da Daruma.
+    /// </summary>
+    /// <param name="command">Comando de logotipo.</param>
+    /// <returns>Sequência de bytes ESC/POS para impressão do logotipo.</returns>
     public override byte[] Resolve(LogoCommand command) => [CmdConst.SYN, CmdConst.BS, CmdConst.SYN, CmdConst.TAB];
 
     #endregion Methods

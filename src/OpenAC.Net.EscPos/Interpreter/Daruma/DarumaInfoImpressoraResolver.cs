@@ -36,8 +36,15 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolver para obter informações da impressora Daruma.
+/// </summary>
 public sealed class DarumaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaInfoImpressoraResolver"/>.
+    /// </summary>
+    /// <param name="encoding">Codificação utilizada para decodificar os dados retornados pela impressora.</param>
     public DarumaInfoImpressoraResolver(Encoding encoding) :
         base([[CmdConst.ESC, 195], [CmdConst.ESC, 199], [CmdConst.ESC, 229]],
             (dados) =>

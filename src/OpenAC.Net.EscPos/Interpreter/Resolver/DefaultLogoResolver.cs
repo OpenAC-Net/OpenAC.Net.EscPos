@@ -38,10 +38,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de impressão de logotipo para ESC/POS.
+/// </summary>
 public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultLogoResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -50,6 +57,11 @@ public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de logotipo para o formato de bytes correspondente.
+    /// </summary>
+    /// <param name="command">Comando de logotipo.</param>
+    /// <returns>Array de bytes do comando ESC/POS.</returns>
     public override byte[] Resolve(LogoCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.LogoNew) &&

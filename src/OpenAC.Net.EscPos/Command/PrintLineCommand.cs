@@ -34,12 +34,16 @@ using OpenAC.Net.EscPos.Interpreter;
 namespace OpenAC.Net.EscPos.Command;
 
 /// <summary>
-/// Exemplo de comando customizado, que gera linhas duplas ou simples, do tamanho solicitado.
+/// Comando para imprimir uma linha simples ou dupla com o tamanho especificado.
 /// </summary>
 public sealed class PrintLineCommand : PrintCommand<PrintLineCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="PrintLineCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS a ser utilizado.</param>
     public PrintLineCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -48,8 +52,14 @@ public sealed class PrintLineCommand : PrintCommand<PrintLineCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o tamanho da linha a ser impressa.
+    /// </summary>
     public int Tamanho { get; set; } = 48;
 
+    /// <summary>
+    /// Obtém ou define se a linha será dupla.
+    /// </summary>
     public bool Dupla { get; set; } = false;
 
     #endregion Properties

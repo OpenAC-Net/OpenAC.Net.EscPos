@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Interpretador ESC/POS específico para impressoras Daruma.
+/// </summary>
 public sealed class DarumaInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres utilizada.</param>
     internal DarumaInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -49,6 +56,9 @@ public sealed class DarumaInterpreter : EscPosInterpreter
 
     #region Methods
 
+    /// <summary>
+    /// Inicializa o interpretador com os comandos e resolvers específicos da Daruma.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new DarumaStatusResolver();

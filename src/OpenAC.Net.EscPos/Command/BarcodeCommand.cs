@@ -34,10 +34,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa um comando para impressão de código de barras.
+/// </summary>
 public sealed class BarcodeCommand : PrintCommand<BarcodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="BarcodeCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS a ser utilizado.</param>
     public BarcodeCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -46,16 +53,34 @@ public sealed class BarcodeCommand : PrintCommand<BarcodeCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o tipo do código de barras.
+    /// </summary>
     public CmdBarcode Tipo { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o valor do código de barras.
+    /// </summary>
     public string Code { get; set; } = "";
 
+    /// <summary>
+    /// Obtém ou define se o texto será exibido junto ao código de barras.
+    /// </summary>
     public CmdBarcodeText Exibir { get; set; } = CmdBarcodeText.SemTexto;
 
+    /// <summary>
+    /// Obtém ou define o alinhamento do código de barras.
+    /// </summary>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
+    /// <summary>
+    /// Obtém ou define a altura do código de barras.
+    /// </summary>
     public int Altura { get; set; } = 0;
 
+    /// <summary>
+    /// Obtém ou define a largura do código de barras.
+    /// </summary>
     public int Largura { get; set; } = 0;
 
     #endregion Properties

@@ -31,16 +31,31 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Configuração para impressão de logotipo na impressora.
+/// </summary>
 public sealed class LogoConfig
 {
     #region Properties
 
+    /// <summary>
+    /// Primeiro código de identificação do logotipo.
+    /// </summary>
     public byte KC1 { get; set; } = 32;
 
+    /// <summary>
+    /// Segundo código de identificação do logotipo.
+    /// </summary>
     public byte KC2 { get; set; } = 32;
 
+    /// <summary>
+    /// Fator de multiplicação horizontal do logotipo.
+    /// </summary>
     public byte FatorX { get; set; } = 1;
 
+    /// <summary>
+    /// Fator de multiplicação vertical do logotipo.
+    /// </summary>
     public byte FatorY { get; set; } = 1;
 
     #endregion Properties

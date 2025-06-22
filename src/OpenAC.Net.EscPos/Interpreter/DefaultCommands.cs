@@ -34,8 +34,14 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter;
 
+/// <summary>
+/// Fornece os comandos padrão ESC/POS e ESC/Bema para impressoras.
+/// </summary>
 public static class DefaultCommands
 {
+    /// <summary>
+    /// Inicializa os dicionários de comandos padrão.
+    /// </summary>
     static DefaultCommands()
     {
         EscPos = new Dictionary<CmdEscPos, byte[]>
@@ -171,7 +177,13 @@ public static class DefaultCommands
         };
     }
 
+    /// <summary>
+    /// Dicionário de comandos padrão ESC/POS.
+    /// </summary>
     public static IReadOnlyDictionary<CmdEscPos, byte[]> EscPos { get; }
 
+    /// <summary>
+    /// Dicionário de comandos padrão ESC/Bema.
+    /// </summary>
     public static IReadOnlyDictionary<CmdEscPos, byte[]> EscBema { get; }
 }

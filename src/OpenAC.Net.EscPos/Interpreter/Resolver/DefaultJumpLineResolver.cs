@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve o comando de pulo de linha (JumpLineCommand) para o formato de bytes ESC/POS.
+/// </summary>
 public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultJumpLineResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultJumpLineResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -49,6 +56,11 @@ public sealed class DefaultJumpLineResolver : CommandResolver<JumpLineCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="JumpLineCommand"/> para um array de bytes.
+    /// </summary>
+    /// <param name="command">O comando de pulo de linha.</param>
+    /// <returns>Array de bytes correspondente ao comando.</returns>
     public override byte[] Resolve(JumpLineCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.PuloDeLinha)) return [];

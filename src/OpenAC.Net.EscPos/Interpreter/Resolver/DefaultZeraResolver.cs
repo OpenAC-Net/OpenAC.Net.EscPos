@@ -35,10 +35,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de Zera para impressoras ESC/POS.
+/// </summary>
 public sealed class DefaultZeraResolver : CommandResolver<ZeraCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultZeraResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultZeraResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -47,6 +54,11 @@ public sealed class DefaultZeraResolver : CommandResolver<ZeraCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="ZeraCommand"/> para o array de bytes correspondente.
+    /// </summary>
+    /// <param name="command">O comando Zera a ser resolvido.</param>
+    /// <returns>Array de bytes do comando Zera, ou vazio se não encontrado.</returns>
     public override byte[] Resolve(ZeraCommand command) => Commandos.ContainsKey(CmdEscPos.Zera) ? Commandos[CmdEscPos.Zera] : [];
 
     #endregion Methods

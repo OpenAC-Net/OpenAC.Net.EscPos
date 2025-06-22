@@ -35,8 +35,14 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Elgin;
 
+/// <summary>
+/// Resolve o status da impressora Elgin a partir dos dados recebidos.
+/// </summary>
 public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
 {
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ElginStatusResolver"/>.
+    /// </summary>
     public ElginStatusResolver() :
         base([[5]],
             dados =>

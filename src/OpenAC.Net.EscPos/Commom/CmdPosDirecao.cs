@@ -31,10 +31,25 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define as direções possíveis para comandos de posicionamento.
+/// </summary>
 public enum CmdPosDirecao : byte
 {
+    /// <summary>
+    /// Da esquerda para a direita.
+    /// </summary>
     EsquerdaParaDireita = 0,
+    /// <summary>
+    /// De baixo para o topo.
+    /// </summary>
     BaixoParaTopo = 1,
+    /// <summary>
+    /// Da direita para a esquerda.
+    /// </summary>
     DireitaParaEsquerda = 2,
+    /// <summary>
+    /// Do topo para baixo.
+    /// </summary>
     TopoParaBaixo = 3,
 }

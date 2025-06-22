@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando Zera para impressão utilizando o interpretador EscPos.
+/// </summary>
 public sealed class ZeraCommand : PrintCommand<ZeraCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ZeraCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador EscPos a ser utilizado.</param>
     public ZeraCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }

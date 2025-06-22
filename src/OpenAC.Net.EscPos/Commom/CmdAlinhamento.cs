@@ -31,9 +31,21 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define os tipos de alinhamento disponíveis para impressão.
+/// </summary>
 public enum CmdAlinhamento
 {
+    /// <summary>
+    /// Alinhamento à esquerda.
+    /// </summary>
     Esquerda,
+    /// <summary>
+    /// Alinhamento centralizado.
+    /// </summary>
     Centro,
+    /// <summary>
+    /// Alinhamento à direita.
+    /// </summary>
     Direita
 }

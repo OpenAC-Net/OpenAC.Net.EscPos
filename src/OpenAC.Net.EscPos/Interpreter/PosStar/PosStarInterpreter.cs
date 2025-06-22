@@ -39,12 +39,16 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.PosStar;
 
 /// <summary>
-/// Classe de interpretação com comandos da Epson.
+/// Interpreta comandos do padrão PosStar, herdando de <see cref="EscPosInterpreter"/>.
 /// </summary>
 public class PosStarInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="PosStarInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação a ser utilizada.</param>
     internal PosStarInterpreter(Encoding enconder) : base(enconder)
     {
         Status = new EpsonStatusResolver();
@@ -55,6 +59,9 @@ public class PosStarInterpreter : EscPosInterpreter
     #region Methods
 
     /// <inheritdoc />
+    /// <summary>
+    /// Inicializa o interpretador PosStar, configurando os resolvers de comandos.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

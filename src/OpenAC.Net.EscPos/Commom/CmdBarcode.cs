@@ -31,18 +31,33 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Tipos de códigos de barras suportados pelo ESC/POS.
+/// </summary>
 public enum CmdBarcode
 {
+    /// <summary>UPC-A</summary>
     UPCA,
+    /// <summary>UPC-E</summary>
     UPCE,
+    /// <summary>EAN-13</summary>
     EAN13,
+    /// <summary>EAN-8</summary>
     EAN8,
+    /// <summary>Code 39</summary>
     CODE39,
+    /// <summary>Interleaved 2 of 5</summary>
     Inter2of5,
+    /// <summary>Codabar</summary>
     CodaBar,
+    /// <summary>Code 93</summary>
     CODE93,
+    /// <summary>Code 128</summary>
     CODE128,
+    /// <summary>Code 128A</summary>
     CODE128a,
+    /// <summary>Code 128B</summary>
     CODE128b,
+    /// <summary>Code 128C</summary>
     CODE128c,
 }

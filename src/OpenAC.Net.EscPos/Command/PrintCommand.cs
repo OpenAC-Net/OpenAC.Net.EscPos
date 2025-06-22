@@ -34,10 +34,18 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Classe base abstrata para comandos de impressão ESC/POS.
+/// </summary>
+/// <typeparam name="TCommand">Tipo do comando derivado.</typeparam>
 public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCommand : PrintCommand<TCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="PrintCommand{TCommand}"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS utilizado para processar o comando.</param>
     protected PrintCommand(EscPosInterpreter interpreter)
     {
         Interpreter = interpreter;
@@ -48,11 +56,14 @@ public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCo
     #region Properties
 
     /// <summary>
-    /// Conteudo em bytes do comando
+    /// Obtém o conteúdo em bytes do comando processado pelo interpretador.
     /// </summary>
-    public byte[] Content => Interpreter.ProcessCommand(this as TCommand);
+    public byte[] Content => Interpreter?.ProcessCommand(this as TCommand);
 
-    protected EscPosInterpreter Interpreter { get; }
+    /// <summary>
+    /// Obtém o interpretador ESC/POS associado ao comando.
+    /// </summary>
+    protected EscPosInterpreter? Interpreter { get; }
 
     #endregion Properties
 }

@@ -38,10 +38,18 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de texto para ESC/POS, aplicando fonte, alinhamento, tamanho e estilos conforme especificado.
+/// </summary>
 public sealed class DefaultTextResolver : CommandResolver<TextCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultTextResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de texto a ser utilizada.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public DefaultTextResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -51,12 +59,20 @@ public sealed class DefaultTextResolver : CommandResolver<TextCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação utilizada para o texto.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de texto, gerando o array de bytes correspondente para a impressora.
+    /// </summary>
+    /// <param name="cmd">Comando de texto a ser resolvido.</param>
+    /// <returns>Array de bytes para envio à impressora.</returns>
     public override byte[] Resolve(TextCommand cmd)
     {
         using var builder = new ByteArrayBuilder();
@@ -174,8 +190,8 @@ public sealed class DefaultTextResolver : CommandResolver<TextCommand>
     /// <summary>
     /// Função para tratar a quebra de linha da string para o formato que a impressora aceita.
     /// </summary>
-    /// <param name="texto"></param>
-    /// <returns></returns>
+    /// <param name="texto">Texto a ser tratado.</param>
+    /// <returns>Texto com quebras de linha normalizadas.</returns>
     private static string TratarString(string texto) => texto.Replace("\r\n", "\n").Replace("\r", "\n");
 
     #endregion Methods

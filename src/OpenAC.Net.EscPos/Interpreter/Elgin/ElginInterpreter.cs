@@ -36,10 +36,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Elgin;
 
+/// <summary>
+/// Interpretador ESC/POS específico para impressoras Elgin.
+/// </summary>
 public sealed class ElginInterpreter : EscPosInterpreter
 {
     #region Methods
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ElginInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
     internal ElginInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -48,6 +55,9 @@ public sealed class ElginInterpreter : EscPosInterpreter
 
     #region Methods
 
+    /// <summary>
+    /// Inicializa os resolvers específicos da Elgin.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new ElginStatusResolver();

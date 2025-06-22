@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Representa o comando para impressão de logotipo na impressora ESC/POS.
+/// </summary>
 public sealed class LogoCommand : PrintCommand<LogoCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="LogoCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS utilizado pelo comando.</param>
     public LogoCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -45,12 +52,24 @@ public sealed class LogoCommand : PrintCommand<LogoCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o valor KC1 do logotipo.
+    /// </summary>
     public byte KC1 { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o valor KC2 do logotipo.
+    /// </summary>
     public byte KC2 { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o fator de multiplicação horizontal.
+    /// </summary>
     public byte FatorX { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o fator de multiplicação vertical.
+    /// </summary>
     public byte FatorY { get; set; }
 
     #endregion Properties

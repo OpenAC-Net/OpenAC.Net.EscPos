@@ -42,22 +42,31 @@ using OpenAC.Net.EscPos.Interpreter.Elgin;
 using OpenAC.Net.EscPos.Interpreter.Epson;
 using OpenAC.Net.EscPos.Interpreter.GPrinter;
 using OpenAC.Net.EscPos.Interpreter.PosStar;
+using OpenAC.Net.EscPos.Interpreter.Sunmi;
 using OpenAC.Net.EscPos.Interpreter.ZJiang;
 
 namespace OpenAC.Net.EscPos;
 
 /// <summary>
-///
+/// Cria uma instância de <see cref="EscPosInterpreter"/> de acordo com o protocolo e página de código informados.
 /// </summary>
+/// <param name="protocolo">O protocolo ESC/POS a ser utilizado.</param>
+/// <param name="paginaCodigo">A página de código a ser utilizada para codificação de caracteres.</param>
+/// <returns>Uma instância de <see cref="EscPosInterpreter"/> correspondente ao protocolo informado.</returns>
+/// <exception cref="ArgumentOutOfRangeException">
+/// Lançada quando o protocolo ou a página de código informados não são suportados.
+/// </exception>
 public static class EscPosInterpreterFactory
 {
     /// <summary>
-    ///
+    /// Cria uma instância de <see cref="EscPosInterpreter"/> de acordo com o protocolo e página de código informados.
     /// </summary>
-    /// <param name="protocolo"></param>
-    /// <param name="paginaCodigo"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <param name="protocolo">O protocolo ESC/POS a ser utilizado.</param>
+    /// <param name="paginaCodigo">A página de código a ser utilizada para codificação de caracteres.</param>
+    /// <returns>Uma instância de <see cref="EscPosInterpreter"/> correspondente ao protocolo informado.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Lançada quando o protocolo ou a página de código informados não são suportados.
+    /// </exception>
     public static EscPosInterpreter Create(ProtocoloEscPos protocolo, PaginaCodigo paginaCodigo)
     {
         var enconder = paginaCodigo switch
@@ -82,6 +91,7 @@ public static class EscPosInterpreterFactory
             ProtocoloEscPos.EscDatecs => new DatecsInterpreter(enconder),
             ProtocoloEscPos.EscZJiang => new ZJiangInterpreter(enconder),
             ProtocoloEscPos.EscPosStar => new PosStarInterpreter(enconder),
+            ProtocoloEscPos.EscSunmi => new SunmiInterpreter(enconder),
             _ => throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null)
         };
     }

@@ -40,10 +40,18 @@ using OpenAC.Net.EscPos.Extensions;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de códigos de barras.
+/// </summary>
 public sealed class DefaultBarcodeResolver : CommandResolver<BarcodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultBarcodeResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public DefaultBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -53,12 +61,21 @@ public sealed class DefaultBarcodeResolver : CommandResolver<BarcodeCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação de caracteres utilizada.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de código de barras para o formato ESC/POS.
+    /// </summary>
+    /// <param name="command">Comando de código de barras.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Se o tipo de alinhamento ou código de barras não for suportado.</exception>
     public override byte[] Resolve(BarcodeCommand command)
     {
         if (!Commandos.ContainsKey(CmdEscPos.IniciarBarcode)) return [];
@@ -83,7 +100,7 @@ public sealed class DefaultBarcodeResolver : CommandResolver<BarcodeCommand>
                 throw new ArgumentOutOfRangeException();
         }
 
-        // Formando o codigo de barras
+        // Formando o código de barras
         byte[] barCode;
         switch (command.Tipo)
         {

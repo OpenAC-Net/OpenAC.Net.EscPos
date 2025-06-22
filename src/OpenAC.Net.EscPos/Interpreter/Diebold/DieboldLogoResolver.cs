@@ -36,10 +36,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Diebold;
 
+/// <summary>
+/// Resolve comandos de logo para impressoras Diebold.
+/// </summary>
 public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DieboldLogoResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DieboldLogoResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -48,6 +55,11 @@ public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de logo especificado.
+    /// </summary>
+    /// <param name="command">O comando de logo.</param>
+    /// <returns>Array de bytes correspondente ao comando.</returns>
     public override byte[] Resolve(LogoCommand command)
     {
         return [];

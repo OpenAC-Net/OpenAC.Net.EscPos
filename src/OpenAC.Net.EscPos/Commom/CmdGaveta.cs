@@ -31,8 +31,17 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Enumera as gavetas disponíveis para abertura.
+/// </summary>
 public enum CmdGaveta : byte
 {
+    /// <summary>
+    /// Gaveta 1.
+    /// </summary>
     GavetaUm = 0,
+    /// <summary>
+    /// Gaveta 2.
+    /// </summary>
     GavetaDois = 1
 }

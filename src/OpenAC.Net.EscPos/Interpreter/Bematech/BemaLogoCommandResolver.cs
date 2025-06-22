@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolve comandos de impressão de logotipo para impressoras Bematech.
+/// </summary>
 public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BemaLogoCommandResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public BemaLogoCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -49,6 +56,11 @@ public sealed class BemaLogoCommandResolver : CommandResolver<LogoCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando <see cref="LogoCommand"/> para o formato de bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">Comando de logotipo.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
     public override byte[] Resolve(LogoCommand command)
     {
         int keyCode;

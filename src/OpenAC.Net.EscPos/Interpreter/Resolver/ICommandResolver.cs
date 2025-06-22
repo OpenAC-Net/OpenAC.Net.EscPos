@@ -33,7 +33,15 @@ using OpenAC.Net.EscPos.Command;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Define um resolvedor de comandos de impressão para ESC/POS.
+/// </summary>
 public interface ICommandResolver
 {
+    /// <summary>
+    /// Resolve o comando de impressão fornecido em um array de bytes ESC/POS.
+    /// </summary>
+    /// <param name="command">O comando de impressão a ser resolvido.</param>
+    /// <returns>Array de bytes representando o comando ESC/POS.</returns>
     byte[] Resolve(IPrintCommand command);
 }

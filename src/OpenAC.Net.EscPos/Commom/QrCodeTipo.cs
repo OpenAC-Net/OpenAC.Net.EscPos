@@ -31,9 +31,23 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Tipos de QR Code suportados.
+/// </summary>
 public enum QrCodeTipo : byte
 {
+    /// <summary>
+    /// Modelo 1 do QR Code.
+    /// </summary>
     Model1 = 49,
+
+    /// <summary>
+    /// Modelo 2 do QR Code.
+    /// </summary>
     Model2 = 50,
+
+    /// <summary>
+    /// Micro QR Code.
+    /// </summary>
     Micro = 51
 }

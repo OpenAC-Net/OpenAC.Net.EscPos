@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Diebold;
 
+/// <summary>
+/// Interpretador ESC/POS específico para impressoras Diebold.
+/// </summary>
 public sealed class DieboldInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="DieboldInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
     internal DieboldInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -51,7 +58,9 @@ public sealed class DieboldInterpreter : EscPosInterpreter
 
     #region Methods
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Inicializa os resolvers de comandos específicos para Diebold.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

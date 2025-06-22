@@ -34,10 +34,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Comando para controle da gaveta de dinheiro.
+/// </summary>
 public sealed class CashDrawerCommand : PrintCommand<CashDrawerCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="CashDrawerCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS a ser utilizado.</param>
     public CashDrawerCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -46,10 +53,19 @@ public sealed class CashDrawerCommand : PrintCommand<CashDrawerCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define a gaveta a ser acionada.
+    /// </summary>
     public CmdGaveta Gaveta { get; set; }
 
+    /// <summary>
+    /// Obtém ou define o tempo em milissegundos que a gaveta ficará energizada (ON).
+    /// </summary>
     public byte TempoON { get; set; } = 50;
 
+    /// <summary>
+    /// Obtém ou define o tempo em milissegundos que a gaveta ficará desligada (OFF).
+    /// </summary>
     public byte TempoOFF { get; set; } = 200;
 
     #endregion Properties

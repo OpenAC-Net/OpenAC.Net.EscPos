@@ -40,10 +40,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve comandos de impressão de imagem para impressoras Daruma.
+/// </summary>
 public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaImageResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DarumaImageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -52,6 +59,11 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de imagem para o formato aceito pela impressora Daruma.
+    /// </summary>
+    /// <param name="command">Comando de imagem.</param>
+    /// <returns>Array de bytes com os comandos para impressão da imagem.</returns>
     public override byte[] Resolve(ImageCommand command)
     {
         if (command.Imagem == null) return [];
@@ -79,7 +91,7 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
         var bmp = new Bitmap(command.Imagem);
         var data = new[] { (byte)'\x00', (byte)'\x00', (byte)'\x00' };
 
-        // ESC * m nL nH d1…dk   Select bitmap mode
+        // ESC * m nL nH d1…dk   Seleciona modo bitmap
         byte[] escBmp = [27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256)];
 
         var slices = bmp.SliceImage(command.IsHiDPI);
@@ -89,7 +101,7 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
             builder.Append(slice);
         }
 
-        // Volta alinhamento para Esquerda.
+        // Retorna alinhamento para Esquerda.
         if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)
             builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
 

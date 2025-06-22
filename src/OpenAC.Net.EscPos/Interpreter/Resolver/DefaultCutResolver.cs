@@ -35,10 +35,17 @@ using OpenAC.Net.EscPos.Commom;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
+/// <summary>
+/// Resolve comandos de corte para impressoras ESC/POS.
+/// </summary>
 public sealed class DefaultCutResolver : CommandResolver<CutCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DefaultCutResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public DefaultCutResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -47,10 +54,15 @@ public sealed class DefaultCutResolver : CommandResolver<CutCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de corte baseado no tipo solicitado.
+    /// </summary>
+    /// <param name="command">Comando de corte.</param>
+    /// <returns>Array de bytes do comando ESC/POS correspondente.</returns>
     public override byte[] Resolve(CutCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial) return [];
-        if (!Commandos.TryGetValue(CmdEscPos.CorteTotal, out var commando)) return [];
+        if (!Commandos.ContainsKey(CmdEscPos.CorteParcial) && command.Parcial || 
+            !Commandos.TryGetValue(CmdEscPos.CorteTotal, out var commando)) return [];
 
         return command.Parcial ? Commandos[CmdEscPos.CorteParcial] : commando;
     }

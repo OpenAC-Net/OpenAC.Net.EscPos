@@ -31,9 +31,18 @@
 
 namespace OpenAC.Net.EscPos.Interpreter;
 
+/// <summary>
+/// Representa as razões de coluna para fontes condensada e expandida.
+/// </summary>
 public sealed class RazaoColunaFonte
 {
+    /// <summary>
+    /// Obtém ou define a razão de coluna para fonte condensada.
+    /// </summary>
     public decimal Condensada { get; set; } = 0.75M;
 
+    /// <summary>
+    /// Obtém ou define a razão de coluna para fonte expandida.
+    /// </summary>
     public decimal Expandida { get; set; } = 2M;
 }

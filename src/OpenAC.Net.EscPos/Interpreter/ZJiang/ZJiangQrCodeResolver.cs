@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.ZJiang;
 
+/// <summary>
+/// Resolve comandos ESC/POS para impressão de QR Code em impressoras ZJiang.
+/// </summary>
 public sealed class ZJiangQrCodeResolver : CommandResolver<QrCodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="ZJiangQrCodeResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public ZJiangQrCodeResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -51,6 +58,11 @@ public sealed class ZJiangQrCodeResolver : CommandResolver<QrCodeCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de QR Code para o formato de bytes ESC/POS da ZJiang.
+    /// </summary>
+    /// <param name="command">Comando de QR Code.</param>
+    /// <returns>Array de bytes para impressão do QR Code.</returns>
     public override byte[] Resolve(QrCodeCommand command)
     {
         using var builder = new ByteArrayBuilder();

@@ -33,10 +33,17 @@ using OpenAC.Net.EscPos.Interpreter;
 
 namespace OpenAC.Net.EscPos.Command;
 
+/// <summary>
+/// Comando para definir o espaçamento entre linhas na impressora.
+/// </summary>
 public sealed class EspacoEntreLinhasCommand : PrintCommand<EspacoEntreLinhasCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="EspacoEntreLinhasCommand"/>.
+    /// </summary>
+    /// <param name="interpreter">O interpretador ESC/POS associado.</param>
     public EspacoEntreLinhasCommand(EscPosInterpreter interpreter) : base(interpreter)
     {
     }
@@ -45,6 +52,9 @@ public sealed class EspacoEntreLinhasCommand : PrintCommand<EspacoEntreLinhasCom
 
     #region Properties
 
+    /// <summary>
+    /// Obtém ou define o espaçamento entre linhas em pontos.
+    /// </summary>
     public byte Espaco { get; set; } = 0;
 
     #endregion Properties

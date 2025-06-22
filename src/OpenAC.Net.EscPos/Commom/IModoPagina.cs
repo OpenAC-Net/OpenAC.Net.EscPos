@@ -33,27 +33,30 @@ using System.Collections.Generic;
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Interface que define o modo página para impressão, incluindo regiões, espaçamento entre linhas e configurações de códigos de barras e QR Code.
+/// </summary>
 public interface IModoPagina
 {
     #region Properties
 
     /// <summary>
-    /// Comandos para serem impressos dentro do modo pagina.
+    /// Obtém a lista de regiões a serem impressas dentro do modo página.
     /// </summary>
     IReadOnlyList<IRegiaoPagina> Regioes { get; }
 
     /// <summary>
-    /// Define/Obtém o espaço entre as linhas da impressão.
+    /// Define ou obtém o espaço entre as linhas da impressão.
     /// </summary>
     byte EspacoEntreLinhas { get; set; }
 
     /// <summary>
-    /// Define/Obtém as configurações padrão do codigo de barras.
+    /// Obtém as configurações padrão do código de barras.
     /// </summary>
     BarcodeConfig CodigoBarras { get; }
 
     /// <summary>
-    /// Define/Obtém as configurações padrão para impressão do QrCode.
+    /// Obtém as configurações padrão para impressão do QR Code.
     /// </summary>
     QrCodeConfig QrCode { get; }
 
@@ -61,8 +64,20 @@ public interface IModoPagina
 
     #region Methods
 
+    /// <summary>
+    /// Cria uma nova região na página com as dimensões especificadas.
+    /// </summary>
+    /// <param name="esqueda">Posição da margem esquerda da região.</param>
+    /// <param name="topo">Posição do topo da região.</param>
+    /// <param name="largura">Largura da região.</param>
+    /// <param name="altura">Altura da região.</param>
+    /// <returns>Instância de <see cref="IRegiaoPagina"/> criada.</returns>
     IRegiaoPagina NovaRegiao(int esqueda, int topo, int largura, int altura);
 
+    /// <summary>
+    /// Remove uma região existente da página.
+    /// </summary>
+    /// <param name="regiao">Região a ser removida.</param>
     void RemoverRegiao(IRegiaoPagina regiao);
 
     #endregion Methods

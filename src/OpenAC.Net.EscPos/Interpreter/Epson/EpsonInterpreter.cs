@@ -36,12 +36,16 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.Epson;
 
 /// <summary>
-/// Classe de interpretação com comandos da Epson.
+/// Classe responsável por interpretar comandos ESC/POS específicos para impressoras Epson.
 /// </summary>
 public class EpsonInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="EpsonInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
     internal EpsonInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -50,7 +54,9 @@ public class EpsonInterpreter : EscPosInterpreter
 
     #region Methods
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Inicializa os resolvers de comandos e status específicos da Epson.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

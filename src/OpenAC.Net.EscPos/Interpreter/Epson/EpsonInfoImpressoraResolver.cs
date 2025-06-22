@@ -46,8 +46,7 @@ public sealed class EpsonInfoImpressoraResolver : InfoResolver<InformacoesImpres
             ],
             (dados) =>
             {
-                if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
-                if (dados.Length < 4) return InformacoesImpressora.Empty;
+                if (dados.IsNullOrEmpty() || dados.Length < 4) return InformacoesImpressora.Empty;
 
                 var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
 

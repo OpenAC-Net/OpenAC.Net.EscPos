@@ -36,16 +36,22 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolver para obter informações da impressora Bematech.
+/// </summary>
 public sealed class BemaInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BemaInfoImpressoraResolver"/>.
+    /// </summary>
+    /// <param name="encoding">Codificação utilizada para decodificar os dados retornados pela impressora.</param>
     public BemaInfoImpressoraResolver(Encoding encoding) :
         base([
                 [CmdConst.GS, 249, 39, 0], [CmdConst.GS, 249, 39, 3], [CmdConst.GS, 249, 1], [CmdConst.GS, 249, 39, 49]
             ],
             (dados) =>
             {
-                if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
-                if (dados.Length < 4) return InformacoesImpressora.Empty;
+                if (dados.IsNullOrEmpty() || dados.Length < 4) return InformacoesImpressora.Empty;
 
                 var fabricante = string.Empty;
                 var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);

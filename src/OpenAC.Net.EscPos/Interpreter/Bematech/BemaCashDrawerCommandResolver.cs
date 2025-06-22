@@ -37,10 +37,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolve comandos para abertura de gaveta no padrão Bematech.
+/// </summary>
 public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BemaCashDrawerCommandResolver"/>.
+    /// </summary>
+    /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
     public BemaCashDrawerCommandResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
     {
     }
@@ -49,16 +56,21 @@ public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCo
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de abertura de gaveta para o padrão Bematech.
+    /// </summary>
+    /// <param name="command">Comando de gaveta.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Lançada quando o tipo de gaveta não é suportado.</exception>
     public override byte[] Resolve(CashDrawerCommand command)
     {
         var tempo = Math.Max(command.TempoON, command.TempoOFF);
-        switch (command.Gaveta)
+        return command.Gaveta switch
         {
-            case CmdGaveta.GavetaUm: return [CmdConst.ESC, 128, tempo];
-            case CmdGaveta.GavetaDois: return [CmdConst.ESC, (byte)'v', tempo];
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            CmdGaveta.GavetaUm => [CmdConst.ESC, 128, tempo],
+            CmdGaveta.GavetaDois => [CmdConst.ESC, (byte)'v', tempo],
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     #endregion Methods

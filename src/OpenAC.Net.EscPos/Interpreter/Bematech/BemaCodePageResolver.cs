@@ -39,10 +39,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
+/// <summary>
+/// Resolve o comando de seleção de página de código para impressoras Bematech.
+/// </summary>
 public sealed class BemaCodePageResolver : CommandResolver<CodePageCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BemaCodePageResolver"/>.
+    /// </summary>
+    /// <param name="dict">Dicionário de comandos ESC/POS e seus bytes correspondentes.</param>
     public BemaCodePageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
     }
@@ -51,6 +58,11 @@ public sealed class BemaCodePageResolver : CommandResolver<CodePageCommand>
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de seleção de página de código.
+    /// </summary>
+    /// <param name="command">O comando de página de código.</param>
+    /// <returns>Array de bytes correspondente ao comando ESC/POS.</returns>
     public override byte[] Resolve(CodePageCommand command)
     {
         if (command.PaginaCodigo.IsIn(PaginaCodigo.pc852, PaginaCodigo.pc1252)) return [];

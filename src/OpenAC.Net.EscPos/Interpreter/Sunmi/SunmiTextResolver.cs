@@ -8,10 +8,19 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Sunmi;
 
+/// <summary>
+/// Responsável por resolver comandos de texto para impressoras Sunmi, convertendo propriedades de formatação
+/// em comandos ESC/POS e texto em bytes.
+/// </summary>
 public class SunmiTextResolver : CommandResolver<TextCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="SunmiTextResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de texto a ser utilizada.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public SunmiTextResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -21,12 +30,20 @@ public class SunmiTextResolver : CommandResolver<TextCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação utilizada para converter texto em bytes.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de texto, aplicando formatação e retornando os bytes correspondentes.
+    /// </summary>
+    /// <param name="cmd">Comando de texto a ser resolvido.</param>
+    /// <returns>Array de bytes com os comandos e texto formatado.</returns>
     public override byte[] Resolve(TextCommand cmd)
     {
         using var builder = new ByteArrayBuilder();
@@ -144,8 +161,8 @@ public class SunmiTextResolver : CommandResolver<TextCommand>
     /// <summary>
     /// Função para tratar a quebra de linha da string para o formato que a impressora aceita.
     /// </summary>
-    /// <param name="texto"></param>
-    /// <returns></returns>
+    /// <param name="texto">Texto a ser tratado.</param>
+    /// <returns>Texto com quebras de linha normalizadas.</returns>
     private static string TratarString(string texto) => texto.Replace("\r\n", "\n").Replace("\r", "\n");
 
     #endregion Methods

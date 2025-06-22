@@ -39,10 +39,18 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
+/// <summary>
+/// Resolve comandos de impressão de código de barras para impressoras Daruma.
+/// </summary>
 public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="DarumaBarcodeResolver"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação de caracteres a ser utilizada.</param>
+    /// <param name="dict">Dicionário de comandos ESC/POS.</param>
     public DarumaBarcodeResolver(Encoding enconder, IReadOnlyDictionary<CmdEscPos, byte[]> dict) : base(dict)
     {
         Enconder = enconder;
@@ -52,12 +60,20 @@ public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
 
     #region Properties
 
+    /// <summary>
+    /// Obtém a codificação de caracteres utilizada.
+    /// </summary>
     public Encoding Enconder { get; }
 
     #endregion Properties
 
     #region Methods
 
+    /// <summary>
+    /// Resolve o comando de código de barras para o formato Daruma.
+    /// </summary>
+    /// <param name="command">Comando de código de barras.</param>
+    /// <returns>Array de bytes representando o comando ESC/POS.</returns>
     public override byte[] Resolve(BarcodeCommand command)
     {
         using var builder = new ByteArrayBuilder();
@@ -80,7 +96,7 @@ public sealed class DarumaBarcodeResolver : CommandResolver<BarcodeCommand>
                 throw new ArgumentOutOfRangeException();
         }
 
-        // Formando o codigo de barras
+        // Formando o código de barras
         byte[] barCode;
         switch (command.Tipo)
         {

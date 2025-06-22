@@ -31,16 +31,49 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Define os protocolos suportados pelo ESC/POS.
+/// </summary>
 public enum ProtocoloEscPos
 {
+    /// <summary>
+    /// Protocolo ESC/POS padrão.
+    /// </summary>
     EscPos,
+    /// <summary>
+    /// Protocolo ESC/Bema.
+    /// </summary>
     EscBema,
+    /// <summary>
+    /// Protocolo ESC/Daruma.
+    /// </summary>
     EscDaruma,
+    /// <summary>
+    /// Protocolo ESC/Elgin.
+    /// </summary>
     EscElgin,
+    /// <summary>
+    /// Protocolo ESC/Diebold.
+    /// </summary>
     EscDiebold,
+    /// <summary>
+    /// Protocolo ESC/GPrinter.
+    /// </summary>
     EscGPrinter,
+    /// <summary>
+    /// Protocolo ESC/Datecs.
+    /// </summary>
     EscDatecs,
+    /// <summary>
+    /// Protocolo ESC/ZJiang.
+    /// </summary>
     EscZJiang,
+    /// <summary>
+    /// Protocolo ESC/POS Star.
+    /// </summary>
     EscPosStar,
+    /// <summary>
+    /// Protocolo ESC/Sunmi.
+    /// </summary>
     EscSunmi
 }

@@ -39,12 +39,16 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.ZJiang;
 
 /// <summary>
-/// Classe de interpretação com comandos da Epson.
+/// Interpretador ESC/POS para impressoras ZJiang.
 /// </summary>
 public class ZJiangInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância da classe <see cref="ZJiangInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação a ser utilizada.</param>
     internal ZJiangInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -54,6 +58,9 @@ public class ZJiangInterpreter : EscPosInterpreter
     #region Methods
 
     /// <inheritdoc />
+    /// <summary>
+    /// Inicializa os resolvers de comandos específicos para impressoras ZJiang.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();

@@ -31,14 +31,26 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Configuração para geração de QR Code.
+/// </summary>
 public sealed class QrCodeConfig
 {
     #region Properties
 
+    /// <summary>
+    /// Tipo do QR Code.
+    /// </summary>
     public QrCodeTipo Tipo { get; set; } = QrCodeTipo.Model2;
 
+    /// <summary>
+    /// Tamanho do módulo do QR Code.
+    /// </summary>
     public QrCodeModSize Tamanho { get; set; } = QrCodeModSize.Normal;
 
+    /// <summary>
+    /// Nível de correção de erro do QR Code.
+    /// </summary>
     public QrCodeErrorLevel ErrorLevel { get; set; } = QrCodeErrorLevel.LevelL;
 
     #endregion Properties

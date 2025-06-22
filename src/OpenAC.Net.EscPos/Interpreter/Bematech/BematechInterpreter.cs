@@ -36,12 +36,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 namespace OpenAC.Net.EscPos.Interpreter.Bematech;
 
 /// <summary>
-/// WIP - Work In Progress
+/// Interpretador ESC/POS específico para impressoras Bematech.
+/// Responsável por registrar os resolvers de comandos e status.
 /// </summary>
 public class BematechInterpreter : EscPosInterpreter
 {
     #region Constructors
 
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="BematechInterpreter"/>.
+    /// </summary>
+    /// <param name="enconder">Codificação a ser utilizada.</param>
     internal BematechInterpreter(Encoding enconder) : base(enconder)
     {
     }
@@ -51,6 +56,9 @@ public class BematechInterpreter : EscPosInterpreter
     #region Methods
 
     /// <inheritdoc />
+    /// <summary>
+    /// Inicializa o interpretador, registrando os resolvers específicos da Bematech.
+    /// </summary>
     protected override void IniciarInterpreter()
     {
         Status = new BematechStatusResolver();
@@ -67,7 +75,7 @@ public class BematechInterpreter : EscPosInterpreter
         CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(DefaultCommands.EscBema));
         CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(DefaultCommands.EscBema));
 
-        // Custons
+        // Comandos customizados Bematech
         CommandResolver.AddResolver<CashDrawerCommand, BemaCashDrawerCommandResolver>(new BemaCashDrawerCommandResolver(DefaultCommands.EscBema));
         CommandResolver.AddResolver<BarcodeCommand, BemaBarcodeCommandResolver>(new BemaBarcodeCommandResolver(Enconder, DefaultCommands.EscBema));
         CommandResolver.AddResolver<LogoCommand, BemaLogoCommandResolver>(new BemaLogoCommandResolver(DefaultCommands.EscBema));

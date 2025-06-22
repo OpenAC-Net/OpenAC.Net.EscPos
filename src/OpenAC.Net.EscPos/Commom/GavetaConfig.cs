@@ -31,14 +31,26 @@
 
 namespace OpenAC.Net.EscPos.Commom;
 
+/// <summary>
+/// Configuração da gaveta do equipamento.
+/// </summary>
 public sealed class GavetaConfig
 {
     #region Properties
 
+    /// <summary>
+    /// Indica se o sinal da gaveta está invertido.
+    /// </summary>
     public bool SinalInvertido { get; set; }
 
+    /// <summary>
+    /// Tempo em milissegundos que a gaveta permanece aberta (ON).
+    /// </summary>
     public byte TempoON { get; set; } = 50;
 
+    /// <summary>
+    /// Tempo em milissegundos que a gaveta permanece fechada (OFF).
+    /// </summary>
     public byte TempoOFF { get; set; } = 200;
 
     #endregion Properties

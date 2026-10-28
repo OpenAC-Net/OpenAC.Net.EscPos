@@ -5,5 +5,7 @@ public enum TipoConexao
     Serial,
     TCP,
     RAW,
-    File
+    File,
+    Bluetooth,
+    USB
 }

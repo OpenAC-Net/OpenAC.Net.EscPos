@@ -232,6 +232,48 @@
                       <NumericUpDown Name="TcpPortInput" Minimum="1" Maximum="65535" Value="9100" FormatString="0" />
                     </StackPanel>
                   </StackPanel>
+                  <StackPanel Name="BluetoothPanel" Spacing="12" IsVisible="False">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="DISPOSITIVOS BLUETOOTH PAREADOS" />
+                      <Grid ColumnDefinitions="*,Auto">
+                        <ComboBox Name="BluetoothDeviceCombo" PlaceholderText="Busque e selecione um dispositivo" />
+                        <Button Grid.Column="1" Name="RefreshBluetoothButton" Content="Buscar" Margin="8,0,0,0" />
+                      </Grid>
+                    </StackPanel>
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="ENDEREÇO MAC / CAMINHO DO DISPOSITIVO" />
+                      <TextBox Name="BluetoothAddressText" PlaceholderText="Ex.: 00:11:22:33:44:55 ou /dev/rfcomm0" />
+                    </StackPanel>
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="CANAL RFCOMM" />
+                      <NumericUpDown Name="BluetoothChannelInput" Minimum="0" Maximum="30" Value="0" FormatString="0" />
+                      <TextBlock Classes="muted" Text="0 usa o canal automático/padrão. Comunicação via perfil SPP." TextWrapping="Wrap" />
+                    </StackPanel>
+                  </StackPanel>
+                  <StackPanel Name="UsbPanel" Spacing="12" IsVisible="False">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="DISPOSITIVOS USB" />
+                      <Grid ColumnDefinitions="*,Auto">
+                        <ComboBox Name="UsbDeviceCombo" PlaceholderText="Busque e selecione um dispositivo" />
+                        <Button Grid.Column="1" Name="RefreshUsbButton" Content="Buscar" Margin="8,0,0,0" />
+                      </Grid>
+                    </StackPanel>
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="CAMINHO DO DISPOSITIVO" />
+                      <TextBox Name="UsbDevicePathText" PlaceholderText="Ex.: /dev/usb/lp0 ou caminho USBPRINT" />
+                    </StackPanel>
+                    <Grid ColumnDefinitions="*,14,*">
+                      <StackPanel>
+                        <TextBlock Classes="label" Text="VENDOR ID (VID, HEX)" />
+                        <TextBox Name="UsbVendorIdText" PlaceholderText="Ex.: 04B8" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="PRODUCT ID (PID, HEX)" />
+                        <TextBox Name="UsbProductIdText" PlaceholderText="Ex.: 0202" />
+                      </StackPanel>
+                    </Grid>
+                    <TextBlock Classes="muted" Text="Informe o caminho ou o par VID/PID em hexadecimal. O caminho tem prioridade." TextWrapping="Wrap" />
+                  </StackPanel>
                   <StackPanel Name="RawPanel" Spacing="12" IsVisible="False">
                     <StackPanel>
                       <TextBlock Classes="label" Text="NOME DA IMPRESSORA" />

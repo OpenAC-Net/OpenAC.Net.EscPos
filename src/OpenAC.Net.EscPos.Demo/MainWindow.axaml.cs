@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Ports;
 using System.Text;
 using Avalonia.Controls;
@@ -107,6 +108,28 @@ public partial class MainWindow : Window
         RawPrinterCombo.Text = printers[0];
     }
 
+    private async Task RefreshBluetoothDevicesAsync()
+    {
+        var address = BluetoothAddressText.Text?.Trim();
+        var devices = await Task.Run(() => BluetoothConfig.GetDevices());
+        BluetoothDeviceCombo.ItemsSource = devices;
+        BluetoothDeviceCombo.SelectedItem = devices.FirstOrDefault(device =>
+            string.Equals(device.Address, address, StringComparison.OrdinalIgnoreCase));
+        ResultText.Text = $"Dispositivos Bluetooth encontrados: {devices.Count}.\nSelecione um dispositivo ou informe o endereço manualmente.";
+        ResponseTabs.SelectedIndex = 1;
+    }
+
+    private async Task RefreshUsbDevicesAsync()
+    {
+        var path = UsbDevicePathText.Text?.Trim();
+        var devices = await Task.Run(() => UsbConfig.GetDevices());
+        UsbDeviceCombo.ItemsSource = devices;
+        UsbDeviceCombo.SelectedItem = devices.FirstOrDefault(device =>
+            string.Equals(device.DevicePath, path, StringComparison.Ordinal));
+        ResultText.Text = $"Dispositivos USB encontrados: {devices.Count}.\nSelecione um dispositivo ou informe o caminho ou VID/PID manualmente.";
+        ResponseTabs.SelectedIndex = 1;
+    }
+
     private void ConnectEvents()
     {
         Closing += (_, _) =>
@@ -136,8 +159,28 @@ public partial class MainWindow : Window
         TcpPortInput.ValueChanged += (_, _) => UpdateContext();
         RawPrinterCombo.SelectionChanged += (_, _) => UpdateContext();
         OutputFileText.TextChanged += (_, _) => UpdateContext();
+        BluetoothAddressText.TextChanged += (_, _) => UpdateContext();
+        BluetoothChannelInput.ValueChanged += (_, _) => UpdateContext();
+        UsbDevicePathText.TextChanged += (_, _) => UpdateContext();
+        UsbVendorIdText.TextChanged += (_, _) => UpdateContext();
+        UsbProductIdText.TextChanged += (_, _) => UpdateContext();
+
+        BluetoothDeviceCombo.SelectionChanged += (_, _) =>
+        {
+            if (BluetoothDeviceCombo.SelectedItem is BluetoothDeviceInfo device)
+                BluetoothAddressText.Text = device.Address;
+        };
+        UsbDeviceCombo.SelectionChanged += (_, _) =>
+        {
+            if (UsbDeviceCombo.SelectedItem is not UsbDeviceInfo device) return;
+            UsbDevicePathText.Text = device.DevicePath;
+            UsbVendorIdText.Text = device.VendorId?.ToString("X4", CultureInfo.InvariantCulture) ?? string.Empty;
+            UsbProductIdText.Text = device.ProductId?.ToString("X4", CultureInfo.InvariantCulture) ?? string.Empty;
+        };
 
         RefreshPortsButton.Click += (_, _) => RefreshSerialPorts();
+        RefreshBluetoothButton.Click += async (_, _) => await RunAsync("Buscar dispositivos Bluetooth", RefreshBluetoothDevicesAsync);
+        RefreshUsbButton.Click += async (_, _) => await RunAsync("Buscar dispositivos USB", RefreshUsbDevicesAsync);
 
         BrowseOutputFileButton.Click += async (_, _) => await RunAsync("Selecionar arquivo de saída", async () =>
         {
@@ -211,6 +254,8 @@ public partial class MainWindow : Window
         TcpPanel.IsVisible = tipo == TipoConexao.TCP;
         RawPanel.IsVisible = tipo == TipoConexao.RAW;
         FilePanel.IsVisible = tipo == TipoConexao.File;
+        BluetoothPanel.IsVisible = tipo == TipoConexao.Bluetooth;
+        UsbPanel.IsVisible = tipo == TipoConexao.USB;
     }
 
     private void UpdateContext()
@@ -229,6 +274,10 @@ public partial class MainWindow : Window
             TipoConexao.TCP => $"{(string.IsNullOrWhiteSpace(TcpIpText.Text) ? "127.0.0.1" : TcpIpText.Text)}:{(int)(TcpPortInput.Value ?? 9100)}",
             TipoConexao.RAW => GetComboText(RawPrinterCombo, "RAW"),
             TipoConexao.File => string.IsNullOrWhiteSpace(OutputFileText.Text) ? "Arquivo" : Path.GetFileName(OutputFileText.Text),
+            TipoConexao.Bluetooth => $"{BluetoothAddressText.Text} · Canal {(int)(BluetoothChannelInput.Value ?? 0)}",
+            TipoConexao.USB => string.IsNullOrWhiteSpace(UsbDevicePathText.Text)
+                ? $"VID:{UsbVendorIdText.Text} PID:{UsbProductIdText.Text}"
+                : UsbDevicePathText.Text,
             _ => conexao.ToString()
         };
 
@@ -288,10 +337,19 @@ public partial class MainWindow : Window
             {
                 Device =
                 {
-                    CreateIfNotExits = true,
+                    CreateIfNotExists = true,
                     File = outputFile
                 }
             },
+            TipoConexao.Bluetooth => new EscPosPrinter<BluetoothConfig>
+            {
+                Device =
+                {
+                    Endereco = BluetoothAddressText.Text?.Trim(),
+                    Canal = (int)(BluetoothChannelInput.Value ?? 0)
+                }
+            },
+            TipoConexao.USB => CreateUsbPrinter(),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -302,6 +360,34 @@ public partial class MainWindow : Window
         ret.LinhasEntreCupons = linhasCupons;
 
         return ret;
+    }
+
+    private EscPosPrinter<UsbConfig> CreateUsbPrinter()
+    {
+        var printer = new EscPosPrinter<UsbConfig>();
+        var path = UsbDevicePathText.Text?.Trim();
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            printer.Device.DevicePath = path;
+        }
+        else
+        {
+            printer.Device.VendorId = ParseUsbId(UsbVendorIdText.Text, "VID");
+            printer.Device.ProductId = ParseUsbId(UsbProductIdText.Text, "PID");
+        }
+
+        return printer;
+    }
+
+    private static int? ParseUsbId(string? text, string name)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return null;
+        var value = text.Trim();
+        if (value.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+            value = value[2..];
+        if (ushort.TryParse(value, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var id))
+            return id;
+        throw new ArgumentException($"O {name} USB deve ser um valor hexadecimal entre 0000 e FFFF.");
     }
 
     private void SaveConfig()
@@ -330,6 +416,15 @@ public partial class MainWindow : Window
 
         // File
         config.Set("FileArquivo", OutputFileText.Text ?? string.Empty);
+
+        // Bluetooth
+        config.Set("BluetoothEndereco", BluetoothAddressText.Text ?? string.Empty);
+        config.Set("BluetoothCanal", BluetoothChannelInput.Value ?? 0M);
+
+        // USB
+        config.Set("UsbDevicePath", UsbDevicePathText.Text ?? string.Empty);
+        config.Set("UsbVendorId", UsbVendorIdText.Text ?? string.Empty);
+        config.Set("UsbProductId", UsbProductIdText.Text ?? string.Empty);
 
         config.Save();
         UpdateContext();
@@ -365,6 +460,15 @@ public partial class MainWindow : Window
 
         // File
         OutputFileText.Text = config.Get("FileArquivo", string.Empty);
+
+        // Bluetooth
+        BluetoothAddressText.Text = config.Get("BluetoothEndereco", string.Empty);
+        BluetoothChannelInput.Value = config.Get("BluetoothCanal", 0M);
+
+        // USB
+        UsbDevicePathText.Text = config.Get("UsbDevicePath", string.Empty);
+        UsbVendorIdText.Text = config.Get("UsbVendorId", string.Empty);
+        UsbProductIdText.Text = config.Get("UsbProductId", string.Empty);
     }
 
     private static void PopulateTextCommands(EscPosPrinter posprinter)

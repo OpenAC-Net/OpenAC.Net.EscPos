@@ -57,7 +57,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="OpenAC.Net.Core" Version="1.6.0" />
-        <PackageReference Include="OpenAC.Net.Devices" Version="1.6.0.1" />
+        <PackageReference Include="OpenAC.Net.Devices" Version="1.7.0" />
         <PackageReference Include="SkiaSharp" Version="3.119.4" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
     </ItemGroup>

@@ -18,8 +18,8 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.4" />
     <PackageReference Include="NLog" Version="6.2.2" />
-    <PackageReference Include="OpenAC.Net.Devices" Version="1.6.0.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
+    <PackageReference Include="OpenAC.Net.Devices" Version="1.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>

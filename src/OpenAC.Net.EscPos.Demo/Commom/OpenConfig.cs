@@ -37,7 +37,7 @@ public class OpenConfig
     {
         var type = typeof(T);
         var value = config.AppSettings.Settings[setting]?.Value;
-        if (value.IsEmpty()) return defaultValue;
+        if (string.IsNullOrEmpty(value)) return defaultValue;
 
         try
         {

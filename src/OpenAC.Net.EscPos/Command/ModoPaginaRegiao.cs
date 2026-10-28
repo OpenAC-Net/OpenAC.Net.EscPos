@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using OpenAC.Net.Core.Logging;
 using OpenAC.Net.EscPos.Commom;
@@ -136,7 +135,8 @@ public sealed class ModoPaginaRegiao : IOpenLog, IRegiaoPagina
     {
         var cmd = new PrintLineCommand(interpreter)
         {
-            Tamanho = parent.Colunas
+            Tamanho = parent.Colunas,
+            Dupla = dupla
         };
 
         commands.Add(cmd);
@@ -420,10 +420,10 @@ public sealed class ModoPaginaRegiao : IOpenLog, IRegiaoPagina
     /// <summary>
     /// Adiciona o comando para imprimir imagem ao buffer.
     /// </summary>
-    /// <param name="imagem">Imagem a ser impressa.</param>
+    /// <param name="imagem">Bytes da imagem a ser impressa.</param>
     /// <param name="aAlinhamento">Alinhamento da imagem.</param>
     /// <param name="isHdpi">Indica se a imagem é HiDPI.</param>
-    public void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
+    public void ImprimirImagem(byte[] imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -81,7 +81,7 @@ public sealed class ElginInterpreter : EscPosInterpreter
 
         // Custons
         CommandResolver.AddResolver<CashDrawerCommand, ElginCashDrawerResolver>(new ElginCashDrawerResolver(DefaultCommands.EscBema));
-        CommandResolver.AddResolver<QrCodeCommand, BemaQrCodeCommandResolver>(new BemaQrCodeCommandResolver(DefaultCommands.EscBema));
+        CommandResolver.AddResolver<QrCodeCommand, ElginQrCodeCommandResolver>(new ElginQrCodeCommandResolver(DefaultCommands.EscBema));
     }
 
     #endregion Methods

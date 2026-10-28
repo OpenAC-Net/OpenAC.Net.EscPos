@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -31,11 +31,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
+using SkiaSharp;
 
 namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 
@@ -44,14 +44,22 @@ namespace OpenAC.Net.EscPos.Interpreter.Resolver;
 /// </summary>
 public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
 {
+    #region Fields
+
+    private readonly bool addLineFeed;
+
+    #endregion Fields
+
     #region Constructors
 
     /// <summary>
     /// Inicializa uma nova instância de <see cref="DefaultImageResolver"/>.
     /// </summary>
     /// <param name="dictionary">Dicionário de comandos ESC/POS.</param>
-    public DefaultImageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary) : base(dictionary)
+    /// <param name="addLineFeed">Se verdadeiro, adiciona LF após cada fatia da imagem.</param>
+    public DefaultImageResolver(IReadOnlyDictionary<CmdEscPos, byte[]> dictionary, bool addLineFeed = true) : base(dictionary)
     {
+        this.addLineFeed = addLineFeed;
     }
 
     #endregion Constructors
@@ -65,29 +73,33 @@ public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
     /// <returns>Array de bytes representando o comando ESC/POS.</returns>
     public override byte[] Resolve(ImageCommand command)
     {
-        if (command.Imagem == null) return [];
+        if (command.Imagem == null || command.Imagem.Length == 0) return [];
+
+        using var bmp = SKBitmap.Decode(command.Imagem);
+        if (bmp == null) return [];
 
         using var builder = new ByteArrayBuilder();
 
         switch (command.Alinhamento)
         {
-            case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+            case CmdAlinhamento.Esquerda:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoEsquerda, out var alinhadoEsquerda))
+                    builder.Append(alinhadoEsquerda);
                 break;
 
-            case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
-                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+            case CmdAlinhamento.Centro:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoCentro, out var alinhadoCentro))
+                    builder.Append(alinhadoCentro);
                 break;
 
-            case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
-                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+            case CmdAlinhamento.Direita:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoDireita, out var alinhadoDireita))
+                    builder.Append(alinhadoDireita);
                 break;
 
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        var bmp = new Bitmap(command.Imagem);
 
         // ESC * m nL nH d1…dk   Select bitmap mode
         byte[] escBmp = [27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256)];
@@ -97,7 +109,8 @@ public sealed class DefaultImageResolver : CommandResolver<ImageCommand>
         {
             builder.Append(escBmp);
             builder.Append(slice);
-            builder.Append([0xA]);
+            if (addLineFeed)
+                builder.Append([0xA]);
         }
 
         // Volta alinhamento para Esquerda.

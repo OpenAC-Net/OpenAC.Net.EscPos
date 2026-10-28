@@ -1,0 +1,268 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:OpenAC.Net.EscPos.Demo"
+        x:Class="OpenAC.Net.EscPos.Demo.MainWindow"
+        Icon="avares://OpenAC.Net.EscPos.Demo/Assets/openac.ico"
+        Title="OpenAC.Net · ESC/POS" Width="1360" Height="900"
+        MinWidth="1080" MinHeight="720" WindowStartupLocation="CenterScreen">
+  <Grid ColumnDefinitions="218,*">
+    <Border Grid.Column="0">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Color="#102B51" Offset="0" />
+          <GradientStop Color="#163D70" Offset="1" />
+        </LinearGradientBrush>
+      </Border.Background>
+      <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18,30,18,22">
+        <StackPanel Margin="14,0,0,34" Spacing="12">
+          <Border Width="48" Height="48" Background="White" CornerRadius="13" Padding="4" HorizontalAlignment="Left" ClipToBounds="True">
+            <Image Source="avares://OpenAC.Net.EscPos.Demo/Assets/openac.png" Stretch="Uniform" />
+          </Border>
+          <StackPanel Spacing="4">
+            <TextBlock Text="OpenAC.Net" Foreground="White" FontSize="21" FontWeight="SemiBold" />
+            <TextBlock Text="IMPRESSÃO TÉRMICA" Foreground="#8FAFD8" FontSize="10" LetterSpacing="1.3" />
+          </StackPanel>
+        </StackPanel>
+        <ListBox Grid.Row="1" Name="Navigation" Classes="navigation" SelectedIndex="0">
+          <ListBoxItem>
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Path Width="17" Height="17" Stretch="Uniform" Stroke="#B6CEF0" StrokeThickness="1.6" Data="M2,2 H8 V8 H2 Z M12,2 H18 V8 H12 Z M2,12 H8 V18 H2 Z M12,12 H18 V18 H12 Z" />
+              <TextBlock Text="Operações" />
+            </StackPanel>
+          </ListBoxItem>
+          <ListBoxItem>
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Path Width="17" Height="17" Stretch="Uniform" Stroke="#B6CEF0" StrokeThickness="1.6" Data="M2,5 H18 M2,10 H18 M2,15 H18 M6,2 V8 M14,7 V13 M8,12 V18" />
+              <TextBlock Text="Configurações" />
+            </StackPanel>
+          </ListBoxItem>
+        </ListBox>
+        <Border Grid.Row="3" Background="#1C4478" CornerRadius="10" Padding="14">
+          <StackPanel Spacing="7">
+            <TextBlock Text="ESC/POS Multi-Marca" Foreground="White" FontWeight="SemiBold" />
+            <TextBlock Text="Impressão direta, diagnóstico de status e preview gráfico." TextWrapping="Wrap" Foreground="#AFC9EB" FontSize="12" LineHeight="20" />
+            <TextBlock Text="DEMONSTRAÇÃO" Foreground="#7EA6DC" FontSize="10" LetterSpacing="1" Margin="0,7,0,0" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Border>
+    <Grid Grid.Column="1" RowDefinitions="Auto,*,Auto">
+      <Border Background="White" BorderBrush="#DCE7F7" BorderThickness="0,0,0,1" Padding="28,22">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Spacing="5">
+            <TextBlock Text="Central ESC/POS" FontSize="23" FontWeight="SemiBold" />
+            <TextBlock Name="ContextText" Classes="muted" Text="Impressora Térmica ESC/POS" />
+          </StackPanel>
+          <Border Grid.Column="1" Name="ConnectionBadge" Background="#EAF2FF" CornerRadius="18" Padding="14,8" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Ellipse Width="7" Height="7" Fill="#3976DA" VerticalAlignment="Center" />
+              <TextBlock Name="ConnectionText" Text="Serial" Foreground="#2456A4" FontWeight="Medium" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+      <Grid Grid.Row="1" Name="Workspace" Margin="26,22">
+        <Grid Name="OperationsPage" RowDefinitions="Auto,Auto,*">
+          <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+            <StackPanel Spacing="5">
+              <TextBlock Text="Operações" Classes="heading" FontSize="19" />
+              <TextBlock Classes="muted" Text="Envie comandos para a impressora térmica ou gere um preview gráfico do cupom." />
+            </StackPanel>
+            <Button Grid.Column="1" Name="ConfigureButton" Content="Configurar conexão" VerticalAlignment="Center" />
+          </Grid>
+          <Grid Grid.Row="1" ColumnDefinitions="*,18,*" Margin="0,0,0,18">
+            <Border Classes="card">
+              <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Text="Impressão e Comandos" Classes="heading" />
+                  <Border Grid.Column="1" Background="#EDF4FF" CornerRadius="4" Padding="7,3">
+                    <TextBlock Name="ProtocolBadgeText" Text="EscPos" FontSize="11" Foreground="#3976DA" />
+                  </Border>
+                </Grid>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="PrintTextButton" Classes="primary" Content="Imprimir Texto" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="PrintBarcodeButton" Content="Código de Barras" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="PrintQrCodeButton" Content="Imprimir QR Code" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="PrintPageModeButton" Content="Modo Página" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="PrintImageButton" Content="Imprimir Imagem" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="CashDrawerButton" Content="Abrir Gaveta" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="CutPaperButton" Content="Cortar Papel" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="BeepButton" Content="Emitir Beep" HorizontalAlignment="Stretch" />
+                </Grid>
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Classes="card">
+              <StackPanel Spacing="12">
+                <TextBlock Text="Diagnóstico e Pré-visualização" Classes="heading" Margin="0,2,0,3" />
+                <StackPanel>
+                  <TextBlock Classes="label" Text="MODELO DE CUPOM PARA PREVIEW" />
+                  <ComboBox Name="PreviewTemplateCombo" />
+                </StackPanel>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="GeneratePreviewButton" Classes="primary" Content="Gerar Preview" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="SavePreviewButton" Content="Salvar Preview PNG" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid ColumnDefinitions="*,10,*">
+                  <Button Name="ReadStatusButton" Content="Ler Status da Impressora" HorizontalAlignment="Stretch" />
+                  <Button Grid.Column="2" Name="ReadInfoButton" Content="Ler Informações" HorizontalAlignment="Stretch" />
+                </Grid>
+              </StackPanel>
+            </Border>
+          </Grid>
+          <Border Grid.Row="2" Classes="card" Padding="0" ClipToBounds="True">
+            <Grid RowDefinitions="Auto,*">
+              <Grid ColumnDefinitions="*,Auto,Auto" Margin="18,12,14,8">
+                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                  <TextBlock Classes="heading" Text="Retorno e Pré-visualização" FontSize="14" />
+                  <TextBlock Name="LastOperationText" Classes="muted" FontSize="11" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button Grid.Column="1" Name="CopyButton" Content="Copiar" MinHeight="28" Padding="10,5" Margin="0,0,8,0" />
+                <Button Grid.Column="2" Name="ClearButton" Content="Limpar" MinHeight="28" Padding="10,5" />
+              </Grid>
+              <TabControl Grid.Row="1" Name="ResponseTabs" Margin="10,0,10,10">
+                <TabItem Header="Preview do Cupom">
+                  <Border Background="#1E293B" CornerRadius="8" Margin="4" ClipToBounds="True">
+                    <Grid>
+                      <StackPanel Name="PreviewEmptyState" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+                        <TextBlock Text="Nenhum preview gerado" Foreground="#E2E8F0" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                        <TextBlock Text="Selecione um modelo de cupom acima e clique em 'Gerar Preview' para visualizar a bobina térmica." Foreground="#94A3B8" FontSize="12" HorizontalAlignment="Center" />
+                      </StackPanel>
+                      <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="20">
+                        <Image Name="PreviewImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                      </ScrollViewer>
+                    </Grid>
+                  </Border>
+                </TabItem>
+                <TabItem Header="Resultado">
+                  <TextBox Name="ResultText" Classes="code" TextWrapping="Wrap" Text="Bem-vindo ao demo OpenAC.Net.EscPos.&#10;&#10;1. Configure o protocolo e a conexão na aba Configurações.&#10;2. Utilize os botões acima para testar impressões, ler status/informações ou gerar um Preview gráfico do cupom.&#10;3. Acompanhe o retorno e os logs nesta área." />
+                </TabItem>
+                <TabItem Header="Logs">
+                  <TextBox Name="LogText" Classes="code" />
+                </TabItem>
+              </TabControl>
+            </Grid>
+          </Border>
+        </Grid>
+        <ScrollViewer Name="SettingsPage" IsVisible="False">
+          <StackPanel Spacing="18">
+            <StackPanel Spacing="5">
+              <TextBlock Text="Configurações" Classes="heading" FontSize="19" />
+              <TextBlock Classes="muted" Text="Defina o protocolo ESC/POS, página de código e parâmetros de comunicação da impressora." />
+            </StackPanel>
+            <Grid ColumnDefinitions="*,18,*">
+              <Border Classes="card">
+                <StackPanel Spacing="14">
+                  <TextBlock Text="Protocolo e Formatação" Classes="heading" />
+                  <StackPanel>
+                    <TextBlock Classes="label" Text="PROTOCOLO ESC/POS" />
+                    <ComboBox Name="ProtocolCombo" />
+                  </StackPanel>
+                  <StackPanel>
+                    <TextBlock Classes="label" Text="PÁGINA DE CÓDIGO (ENCODING)" />
+                    <ComboBox Name="EncodingCombo" />
+                  </StackPanel>
+                  <Grid ColumnDefinitions="*,14,*">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="ESPAÇO ENTRE LINHAS" />
+                      <NumericUpDown Name="LineSpaceInput" Minimum="0" Maximum="255" Value="0" FormatString="0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                      <TextBlock Classes="label" Text="LINHAS ENTRE CUPONS" />
+                      <NumericUpDown Name="CouponLinesInput" Minimum="0" Maximum="255" Value="4" FormatString="0" />
+                    </StackPanel>
+                  </Grid>
+                  <CheckBox Name="PortControlCheck" Content="Controle automático de porta (abre e fecha ao enviar)" IsChecked="True" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="2" Classes="card">
+                <StackPanel Spacing="14">
+                  <TextBlock Text="Conexão com a Impressora" Classes="heading" />
+                  <StackPanel>
+                    <TextBlock Classes="label" Text="TIPO DE CONEXÃO" />
+                    <ComboBox Name="ConnectionTypeCombo" />
+                  </StackPanel>
+                  <StackPanel Name="SerialPanel" Spacing="12">
+                    <Grid ColumnDefinitions="*,14,*">
+                      <StackPanel>
+                        <TextBlock Classes="label" Text="PORTA SERIAL" />
+                        <Grid ColumnDefinitions="*,Auto">
+                          <ComboBox Name="SerialPortCombo" IsEditable="True" />
+                          <Button Grid.Column="1" Name="RefreshPortsButton" Content="Atualizar" Margin="8,0,0,0" />
+                        </Grid>
+                      </StackPanel>
+                      <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="VELOCIDADE (BAUD)" />
+                        <ComboBox Name="SerialBaudCombo" />
+                      </StackPanel>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,14,*">
+                      <StackPanel>
+                        <TextBlock Classes="label" Text="DATA BITS" />
+                        <ComboBox Name="SerialDataBitsCombo" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="PARIDADE" />
+                        <ComboBox Name="SerialParityCombo" />
+                      </StackPanel>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,14,*">
+                      <StackPanel>
+                        <TextBlock Classes="label" Text="STOP BITS" />
+                        <ComboBox Name="SerialStopBitsCombo" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="HANDSHAKE" />
+                        <ComboBox Name="SerialHandshakeCombo" />
+                      </StackPanel>
+                    </Grid>
+                  </StackPanel>
+                  <StackPanel Name="TcpPanel" Spacing="12" IsVisible="False">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="ENDEREÇO IP / HOST" />
+                      <TextBox Name="TcpIpText" PlaceholderText="Ex.: 192.168.0.100" />
+                    </StackPanel>
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="PORTA TCP" />
+                      <NumericUpDown Name="TcpPortInput" Minimum="1" Maximum="65535" Value="9100" FormatString="0" />
+                    </StackPanel>
+                  </StackPanel>
+                  <StackPanel Name="RawPanel" Spacing="12" IsVisible="False">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="NOME DA IMPRESSORA" />
+                      <ComboBox Name="RawPrinterCombo" IsEditable="True" />
+                    </StackPanel>
+                  </StackPanel>
+                  <StackPanel Name="FilePanel" Spacing="12" IsVisible="False">
+                    <StackPanel>
+                      <TextBlock Classes="label" Text="ARQUIVO DE SAÍDA" />
+                      <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Name="OutputFileText" PlaceholderText="Selecione ou digite o caminho do arquivo" />
+                        <Button Grid.Column="1" Name="BrowseOutputFileButton" Content="Procurar" Margin="8,0,0,0" />
+                      </Grid>
+                    </StackPanel>
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Name="ConfigurationPathText" Classes="muted" FontSize="11" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,16,0" />
+              <Button Grid.Column="1" Name="SaveSettingsButton" Classes="primary" Content="Salvar configurações" />
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+      <Border Grid.Row="2" Background="White" BorderBrush="#DCE7F7" BorderThickness="0,1,0,0" Padding="26,12">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <ProgressBar Name="BusyProgress" Width="68" Height="4" IsIndeterminate="True" IsVisible="False" Margin="0,0,12,0" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Name="StatusText" Classes="muted" Text="Pronto para operar" VerticalAlignment="Center" />
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>

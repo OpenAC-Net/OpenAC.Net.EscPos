@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -51,7 +51,6 @@ public class PosStarInterpreter : EscPosInterpreter
     /// <param name="enconder">Codificação a ser utilizada.</param>
     internal PosStarInterpreter(Encoding enconder) : base(enconder)
     {
-        Status = new EpsonStatusResolver();
     }
 
     #endregion Constructors
@@ -64,11 +63,12 @@ public class PosStarInterpreter : EscPosInterpreter
     /// </summary>
     protected override void IniciarInterpreter()
     {
-        Status = new EpsonStatusResolver();
+        Status = new PosStarStatusResolver();
         InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         commandos[CmdEscPos.Beep] = [CmdConst.ESC, CmdConst.GS, CmdConst.BELL, 1, 2, 5];
+        commandos[CmdEscPos.PaginaDeCodigo] = [CmdConst.FS, (byte)'.', CmdConst.ESC, (byte)'t'];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));
@@ -78,12 +78,12 @@ public class PosStarInterpreter : EscPosInterpreter
         CommandResolver.AddResolver<PrintLineCommand, DefaultPrintLineResolver>(new DefaultPrintLineResolver(Enconder, commandos));
         CommandResolver.AddResolver<JumpLineCommand, DefaultJumpLineResolver>(new DefaultJumpLineResolver(commandos));
         CommandResolver.AddResolver<CutCommand, DefaultCutResolver>(new DefaultCutResolver(commandos));
-        CommandResolver.AddResolver<CashDrawerCommand, DefaultCashDrawerResolver>(new DefaultCashDrawerResolver(commandos));
+        CommandResolver.AddResolver<CashDrawerCommand, PosStarCashDrawerResolver>(new PosStarCashDrawerResolver(commandos));
         CommandResolver.AddResolver<BeepCommand, DefaultBeepResolver>(new DefaultBeepResolver(commandos));
         CommandResolver.AddResolver<BarcodeCommand, DefaultBarcodeResolver>(new DefaultBarcodeResolver(Enconder, commandos));
         CommandResolver.AddResolver<LogoCommand, DefaultLogoResolver>(new DefaultLogoResolver(commandos));
         CommandResolver.AddResolver<QrCodeCommand, DefaultQrCodeResolver>(new DefaultQrCodeResolver(commandos));
-        CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos));
+        CommandResolver.AddResolver<ImageCommand, DefaultImageResolver>(new DefaultImageResolver(commandos, false));
         CommandResolver.AddResolver<ModoPaginaCommand, DefaultModoPaginaResolver>(new DefaultModoPaginaResolver(commandos));
     }
 

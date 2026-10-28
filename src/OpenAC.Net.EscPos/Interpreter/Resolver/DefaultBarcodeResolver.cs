@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -186,8 +186,8 @@ public sealed class DefaultBarcodeResolver : CommandResolver<BarcodeCommand>
             _ => []
         };
 
-        if (Commandos.ContainsKey(CmdEscPos.BarcodeWidth))
-            builder.Append(Commandos[CmdEscPos.BarcodeHeight], largura);
+        if (Commandos.TryGetValue(CmdEscPos.BarcodeWidth, out var widthCmd))
+            builder.Append(widthCmd, largura);
 
         if (Commandos.TryGetValue(CmdEscPos.BarcodeHeight, out var commando))
             builder.Append(commando, altura);

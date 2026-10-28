@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -47,17 +47,17 @@ public sealed class BemaInfoImpressoraResolver : InfoResolver<InformacoesImpress
     /// <param name="encoding">Codificação utilizada para decodificar os dados retornados pela impressora.</param>
     public BemaInfoImpressoraResolver(Encoding encoding) :
         base([
-                [CmdConst.GS, 249, 39, 0], [CmdConst.GS, 249, 39, 3], [CmdConst.GS, 249, 1], [CmdConst.GS, 249, 39, 49]
+                [CmdConst.GS, 249, 39, 0], [CmdConst.GS, 249, 39, 3], [CmdConst.GS, 249, 39, 1], [CmdConst.GS, 248, (byte)'1']
             ],
             (dados) =>
             {
                 if (dados.IsNullOrEmpty() || dados.Length < 4) return InformacoesImpressora.Empty;
 
-                var fabricante = string.Empty;
+                const string fabricante = "Bematech";
                 var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
                 var firmware = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
                 var serial = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var guilhotina = !dados[3].IsNullOrEmpty() && dados[3].Length >= 3 && dados[3][2].IsBitOn(2);
+                var guilhotina = !dados[3].IsNullOrEmpty() && dados[3].Length >= 3 && dados[3][2].IsBitOff(2);
 
                 return new InformacoesImpressora(fabricante, modelo, firmware, serial, guilhotina);
             })

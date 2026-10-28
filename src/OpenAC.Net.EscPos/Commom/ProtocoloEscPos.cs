@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -75,5 +75,13 @@ public enum ProtocoloEscPos
     /// <summary>
     /// Protocolo ESC/Sunmi.
     /// </summary>
-    EscSunmi
+    EscSunmi,
+    /// <summary>
+    /// Protocolo ESC/Epson P2.
+    /// </summary>
+    EscEpsonP2,
+    /// <summary>
+    /// Protocolo ESC/Custom Pos.
+    /// </summary>
+    EscCustomPos
 }

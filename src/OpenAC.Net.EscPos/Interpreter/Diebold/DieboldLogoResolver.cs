@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -29,7 +29,9 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
+using OpenAC.Net.Core.Extensions;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
@@ -62,7 +64,8 @@ public sealed class DieboldLogoResolver : CommandResolver<LogoCommand>
     /// <returns>Array de bytes correspondente ao comando.</returns>
     public override byte[] Resolve(LogoCommand command)
     {
-        return [];
+        var keyCode = new string([(char)command.KC1, (char)command.KC2]).ToInt32();
+        return [CmdConst.GS, (byte)'0', (byte)'9', (byte)Math.Min(keyCode, 9)];
     }
 
     #endregion Methods

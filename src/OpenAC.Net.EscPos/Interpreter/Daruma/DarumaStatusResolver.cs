@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -47,11 +47,12 @@ public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
         base([[CmdConst.ENQ], [CmdConst.GS, CmdConst.ENQ]],
             dados =>
             {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+                if (dados.IsNullOrEmpty() || dados.Length < 2 || dados[0].IsNullOrEmpty())
+                    return EscPosTipoStatus.ErroLeitura;
 
                 EscPosTipoStatus? status = null;
 
-                // Primeiro byte de status
+                // Primeiro byte de status (ENQ)
                 var b = dados[0][0];
                 if (b.IsBitOn(0))
                     status = EscPosTipoStatus.Imprimindo;
@@ -80,8 +81,18 @@ public sealed class DarumaStatusResolver : InfoResolver<EscPosTipoStatus>
                     else
                         status = EscPosTipoStatus.TampaAberta;
 
-                // Segundo byte de status
-                b = dados[0][1];
+                // Segundo byte de status (GS + ENQ)
+                if (dados[1].IsNullOrEmpty())
+                {
+                    if (status.HasValue)
+                        status |= EscPosTipoStatus.ErroLeitura;
+                    else
+                        status = EscPosTipoStatus.ErroLeitura;
+
+                    return status.Value;
+                }
+
+                b = dados[1][0];
                 if (b.IsBitOn(0))
                     if (status.HasValue)
                         status |= EscPosTipoStatus.PoucoPapel;

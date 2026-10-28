@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -52,9 +52,10 @@ public sealed class DarumaInfoImpressoraResolver : InfoResolver<InformacoesImpre
                 if (dados.IsNullOrEmpty()) return InformacoesImpressora.Empty;
                 if (dados.Length < 3) return InformacoesImpressora.Empty;
 
-                var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var firmware = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var guilhotina = dados[2].IsNullOrEmpty() && encoding.GetString(dados[2]).Substring(8, 1) == "1";
+                var modelo = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_', ':').Replace("\0", string.Empty);
+                var firmware = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_', ':').Replace("\0", string.Empty);
+                var info229 = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]);
+                var guilhotina = info229.Length >= 9 && info229.Substring(8, 1) == "1";
 
                 return new InformacoesImpressora("Daruma", modelo, firmware, "", guilhotina);
             })

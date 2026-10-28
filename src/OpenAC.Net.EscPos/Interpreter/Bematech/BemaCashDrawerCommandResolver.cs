@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -67,8 +67,8 @@ public sealed class BemaCashDrawerCommandResolver : CommandResolver<CashDrawerCo
         var tempo = Math.Max(command.TempoON, command.TempoOFF);
         return command.Gaveta switch
         {
-            CmdGaveta.GavetaUm => [CmdConst.ESC, 128, tempo],
-            CmdGaveta.GavetaDois => [CmdConst.ESC, (byte)'v', tempo],
+            CmdGaveta.GavetaUm => [CmdConst.ESC, (byte)'v', tempo],
+            CmdGaveta.GavetaDois => [CmdConst.ESC, 128, tempo],
             _ => throw new ArgumentOutOfRangeException()
         };
     }

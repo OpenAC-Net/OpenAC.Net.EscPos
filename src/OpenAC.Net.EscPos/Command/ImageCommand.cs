@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Drawing;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 
@@ -60,9 +59,9 @@ public sealed class ImageCommand : PrintCommand<ImageCommand>
     public CmdAlinhamento Alinhamento { get; set; } = CmdAlinhamento.Esquerda;
 
     /// <summary>
-    /// Obtém ou define a imagem a ser impressa.
+    /// Obtém ou define os bytes da imagem a ser impressa.
     /// </summary>
-    public Image? Imagem { get; set; }
+    public byte[]? Imagem { get; set; }
 
     /// <summary>
     /// Indica se a imagem é HiDPI.

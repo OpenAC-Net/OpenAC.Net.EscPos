@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -39,17 +39,14 @@ internal static class CmdConst
     /// <summary>Nulo (NUL).</summary>
     public static byte NUL => 0;
 
+    /// <summary>End of Transmission (EOT).</summary>
+    public static byte EOT => 4;
+
     /// <summary>Enquiry (ENQ).</summary>
     public static byte ENQ => 5;
 
-    /// <summary>Escape (ESC).</summary>
-    public static byte ESC => 27;
-
-    /// <summary>File Separator (FS).</summary>
-    public static byte FS => 28;
-
-    /// <summary>Group Separator (GS).</summary>
-    public static byte GS => 29;
+    /// <summary>Bell (BELL).</summary>
+    public static byte BELL => 7;
 
     /// <summary>Backspace (BS).</summary>
     public static byte BS => 8;
@@ -69,6 +66,9 @@ internal static class CmdConst
     /// <summary>Shift In (SI).</summary>
     public static byte SI => 15;
 
+    /// <summary>Data Link Escape (DLE).</summary>
+    public static byte DLE => 16;
+
     /// <summary>Device Control 2 (DC2).</summary>
     public static byte DC2 => 18;
 
@@ -78,6 +78,12 @@ internal static class CmdConst
     /// <summary>Synchronous Idle (SYN).</summary>
     public static byte SYN => 22;
 
-    /// <summary>Bell (BELL).</summary>
-    public static byte BELL => 7;
+    /// <summary>Escape (ESC).</summary>
+    public static byte ESC => 27;
+
+    /// <summary>File Separator (FS).</summary>
+    public static byte FS => 28;
+
+    /// <summary>Group Separator (GS).</summary>
+    public static byte GS => 29;
 }

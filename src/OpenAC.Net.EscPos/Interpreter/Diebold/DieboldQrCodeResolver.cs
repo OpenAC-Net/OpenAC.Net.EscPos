@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -69,11 +69,11 @@ public sealed class DieboldQrCodeResolver : CommandResolver<QrCodeCommand>
         var pL = (byte)(num % 256);
         var pH = (byte)(num / 256);
 
-        var initial = Commandos[CmdEscPos.QrCodeInitial];
+        var initial = new byte[] { CmdConst.ESC, (byte)'(', (byte)'k' };
         using var builder = new ByteArrayBuilder();
         builder.Append(initial, new byte[] { 3, 0, (byte)'1', (byte)'B' });
-        builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)0 : (byte)1); // 0 - A esquerda, 1 - Centralizar
-        builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo); // Error Level
+        builder.Append(command.Alinhamento == CmdAlinhamento.Esquerda ? (byte)'0' : (byte)'1'); // '0' - A esquerda, '1' - Centralizar
+        builder.Append(initial, Commandos[CmdEscPos.QrCodeSize], (byte)command.LarguraModulo);
         builder.Append(initial, Commandos[CmdEscPos.QrCodeError], (byte)command.ErrorLevel);
         builder.Append(initial, pL, pH, Commandos[CmdEscPos.QrCodeStore]);
         builder.Append(Encoding.UTF8.GetBytes(command.Code));

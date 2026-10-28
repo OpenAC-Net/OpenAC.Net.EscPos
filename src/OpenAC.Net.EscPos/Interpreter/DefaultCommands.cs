@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -127,8 +127,8 @@ public static class DefaultCommands
             // Diversos
             {CmdEscPos.Zera, [CmdConst.ESC, (byte) '@'] },
             {CmdEscPos.Beep, [CmdConst.ESC, (byte) '(', (byte) 'A', 4, 0, 1, 2, 1, 0] },
-            {CmdEscPos.EspacoEntreLinhasPadrao, [CmdConst.ESC, 2] },
-            {CmdEscPos.EspacoEntreLinhas, [CmdConst.ESC, 3] },
+            {CmdEscPos.EspacoEntreLinhasPadrao, [CmdConst.ESC, (byte)'2'] },
+            {CmdEscPos.EspacoEntreLinhas, [CmdConst.ESC, (byte)'3'] },
             {CmdEscPos.PaginaDeCodigo, [CmdConst.ESC, (byte)'t'] },
             {CmdEscPos.PuloDeLinha, [CmdConst.LF] },
 
@@ -138,7 +138,7 @@ public static class DefaultCommands
             {CmdEscPos.AlinhadoDireita, [CmdConst.ESC, (byte)'a', 2] },
 
             // Fonte
-            {CmdEscPos.FonteNormal, [CmdConst.ESC, (byte)'!', 0, CmdConst.ESC, (byte)'H', CmdConst.ESC, 5] },
+            {CmdEscPos.FonteNormal, [CmdConst.ESC, (byte)'!', 0, CmdConst.ESC, (byte)'H', CmdConst.ESC, (byte)'5'] },
             {CmdEscPos.FonteA, [CmdConst.ESC, (byte)'H'] },
             {CmdEscPos.FonteB, [CmdConst.ESC, CmdConst.SI] },
             {CmdEscPos.LigaExpandido, [CmdConst.ESC, (byte)'W', 1] },
@@ -150,6 +150,8 @@ public static class DefaultCommands
             {CmdEscPos.DesligaNegrito, [CmdConst.ESC, (byte)'F'] },
             {CmdEscPos.LigaSublinhado, [CmdConst.ESC, (byte)'-', 1] },
             {CmdEscPos.DesligaSublinhado, [CmdConst.ESC, (byte)'-', 0] },
+            {CmdEscPos.LigaItalico, [CmdConst.ESC, (byte)'4'] },
+            {CmdEscPos.DesligaItalico, [CmdConst.ESC, (byte)'5'] },
             {CmdEscPos.LigaAlturaDupla, [CmdConst.ESC, (byte)'d', 1] },
             {CmdEscPos.DesligaAlturaDupla, [CmdConst.ESC, (byte)'d', 0] },
 

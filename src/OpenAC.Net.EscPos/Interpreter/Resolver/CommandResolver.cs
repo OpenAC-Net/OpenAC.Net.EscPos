@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -73,7 +73,7 @@ public abstract class CommandResolver<TCommand> : ICommandResolver where TComman
     public abstract byte[] Resolve(TCommand command);
 
     /// <inheritdoc />
-    byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve(command as TCommand);
+    byte[] ICommandResolver.Resolve(IPrintCommand command) => Resolve((TCommand)command);
 
     #endregion Methods
 }

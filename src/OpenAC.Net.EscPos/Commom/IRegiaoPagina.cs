@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -29,7 +29,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Drawing;
 using OpenAC.Net.EscPos.Command;
 
 namespace OpenAC.Net.EscPos.Commom;
@@ -258,10 +257,10 @@ public interface IRegiaoPagina
     /// <summary>
     /// Adiciona o comando para imprimir imagem ao buffer.
     /// </summary>
-    /// <param name="imagem">Imagem a ser impressa.</param>
+    /// <param name="imagem">Bytes da imagem a ser impressa.</param>
     /// <param name="aAlinhamento">Alinhamento da imagem.</param>
     /// <param name="isHdpi">Indica se a imagem é de alta densidade.</param>
-    void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false);
+    void ImprimirImagem(byte[] imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false);
 
     #endregion Methods
 }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -80,16 +80,19 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
 
         switch (cmd.Fonte)
         {
-            case CmdFonte.Normal when Commandos.ContainsKey(CmdEscPos.FonteNormal):
-                builder.Append(Commandos[CmdEscPos.FonteNormal]);
+            case CmdFonte.Normal:
+                if (Commandos.TryGetValue(CmdEscPos.FonteNormal, out var fonteNormal))
+                    builder.Append(fonteNormal);
                 break;
 
-            case CmdFonte.FonteA when Commandos.ContainsKey(CmdEscPos.FonteA):
-                builder.Append(Commandos[CmdEscPos.FonteA]);
+            case CmdFonte.FonteA:
+                if (Commandos.TryGetValue(CmdEscPos.FonteA, out var fonteA))
+                    builder.Append(fonteA);
                 break;
 
-            case CmdFonte.FonteB when Commandos.ContainsKey(CmdEscPos.FonteB):
-                builder.Append(Commandos[CmdEscPos.FonteB]);
+            case CmdFonte.FonteB:
+                if (Commandos.TryGetValue(CmdEscPos.FonteB, out var fonteB))
+                    builder.Append(fonteB);
                 break;
 
             default:
@@ -98,16 +101,19 @@ public sealed class DefaultTextSliceResolver : CommandResolver<TextSliceCommand>
 
         switch (cmd.Alinhamento)
         {
-            case CmdAlinhamento.Esquerda when Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda):
-                builder.Append(Commandos[CmdEscPos.AlinhadoEsquerda]);
+            case CmdAlinhamento.Esquerda:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoEsquerda, out var alinhadoEsquerda))
+                    builder.Append(alinhadoEsquerda);
                 break;
 
-            case CmdAlinhamento.Centro when Commandos.ContainsKey(CmdEscPos.AlinhadoCentro):
-                builder.Append(Commandos[CmdEscPos.AlinhadoCentro]);
+            case CmdAlinhamento.Centro:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoCentro, out var alinhadoCentro))
+                    builder.Append(alinhadoCentro);
                 break;
 
-            case CmdAlinhamento.Direita when Commandos.ContainsKey(CmdEscPos.AlinhadoDireita):
-                builder.Append(Commandos[CmdEscPos.AlinhadoDireita]);
+            case CmdAlinhamento.Direita:
+                if (Commandos.TryGetValue(CmdEscPos.AlinhadoDireita, out var alinhadoDireita))
+                    builder.Append(alinhadoDireita);
                 break;
 
             default:

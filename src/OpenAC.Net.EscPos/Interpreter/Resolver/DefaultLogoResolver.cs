@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -74,7 +74,7 @@ public sealed class DefaultLogoResolver : CommandResolver<LogoCommand>
         // Nesse caso, vamos usar o comando "FS + 'p'", para tal, informe:
         // KeyCode1:= 1..255; KeyCode2:= 0
 
-        var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is < 32 or > 126) ? (byte)((char)keycode).ToInt32() : keycode);
+        var keyCodeUnico = new Func<byte, byte>(keycode => (keycode is >= 48 and <= 57) ? (byte)((char)keycode).ToInt32() : keycode);
 
         if (command.KC2 != 0)
             return Commandos[CmdEscPos.LogoNew].Concat([command.KC1, command.KC2, command.FatorX, command.FatorY]).ToArray();

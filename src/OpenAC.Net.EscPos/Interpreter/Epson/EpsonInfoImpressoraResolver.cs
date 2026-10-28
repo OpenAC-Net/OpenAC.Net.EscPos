@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -37,9 +37,17 @@ using OpenAC.Net.EscPos.Interpreter.Resolver;
 
 namespace OpenAC.Net.EscPos.Interpreter.Epson;
 
+/// <summary>
+/// Resolver para obter informações da impressora no padrão Epson ESC/POS.
+/// </summary>
 public sealed class EpsonInfoImpressoraResolver : InfoResolver<InformacoesImpressora>
 {
-    public EpsonInfoImpressoraResolver(Encoding encoding) :
+    /// <summary>
+    /// Inicializa uma nova instância de <see cref="EpsonInfoImpressoraResolver"/>.
+    /// </summary>
+    /// <param name="encoding">Codificação utilizada para decodificar os dados retornados pela impressora.</param>
+    /// <param name="fabricantePadrao">Nome do fabricante padrão caso não seja retornado pela impressora.</param>
+    public EpsonInfoImpressoraResolver(Encoding encoding, string? fabricantePadrao = null) :
         base([
                 [CmdConst.GS, 73, 66], [CmdConst.GS, 73, 67], [CmdConst.GS, 73, 65], [CmdConst.GS, 73, 68], [CmdConst.GS, 73, 50
                 ]
@@ -50,11 +58,13 @@ public sealed class EpsonInfoImpressoraResolver : InfoResolver<InformacoesImpres
 
                 var bitTest = new Func<int, byte, bool>((value, index) => ((value >> index) & 1) == 1);
 
-                var fabricante = dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
+                var fabricante = !string.IsNullOrWhiteSpace(fabricantePadrao)
+                    ? fabricantePadrao!
+                    : dados[0].IsNullOrEmpty() ? "" : encoding.GetString(dados[0]).Trim().TrimStart('_').Replace("\0", string.Empty);
                 var modelo = dados[1].IsNullOrEmpty() ? "" : encoding.GetString(dados[1]).Trim().TrimStart('_').Replace("\0", string.Empty);
                 var firmware = dados[2].IsNullOrEmpty() ? "" : encoding.GetString(dados[2]).Trim().TrimStart('_').Replace("\0", string.Empty);
                 var serial = dados[3].IsNullOrEmpty() ? "" : encoding.GetString(dados[3]).Trim().TrimStart('_').Replace("\0", string.Empty);
-                var guilhotina = !dados[4].IsNullOrEmpty() && bitTest(dados[4][0], 1);
+                var guilhotina = dados.Length >= 5 && !dados[4].IsNullOrEmpty() && bitTest(dados[4][0], 1);
 
                 return new InformacoesImpressora(fabricante, modelo, firmware, serial, guilhotina);
             })

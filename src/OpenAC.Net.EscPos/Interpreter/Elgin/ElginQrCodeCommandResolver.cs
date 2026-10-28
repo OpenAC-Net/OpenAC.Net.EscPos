@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -67,8 +67,6 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
     /// <exception cref="ArgumentOutOfRangeException">Lançada quando o alinhamento, tipo ou nível de erro é inválido.</exception>
     public override byte[] Resolve(QrCodeCommand command)
     {
-        if (!Commandos.ContainsKey(CmdEscPos.QrCodeInitial)) return [];
-
         using var builder = new ByteArrayBuilder();
 
         switch (command.Alinhamento)
@@ -90,55 +88,32 @@ public sealed class ElginQrCodeCommandResolver : CommandResolver<QrCodeCommand>
         }
 
         // Symbol type: 1:Original type 2:Enhanced type(Recommended)
-        byte tipo;
-        switch (command.Tipo)
+        byte tipo = command.Tipo switch
         {
-            case QrCodeTipo.Model1:
-                tipo = 1;
-                break;
+            QrCodeTipo.Model1 => 1,
+            QrCodeTipo.Micro or QrCodeTipo.Model2 => 2,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-            case QrCodeTipo.Micro:
-            case QrCodeTipo.Model2:
-                tipo = 2;
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        byte error;
-        switch (command.ErrorLevel)
+        byte error = command.ErrorLevel switch
         {
-            case QrCodeErrorLevel.LevelL:
-                error = (byte)'L';
-                break;
-
-            case QrCodeErrorLevel.LevelM:
-                error = (byte)'M';
-                break;
-
-            case QrCodeErrorLevel.LevelQ:
-                error = (byte)'Q';
-                break;
-
-            case QrCodeErrorLevel.LevelH:
-                error = (byte)'H';
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+            QrCodeErrorLevel.LevelL => (byte)'L',
+            QrCodeErrorLevel.LevelM => (byte)'M',
+            QrCodeErrorLevel.LevelQ => (byte)'Q',
+            QrCodeErrorLevel.LevelH => (byte)'H',
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
         builder.Append([CmdConst.GS, (byte)'o', 0]);  // Define parâmetros do QR Code
         builder.Append((byte)command.LarguraModulo); // Largura do módulo básico
-        builder.Append(0); // Modo de idioma: 0:Chinês 1:Japonês
+        builder.Append((byte)0); // Modo de idioma: 0:Chinês 1:Japonês
         builder.Append(tipo); // Tipo do símbolo: 1:Original 2:Recomendado
         builder.Append([CmdConst.GS, (byte)'k']); // Código de barras
-        builder.Append(11); // Tipo = QRCode. Número de caracteres: 4-928
+        builder.Append((byte)11); // Tipo = QRCode. Número de caracteres: 4-928
         builder.Append(error);
-        builder.Append('A'); // Modo de entrada de dados: A-automático (Recomendado)
+        builder.Append([(byte)'A', (byte)',']); // Modo de entrada de dados: A-automático (Recomendado)
         builder.Append(Encoding.UTF8.GetBytes(command.Code));
-        builder.Append(0);
+        builder.Append((byte)0);
 
         // Volta alinhamento para Esquerda.
         if (Commandos.ContainsKey(CmdEscPos.AlinhadoEsquerda) && command.Alinhamento != CmdAlinhamento.Esquerda)

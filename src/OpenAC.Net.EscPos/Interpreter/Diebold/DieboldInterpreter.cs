@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -64,11 +64,12 @@ public sealed class DieboldInterpreter : EscPosInterpreter
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();
+        InfoImpressora = new EpsonInfoImpressoraResolver(Enconder, "Diebold");
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         commandos[CmdEscPos.DesligaExpandido] = [CmdConst.ESC, (byte)'!', 0];
-        commandos[CmdEscPos.LigaItalico] = [CmdConst.ESC, 4];
-        commandos[CmdEscPos.DesligaItalico] = [CmdConst.ESC, 5];
+        commandos[CmdEscPos.LigaItalico] = [CmdConst.ESC, (byte)'4'];
+        commandos[CmdEscPos.DesligaItalico] = [CmdConst.ESC, (byte)'5'];
 
         CommandResolver.AddResolver<CodePageCommand, DefaultCodePageResolver>(new DefaultCodePageResolver(commandos));
         CommandResolver.AddResolver<TextCommand, DefaultTextResolver>(new DefaultTextResolver(Enconder, commandos));

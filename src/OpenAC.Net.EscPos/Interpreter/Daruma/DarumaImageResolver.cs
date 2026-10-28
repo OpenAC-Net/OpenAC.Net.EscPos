@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -31,12 +31,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Extensions;
 using OpenAC.Net.EscPos.Interpreter.Resolver;
+using SkiaSharp;
 
 namespace OpenAC.Net.EscPos.Interpreter.Daruma;
 
@@ -66,7 +66,10 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
     /// <returns>Array de bytes com os comandos para impressão da imagem.</returns>
     public override byte[] Resolve(ImageCommand command)
     {
-        if (command.Imagem == null) return [];
+        if (command.Imagem == null || command.Imagem.Length == 0) return [];
+
+        using var bmp = SKBitmap.Decode(command.Imagem);
+        if (bmp == null) return [];
 
         using var builder = new ByteArrayBuilder();
 
@@ -87,9 +90,6 @@ public sealed class DarumaImageResolver : CommandResolver<ImageCommand>
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        var bmp = new Bitmap(command.Imagem);
-        var data = new[] { (byte)'\x00', (byte)'\x00', (byte)'\x00' };
 
         // ESC * m nL nH d1…dk   Seleciona modo bitmap
         byte[] escBmp = [27, 42, 33, (byte)(bmp.Width % 256), (byte)(bmp.Width / 256)];

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -44,10 +44,10 @@ public sealed class EpsonStatusResolver : InfoResolver<EscPosTipoStatus>
     /// Inicializa uma nova instância da classe <see cref="EpsonStatusResolver"/>.
     /// </summary>
     public EpsonStatusResolver() :
-        base([[16, 4, 1], [16, 4, 2], [16, 4, 4]],
+        base([[CmdConst.DLE, CmdConst.EOT, 1], [CmdConst.DLE, CmdConst.EOT, 2], [CmdConst.DLE, CmdConst.EOT, 4]],
             (dados) =>
             {
-                if (dados.IsNullOrEmpty() || dados.Length < 3) return EscPosTipoStatus.ErroLeitura;
+                if (dados.IsNullOrEmpty() || dados.Length < 3 || dados[0].IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
 
                 EscPosTipoStatus? status = null;
 

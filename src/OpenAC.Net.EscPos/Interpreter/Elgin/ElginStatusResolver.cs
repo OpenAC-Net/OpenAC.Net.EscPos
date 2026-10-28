@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -44,10 +44,10 @@ public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
     /// Inicializa uma nova instância da classe <see cref="ElginStatusResolver"/>.
     /// </summary>
     public ElginStatusResolver() :
-        base([[5]],
+        base([[CmdConst.ENQ]],
             dados =>
             {
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
+                if (dados.IsNullOrEmpty() || dados[0].IsNullOrEmpty()) return EscPosTipoStatus.ErroLeitura;
 
                 EscPosTipoStatus? status = null;
 
@@ -67,7 +67,7 @@ public sealed class ElginStatusResolver : InfoResolver<EscPosTipoStatus>
                     else
                         status = EscPosTipoStatus.GavetaAberta;
 
-                if (b.IsBitOn(3))
+                if (b.IsBitOff(3))
                     if (status.HasValue)
                         status |= EscPosTipoStatus.TampaAberta;
                     else

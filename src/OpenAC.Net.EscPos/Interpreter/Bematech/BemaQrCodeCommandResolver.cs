@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -99,7 +99,7 @@ public sealed class BemaQrCodeCommandResolver : CommandResolver<QrCodeCommand>
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        builder.Append([CmdConst.GS, 107, 81, erroLevel, (byte)command.LarguraModulo, 0, 1, pL, pH]);
+        builder.Append([CmdConst.GS, 107, 81, erroLevel, (byte)((byte)command.LarguraModulo * 2), 0, 1, pL, pH]);
         builder.Append(Encoding.UTF8.GetBytes(command.Code));
 
         // Volta alinhamento para Esquerda.

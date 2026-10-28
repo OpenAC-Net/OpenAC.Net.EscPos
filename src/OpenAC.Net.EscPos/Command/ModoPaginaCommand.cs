@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -154,7 +154,11 @@ public sealed class ModoPaginaCommand : PrintCommand<ModoPaginaCommand>, IModoPa
     /// Remove uma região de impressão do modo página.
     /// </summary>
     /// <param name="regiao">Região a ser removida.</param>
-    public void RemoverRegiao(IRegiaoPagina regiao) => regioes.Remove(regiao as ModoPaginaRegiao);
+    public void RemoverRegiao(IRegiaoPagina regiao)
+    {
+        if (regiao is ModoPaginaRegiao item)
+            regioes.Remove(item);
+    }
 
     #endregion Methods
 }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -31,7 +31,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using OpenAC.Net.Core;
@@ -42,6 +42,7 @@ using OpenAC.Net.Devices.Commom;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
+using OpenAC.Net.EscPos.Preview;
 
 namespace OpenAC.Net.EscPos;
 
@@ -101,8 +102,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
             if (protocolo == value) return;
 
             protocolo = value;
-
-            interpreter = null;
             interpreter = EscPosInterpreterFactory.Create(value, PaginaCodigo);
         }
     }
@@ -119,8 +118,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
             if (paginaCodigo == value) return;
 
             paginaCodigo = value;
-
-            interpreter = null;
             interpreter = EscPosInterpreterFactory.Create(protocolo, value);
         }
     }
@@ -252,7 +249,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         }
 
         if (builder.Length > 0)
-            device.Write(builder.ToArray());
+            device!.Write(builder.ToArray());
 
         inicializada = true;
     }
@@ -263,8 +260,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void Clear()
     {
         this.Log().Debug("Clear");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
         commands.Clear();
     }
 
@@ -280,7 +275,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         var cmd = new ZeraCommand(interpreter);
         var dados = cmd.Content;
 
-        device.Write(dados);
+        device!.Write(dados);
         inicializada = false;
         Inicializar();
     }
@@ -291,8 +286,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void Beep()
     {
         this.Log().Debug("Beep");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         var cmd = new BeepCommand(interpreter);
         commands.Add(cmd);
@@ -307,24 +300,22 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
-        if (interpreter.Status == null) return EscPosTipoStatus.ErroLeitura;
+        if (!device!.CanRead) return EscPosTipoStatus.ApenasEscrita;
+        if (interpreter.Status == null || interpreter.Status.Commands.IsNullOrEmpty()) return EscPosTipoStatus.Nenhum;
 
         try
         {
-            byte[][] ret;
+            tentativas = Math.Max(1, tentativas);
             var leituras = 0;
+            EscPosTipoStatus status;
             do
             {
                 var dados = interpreter.Status.Commands;
-                if (dados.IsNullOrEmpty()) return EscPosTipoStatus.Nenhum;
-
-                ret = dados.Select(dado => device.WriteRead(dado, 10)).ToArray();
+                var ret = dados.Select(dado => device.WriteRead(dado, 10)).ToArray();
+                status = interpreter.Status.Resolve(ret);
                 leituras++;
-            } while (leituras < tentativas && !ret.Any());
+            } while (leituras < tentativas && status.HasFlag(EscPosTipoStatus.ErroLeitura));
 
-            if (!ret.Any()) return EscPosTipoStatus.ErroLeitura;
-
-            var status = interpreter.Status.Resolve(ret);
             if (!Gaveta.SinalInvertido) return status;
 
             if (status.HasFlag(EscPosTipoStatus.GavetaAberta))
@@ -349,7 +340,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
-        if (interpreter.InfoImpressora == null) return InformacoesImpressora.Empty;
+        if (!device!.CanRead || interpreter.InfoImpressora == null) return InformacoesImpressora.Empty;
 
         try
         {
@@ -357,7 +348,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
             if (dados.IsNullOrEmpty()) return null;
 
             var ret = dados.Select(dado => device.WriteRead(dado, 500)).ToArray();
-            return !ret.Any() ? InformacoesImpressora.Empty : interpreter.InfoImpressora.Resolve(ret);
+            return ret.All(x => x.IsNullOrEmpty()) ? InformacoesImpressora.Empty : interpreter.InfoImpressora.Resolve(ret);
         }
         catch (Exception ex)
         {
@@ -373,8 +364,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void PularLinhas(byte aLinhas = 0)
     {
         this.Log().Debug("PularLinhas");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         var cmd = new JumpLineCommand(interpreter)
         {
@@ -392,8 +381,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new PrintLineCommand(interpreter)
         {
             Tamanho = Colunas,
@@ -410,8 +397,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void CortarPapel(bool parcial = false)
     {
         this.Log().Debug($"CortarPapel {(parcial ? "Parcial" : "Total")}");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         commands.Add(new JumpLineCommand(interpreter)
         {
@@ -431,8 +416,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void AbrirGaveta(CmdGaveta aGaveta = CmdGaveta.GavetaUm)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name} {(byte)aGaveta}");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         var cmd = new CashDrawerCommand(interpreter)
         {
@@ -454,8 +437,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     public void ImprimirLogo(byte? kc1 = null, byte? kc2 = null, byte? fatorX = null, byte? fatorY = null)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         var cmd = new LogoCommand(interpreter)
         {
@@ -564,8 +545,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new TextCommand(interpreter)
         {
             Texto = aTexto,
@@ -630,8 +609,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new TextSliceCommand(interpreter)
         {
             Fonte = fonte,
@@ -678,8 +655,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new BarcodeCommand(interpreter)
         {
             Tipo = barcode,
@@ -715,8 +690,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new QrCodeCommand(interpreter)
         {
             Code = texto,
@@ -732,14 +705,12 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     /// <summary>
     /// Adiciona o comando para imprimir imagem ao buffer.
     /// </summary>
-    /// <param name="imagem">Imagem a ser impressa.</param>
+    /// <param name="imagem">Bytes da imagem a ser impressa.</param>
     /// <param name="aAlinhamento">Alinhamento da imagem.</param>
     /// <param name="isHdpi">Se verdadeiro, imprime em alta densidade.</param>
-    public void ImprimirImagem(Image imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
+    public void ImprimirImagem(byte[] imagem, CmdAlinhamento aAlinhamento = CmdAlinhamento.Esquerda, bool isHdpi = false)
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
-
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
 
         commands.Add(new EspacoEntreLinhasCommand(interpreter) { Espaco = 16 });
 
@@ -761,8 +732,6 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
     {
         this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
 
-        Guard.Against<OpenException>(!Conectado, "A porta não está aberta");
-
         var cmd = new ModoPaginaCommand(interpreter)
         {
             EspacoEntreLinhas = EspacoEntreLinhas,
@@ -773,6 +742,36 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         };
         commands.Add(cmd);
         return cmd;
+    }
+
+    /// <summary>
+    /// Gera uma imagem (PNG em array de bytes) de pré-visualização dos comandos que estão no buffer de impressão.
+    /// </summary>
+    /// <param name="limparBuffer">Se verdadeiro, limpa o buffer de comandos após gerar o preview.</param>
+    /// <returns>Um array de bytes contendo a imagem PNG de pré-visualização do cupom.</returns>
+    public byte[] GerarPreview(bool limparBuffer = false)
+    {
+        this.Log().Debug($"{MethodBase.GetCurrentMethod()?.Name}");
+
+        var pngBytes = EscPosPreviewRenderer.Render(commands, interpreter, Colunas, EspacoEntreLinhas);
+
+        if (limparBuffer)
+            commands.Clear();
+
+        return pngBytes;
+    }
+
+    /// <summary>
+    /// Gera uma imagem PNG de pré-visualização dos comandos do buffer e grava no <see cref="Stream"/> informado.
+    /// </summary>
+    /// <param name="stream">Stream de destino onde a imagem será gravada.</param>
+    /// <param name="limparBuffer">Se verdadeiro, limpa o buffer de comandos após gerar o preview.</param>
+    public void GerarPreview(Stream stream, bool limparBuffer = false)
+    {
+        Guard.Against<ArgumentNullException>(stream == null, $"{nameof(stream)} não pode ser nulo.");
+
+        var pngBytes = GerarPreview(limparBuffer);
+        stream!.Write(pngBytes, 0, pngBytes.Length);
     }
 
     /// <summary>
@@ -798,7 +797,7 @@ public abstract class EscPosPrinter : OpenDisposable, IOpenLog
         var dados = builder.ToArray();
 
         for (var i = 0; i < copias; i++)
-            device.Write(dados);
+            device!.Write(dados);
 
         Clear();
     }

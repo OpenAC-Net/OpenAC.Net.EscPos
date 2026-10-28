@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -58,12 +58,12 @@ public abstract class PrintCommand<TCommand> : IPrintCommand, IOpenLog where TCo
     /// <summary>
     /// Obtém o conteúdo em bytes do comando processado pelo interpretador.
     /// </summary>
-    public byte[] Content => Interpreter?.ProcessCommand(this as TCommand);
+    public byte[] Content => Interpreter.ProcessCommand((TCommand)this);
 
     /// <summary>
     /// Obtém o interpretador ESC/POS associado ao comando.
     /// </summary>
-    protected EscPosInterpreter? Interpreter { get; }
+    protected EscPosInterpreter Interpreter { get; }
 
     #endregion Properties
 }

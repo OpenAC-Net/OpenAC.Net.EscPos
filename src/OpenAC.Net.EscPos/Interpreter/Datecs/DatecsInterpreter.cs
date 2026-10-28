@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -63,6 +63,7 @@ public class DatecsInterpreter : EscPosInterpreter
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();
+        InfoImpressora = new DatecsInfoImpressoraResolver(Enconder);
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         commandos[CmdEscPos.Beep] = [CmdConst.BELL];

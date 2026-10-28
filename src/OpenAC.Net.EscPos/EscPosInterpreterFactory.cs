@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Assembly         : OpenAC.Net.EscPos
 // Author           : Rafael Dias
 // Created          : 17-03-2022
@@ -35,11 +35,13 @@ using OpenAC.Net.Core;
 using OpenAC.Net.EscPos.Commom;
 using OpenAC.Net.EscPos.Interpreter;
 using OpenAC.Net.EscPos.Interpreter.Bematech;
+using OpenAC.Net.EscPos.Interpreter.CustomPos;
 using OpenAC.Net.EscPos.Interpreter.Daruma;
 using OpenAC.Net.EscPos.Interpreter.Datecs;
 using OpenAC.Net.EscPos.Interpreter.Diebold;
 using OpenAC.Net.EscPos.Interpreter.Elgin;
 using OpenAC.Net.EscPos.Interpreter.Epson;
+using OpenAC.Net.EscPos.Interpreter.EpsonP2;
 using OpenAC.Net.EscPos.Interpreter.GPrinter;
 using OpenAC.Net.EscPos.Interpreter.PosStar;
 using OpenAC.Net.EscPos.Interpreter.Sunmi;
@@ -50,12 +52,6 @@ namespace OpenAC.Net.EscPos;
 /// <summary>
 /// Cria uma instância de <see cref="EscPosInterpreter"/> de acordo com o protocolo e página de código informados.
 /// </summary>
-/// <param name="protocolo">O protocolo ESC/POS a ser utilizado.</param>
-/// <param name="paginaCodigo">A página de código a ser utilizada para codificação de caracteres.</param>
-/// <returns>Uma instância de <see cref="EscPosInterpreter"/> correspondente ao protocolo informado.</returns>
-/// <exception cref="ArgumentOutOfRangeException">
-/// Lançada quando o protocolo ou a página de código informados não são suportados.
-/// </exception>
 public static class EscPosInterpreterFactory
 {
     /// <summary>
@@ -92,6 +88,8 @@ public static class EscPosInterpreterFactory
             ProtocoloEscPos.EscZJiang => new ZJiangInterpreter(enconder),
             ProtocoloEscPos.EscPosStar => new PosStarInterpreter(enconder),
             ProtocoloEscPos.EscSunmi => new SunmiInterpreter(enconder),
+            ProtocoloEscPos.EscEpsonP2 => new EpsonP2Interpreter(enconder),
+            ProtocoloEscPos.EscCustomPos => new CustomPosInterpreter(enconder),
             _ => throw new ArgumentOutOfRangeException(nameof(protocolo), protocolo, null)
         };
     }

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text;
 using OpenAC.Net.EscPos.Command;
 using OpenAC.Net.EscPos.Commom;
@@ -32,7 +32,7 @@ public class SunmiInterpreter : EpsonInterpreter
     protected override void IniciarInterpreter()
     {
         Status = new EpsonStatusResolver();
-        InfoImpressora = new EpsonInfoImpressoraResolver(Enconder);
+        InfoImpressora = new SunmiInfoImpressoraResolver(Enconder);
 
         var commandos = DefaultCommands.EscPos.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         commandos[CmdEscPos.FonteA] = [CmdConst.ESC, (byte)'M', 0];
